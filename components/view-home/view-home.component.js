@@ -5,7 +5,7 @@
   angular.
   module('viewHome').
   component('viewHome', {
-    templateUrl: 'components/view-home/view-home.template.html',
+    templateUrl: 'dndash/components/view-home/view-home.template.html',
     controller: ['homeService', HomeController],
     controllerAs: 'home',
   });
