@@ -1,0 +1,26 @@
+/* bump down content */
+.content {
+  padding-top: 30px;
+  padding-bottom: 20px;
+}
+
+/* using a blue-heading in a panel without the blue border */
+.blue-heading {
+  background-color: #337ab7!important
+}
+
+.blue-heading > strong, .blue-heading > p, .blue-heading > h1 {
+  color: white;
+}
+
+.form-group {
+  margin-bottom: .5rem;
+}
+
+/* eventually change this column-count to 2 or 3
+and surround the app in container-fluid when more funtionality is added to the dash */
+@media (min-width: 575px) {
+  .card-columns {
+    column-count: 1;
+  }
+}
