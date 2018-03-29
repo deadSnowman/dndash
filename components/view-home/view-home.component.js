@@ -22,7 +22,7 @@
       else return true;
     }
     this.isRemainder = () => {
-      if(this.lootReturn.remainder.copper != 0 || this.lootReturn.remainder.silver != 0) return false;
+      if(this.lootReturn.remainder.copper != 0 || this.lootReturn.remainder.silver != 0 || this.lootReturn.remainder.electrum != 0 || this.lootReturn.remainder.gold != 0 || this.lootReturn.remainder.platinum != 0) return false;
       else return true;
     }
 
