@@ -6,8 +6,7 @@
     .controller('DnDashController', DnDashController);
 
   function DnDashController() {
-    var self = this;
-    self.titleName = "DnDash";
+    this.titleName = "DnDash";
   }
 
 })();
