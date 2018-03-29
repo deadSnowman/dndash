@@ -18,12 +18,12 @@
     this.loot = { "copper": 0, "silver": 0, "electrum": 0, "gold": 0, "platinum": 0 }
     this.convert = true;
     this.isDisabled = () => {
-      if(this.loot.copper != 0 || this.loot.silver != 0 || this.loot.electrum != 0 || this.loot.gold != 0 || this.loot.platinum != 0) return false;
+      if(this.loot.copper > 0 || this.loot.silver > 0 || this.loot.electrum > 0 || this.loot.gold > 0 || this.loot.platinum > 0) return false;
       else return true;
     }
     this.isRemainder = () => {
-      if(this.lootReturn.remainder.copper == 0) return true;
-      else return false;
+      if(this.lootReturn.remainder.copper != 0 || this.lootReturn.remainder.silver != 0) return false;
+      else return true;
     }
 
     this.split = nparty => {
