@@ -2,12 +2,15 @@
 <html ng-app="DnDash">
 <head>
   <meta content="width=device-width, initial-scale=1" name="viewport">
-  <base href="/"> <!-- https://deadsnowman.github.io/dndash/ -->
+  <!--<base href="/">--> <!-- https://deadsnowman.github.io/dndash/ -->
+  <script>
+    document.write('<base href="' + document.location + '" />');
+  </script>
   <title>DnDash</title>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">-->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <link href="dndash/css/style.css" rel="stylesheet" />
+  <link href="css/style.css" rel="stylesheet" />
   <style type="text/css">
   [ng\:cloak], [ng-cloak], .ng-cloak {
     display: none !important;
@@ -22,15 +25,15 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular-route.js"></script>
   <!-- Application Level Angular -->
-	<script defer src="dndash/app.module.js"></script>
-	<script defer src="dndash/app.controller.js"></script>
-  <script defer src="dndash/app.config.js"></script>
+	<script defer src="app.module.js"></script>
+	<script defer src="app.controller.js"></script>
+  <script defer src="app.config.js"></script>
   <!-- View-Home Content -->
-  <link rel="stylesheet" href="dndash/components/view-home/view-home.style.css">
-	<script defer src="dndash/components/view-home/view-home.module.js"></script>
-	<script defer src="dndash/components/view-home/view-home.component.js"></script>
-	<script defer src="dndash/components/view-home/view-home.config.js"></script>
-  <script defer src="dndash/components/view-home/view-home.service.js"></script>
+  <link rel="stylesheet" href="components/view-home/view-home.style.css">
+	<script defer src="components/view-home/view-home.module.js"></script>
+	<script defer src="components/view-home/view-home.component.js"></script>
+	<script defer src="components/view-home/view-home.config.js"></script>
+  <script defer src="components/view-home/view-home.service.js"></script>
 
   <div class="container">
     <div ng-controller="DnDashController">
