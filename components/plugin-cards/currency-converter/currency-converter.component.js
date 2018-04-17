@@ -13,7 +13,7 @@
   function CurrencyConverterCtrl() {
     this.fromcurrency = null;
     this.tocurrency = null;
-    this.fromcurrencytype = "Gold";
+    this.fromcurrencytype = "Electrum";
     this.tocurrencytype = "Copper";
     this.resultset = {
       "copper": null,

@@ -11,7 +11,7 @@
         <form name="lootForm"> <!-- class="" ng-submit="currencyconverter.convert()" -->
 
           <div class="form-group row">
-            <input class="col-sm-6 form-control" type="number" min="0" data-ng-model="currencyconverter.fromcurrency" ng-change="currencyconverter.convert()" placeholder="0" />
+            <input class="col-sm-6 form-control" type="number" step="any" min="0" data-ng-model="currencyconverter.fromcurrency" ng-change="currencyconverter.convert()" placeholder="0" />
             <div class="col-sm-6">
               <select class="form-control" data-ng-model="currencyconverter.fromcurrencytype" ng-change="currencyconverter.convert()">
                 <option>Copper</option>
@@ -23,7 +23,7 @@
             </div>
           </div>
           <div class="form-group row">
-            <input class="col-sm-6 form-control" type="number" min="0" data-ng-model="currencyconverter.tocurrency" placeholder="0" ng-change="currencyconverter.convertBackward()" />
+            <input class="col-sm-6 form-control" type="number" step="any" min="0" data-ng-model="currencyconverter.tocurrency" placeholder="0" ng-change="currencyconverter.convertBackward()" />
             <div class="col-sm-6">
               <select class="form-control" data-ng-model="currencyconverter.tocurrencytype" ng-change="currencyconverter.convert()">
                 <option>Copper</option>
