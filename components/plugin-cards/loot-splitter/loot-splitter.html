@@ -13,45 +13,59 @@
 
           <div class="form-group row">
             <label for="lootsplitter.numparty" class="col-sm-4 control-label">Num Party</label>
-            <input class="col-sm-4 form-control" type="number" style="width: 5rem" min="1" name="lootsplitter.numparty" data-ng-model="lootsplitter.numparty" placeholder="0"
-            />
+            <div class="col-sm-4">
+              <input class="form-control" type="number" style="width: 5rem" min="1" name="lootsplitter.numparty" data-ng-model="lootsplitter.numparty"
+                placeholder="0" />
+            </div>
           </div>
 
           <div class="form-group row">
             <label for="lootsplitter.copper" class="col-sm-4 control-label">Copper (cp)</label>
-            <input class="col-sm-7 form-control" type="number" min="0" name="lootsplitter.copper" data-ng-model="lootsplitter.loot.copper" placeholder="0"
-            />
+            <div class="col-sm-8">
+              <input class="form-control" type="number" min="0" name="lootsplitter.copper" data-ng-model="lootsplitter.loot.copper" placeholder="0"
+              />
+            </div>
           </div>
 
           <div class="form-group row">
             <label for="lootsplitter.silver" class="col-sm-4 control-label">Silver (sp)</label>
-            <input class="col-sm-7 form-control" type="number" min="0" name="lootsplitter.silver" data-ng-model="lootsplitter.loot.silver" placeholder="0"
-            />
+            <div class="col-sm-8">
+              <input class="form-control" type="number" min="0" name="lootsplitter.silver" data-ng-model="lootsplitter.loot.silver" placeholder="0"
+              />
+            </div>
           </div>
 
           <div class="form-group row">
             <label for="lootsplitter.electrum" class="col-sm-4 control-label">Electrum (ep)</label>
-            <input class="col-sm-7 form-control" type="number" min="0" name="lootsplitter.electrum" data-ng-model="lootsplitter.loot.electrum" placeholder="0"
-            />
+            <div class="col-sm-8">
+              <input class="form-control" type="number" min="0" name="lootsplitter.electrum" data-ng-model="lootsplitter.loot.electrum"
+                placeholder="0" />
+            </div>
           </div>
 
           <div class="form-group row">
             <label for="lootsplitter.gold" class="col-sm-4 control-label">Gold (gp)</label>
-            <input class="col-sm-7 form-control" type="number" min="0" name="lootsplitter.gold" data-ng-model="lootsplitter.loot.gold" placeholder="0"
-            />
+            <div class="col-sm-8">
+              <input class="form-control" type="number" min="0" name="lootsplitter.gold" data-ng-model="lootsplitter.loot.gold" placeholder="0"
+              />
+            </div>
           </div>
 
           <div class="form-group row">
             <label for="lootsplitter.platinum" class="col-sm-4 control-label">Platinum (pp)</label>
-            <input class="col-sm-7 form-control" type="number" min="0" name="lootsplitter.platinum" data-ng-model="lootsplitter.loot.platinum" placeholder="0"
-            />
+            <div class="col-sm-8">
+              <input class="form-control" type="number" min="0" name="lootsplitter.platinum" data-ng-model="lootsplitter.loot.platinum"
+                placeholder="0" />
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="lootsplitter.numparty" class="col-sm-4"></label>
-            <div style="display:inline-block">
-              <input type="checkbox" data-ng-model="lootsplitter.convert" />&ThinSpace;
-              <label for="lootsplitter.convert" class="col-form-label text-fix">Convert currency?</label>
+          <div class="form-group row">
+            <label for="lootsplitter.numparty" class="col-sm-4 control-label"></label>
+            <div class="col-sm-8">
+              <div style="display:inline-block">
+                <input type="checkbox" data-ng-model="lootsplitter.convert" />&ThinSpace;
+                <label for="lootsplitter.convert" class="col-form-label text-fix">Convert currency?</label>
+              </div>
             </div>
           </div>
 
@@ -59,6 +73,7 @@
             <button type="submit" ng-disabled="lootsplitter.isDisabled()" class="btn btn-info" ng-click="lootsplitter.split(); showLootResults = true">Split Loot</button>
             <button type="button" class="btn btn-light ng-cloak" ng-hide="lootsplitter.clearButton" ng-click="lootsplitter.clear(); showLootResults = false">Clear</button>
           </div>
+          
         </form>
 
         <div ng-if="showLootResults">
