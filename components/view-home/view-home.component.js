@@ -12,34 +12,12 @@
 
   // Controller - data binds to view-home template
   function HomeController(homeService) {
-    this.clearButton = true;
-    this.numparty = 1;
-    this.lootReturn = null;
-    this.loot = { "copper": 0, "silver": 0, "electrum": 0, "gold": 0, "platinum": 0 }
-    this.convert = true;
-    this.isDisabled = () => {
-      if(this.loot.copper > 0 || this.loot.silver > 0 || this.loot.electrum > 0 || this.loot.gold > 0 || this.loot.platinum > 0) return false;
-      else return true;
-    }
-    this.isRemainder = () => {
-      if(this.lootReturn.remainder.copper != 0 || this.lootReturn.remainder.silver != 0 || this.lootReturn.remainder.electrum != 0 || this.lootReturn.remainder.gold != 0 || this.lootReturn.remainder.platinum != 0) return false;
-      else return true;
-    }
+    const base = 'components/plugin-cards/';
 
-    this.split = nparty => {
-      this.clearButton = false;
-      homeService.splitLoot(this.numparty, this.convert, this.loot, success => {
-        this.lootReturn = success;
-      });
+    this.plugins = {
+      'loot-splitter': base + 'loot-splitter/loot-splitter.html',
+      'currency-converter': base + 'currency-converter/currency-converter.html'/*,
+      'dice-roller': base + 'dice-roller/dice-roller.html'*/
     }
-
-    this.clear = () => {
-      this.numparty = 1;
-      this.lootReturn = null;
-      this.loot = { "copper": 0, "silver": 0, "electrum": 0, "gold": 0, "platinum": 0 }
-      this.clearButton = true;
-      this.convert = true;
-    }
-
   }
 })();

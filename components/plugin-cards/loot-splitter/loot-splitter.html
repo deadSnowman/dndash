@@ -1,0 +1,95 @@
+<div ng-controller="LootSplitterCtrl as lootsplitter">
+  <!--<link rel="stylesheet" href="components/view-home/view-home.style.css">-->
+  <!-- make these form-control -->
+
+  <div class="card">
+    <div class="card-header text-white bg-info">
+      <strong>Split Loot</strong>
+    </div>
+    <div class="card-body">
+      <div class="card-text">
+
+        <form name="lootForm" class="" ng-submit="lootsplitter.split()">
+
+          <div class="form-group row">
+            <label for="lootsplitter.numparty" class="col-sm-4 control-label">Num Party</label>
+            <input class="col-sm-4 form-control" type="number" style="width: 5rem" min="1" name="lootsplitter.numparty" data-ng-model="lootsplitter.numparty" placeholder="0"
+            />
+          </div>
+
+          <div class="form-group row">
+            <label for="lootsplitter.copper" class="col-sm-4 control-label">Copper (cp)</label>
+            <input class="col-sm-7 form-control" type="number" min="0" name="lootsplitter.copper" data-ng-model="lootsplitter.loot.copper" placeholder="0"
+            />
+          </div>
+
+          <div class="form-group row">
+            <label for="lootsplitter.silver" class="col-sm-4 control-label">Silver (sp)</label>
+            <input class="col-sm-7 form-control" type="number" min="0" name="lootsplitter.silver" data-ng-model="lootsplitter.loot.silver" placeholder="0"
+            />
+          </div>
+
+          <div class="form-group row">
+            <label for="lootsplitter.electrum" class="col-sm-4 control-label">Electrum (ep)</label>
+            <input class="col-sm-7 form-control" type="number" min="0" name="lootsplitter.electrum" data-ng-model="lootsplitter.loot.electrum" placeholder="0"
+            />
+          </div>
+
+          <div class="form-group row">
+            <label for="lootsplitter.gold" class="col-sm-4 control-label">Gold (gp)</label>
+            <input class="col-sm-7 form-control" type="number" min="0" name="lootsplitter.gold" data-ng-model="lootsplitter.loot.gold" placeholder="0"
+            />
+          </div>
+
+          <div class="form-group row">
+            <label for="lootsplitter.platinum" class="col-sm-4 control-label">Platinum (pp)</label>
+            <input class="col-sm-7 form-control" type="number" min="0" name="lootsplitter.platinum" data-ng-model="lootsplitter.loot.platinum" placeholder="0"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="lootsplitter.numparty" class="col-sm-4"></label>
+            <div style="display:inline-block">
+              <input type="checkbox" data-ng-model="lootsplitter.convert" />&ThinSpace;
+              <label for="lootsplitter.convert" class="col-form-label text-fix">Convert currency?</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <button type="submit" ng-disabled="lootsplitter.isDisabled()" class="btn btn-info" ng-click="lootsplitter.split(); showLootResults = true">Split Loot</button>
+            <button type="button" class="btn btn-light ng-cloak" ng-hide="lootsplitter.clearButton" ng-click="lootsplitter.clear(); showLootResults = false">Clear</button>
+          </div>
+        </form>
+
+        <div ng-if="showLootResults">
+          <div class="row">
+            <div class="col-sm-6">
+              <strong>Each party member gets</strong>
+              <p>
+                <div ng-if="lootsplitter.lootReturn.split_evenly.copper > 0">{{lootsplitter.lootReturn.split_evenly.copper}} copper</div>
+                <div ng-if="lootsplitter.lootReturn.split_evenly.silver > 0">{{lootsplitter.lootReturn.split_evenly.silver}} silver</div>
+                <div ng-if="lootsplitter.lootReturn.split_evenly.electrum > 0">{{lootsplitter.lootReturn.split_evenly.electrum}} electrum</div>
+                <div ng-if="lootsplitter.lootReturn.split_evenly.gold > 0">{{lootsplitter.lootReturn.split_evenly.gold}} gold</div>
+                <div ng-if="lootsplitter.lootReturn.split_evenly.platinum > 0">{{lootsplitter.lootReturn.split_evenly.platinum}} platinum</div>
+              </p>
+            </div>
+            <div class="col-sm-6" ng-hide="lootsplitter.isRemainder()">
+              <strong>Remaining</strong>
+              <p>
+                <div ng-if="lootsplitter.lootReturn.remainder.copper > 0">{{lootsplitter.lootReturn.remainder.copper}} copper</div>
+                <div ng-if="lootsplitter.lootReturn.remainder.silver > 0">{{lootsplitter.lootReturn.remainder.silver}} silver</div>
+                <div ng-if="lootsplitter.lootReturn.remainder.electrum > 0">{{lootsplitter.lootReturn.remainder.electrum}} electrum</div>
+                <div ng-if="lootsplitter.lootReturn.remainder.gold > 0">{{lootsplitter.lootReturn.remainder.gold}} gold</div>
+                <div ng-if="lootsplitter.lootReturn.remainder.platinum > 0">{{lootsplitter.lootReturn.remainder.platinum}} platinum</div>
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+</div>

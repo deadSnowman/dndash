@@ -5,6 +5,6 @@
   // modues used are injected here
   angular.module('DnDash', [
     'ngRoute',
-    'viewHome',
+    'viewHome'
   ]);
 })();

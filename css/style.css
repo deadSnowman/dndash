@@ -21,6 +21,6 @@
 and surround the app in container-fluid when more funtionality is added to the dash */
 @media (min-width: 575px) {
   .card-columns {
-    column-count: 1;
+    column-count: 2;
   }
 }
