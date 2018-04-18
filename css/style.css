@@ -5,17 +5,15 @@
 }
 
 /* using a blue-heading in a panel without the blue border */
-.blue-heading {
-  background-color: #337ab7!important
-}
+.blue-heading { background-color: #337ab7!important }
+.blue-heading > strong, .blue-heading > p, .blue-heading > h1 { color: white; }
 
-.blue-heading > strong, .blue-heading > p, .blue-heading > h1 {
-  color: white;
-}
+.form-group { margin-bottom: .5rem; }
 
-.form-group {
-  margin-bottom: .5rem;
-}
+/* smaller */
+.card-header { padding: .25rem .75rem; }
+.card-body { padding: .75rem; }
+p strong label { font-size: .875rem; }
 
 /* eventually change this column-count to 2 or 3
 and surround the app in container-fluid when more funtionality is added to the dash */

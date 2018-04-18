@@ -13,11 +13,11 @@
 
           <div class="form-row form-group">
             <div class="col">
-              <input class="form-control" type="number" step="any" min="0" data-ng-model="currencyconverter.fromcurrency" ng-change="currencyconverter.convert()"
+              <input class="form-control form-control-sm" type="number" step="any" min="0" data-ng-model="currencyconverter.fromcurrency" ng-change="currencyconverter.convert()"
                 placeholder="0" />
             </div>
             <div class="col">
-              <select class="form-control" data-ng-model="currencyconverter.fromcurrencytype" ng-change="currencyconverter.convert()">
+              <select class="form-control form-control-sm" data-ng-model="currencyconverter.fromcurrencytype" ng-change="currencyconverter.convert()">
                 <option>Copper</option>
                 <option>Silver</option>
                 <option>Electrum</option>
@@ -28,10 +28,10 @@
           </div>
           <div class="form-row form-group">
             <div class="col">
-              <input class="form-control" type="number" step="any" min="0" data-ng-model="currencyconverter.tocurrency" placeholder="0" ng-change="currencyconverter.convertBackward()" />
+              <input class="form-control form-control-sm" type="number" step="any" min="0" data-ng-model="currencyconverter.tocurrency" placeholder="0" ng-change="currencyconverter.convertBackward()" />
             </div>
             <div class="col">
-              <select class="form-control" data-ng-model="currencyconverter.tocurrencytype" ng-change="currencyconverter.convert()">
+              <select class="form-control form-control-sm" data-ng-model="currencyconverter.tocurrencytype" ng-change="currencyconverter.convert()">
                 <option>Copper</option>
                 <option>Silver</option>
                 <option>Electrum</option>
