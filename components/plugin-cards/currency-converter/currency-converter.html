@@ -8,9 +8,40 @@
     <div class="card-body">
       <div class="card-text">
 
-        <form name="lootForm"> <!-- class="" ng-submit="currencyconverter.convert()" -->
+        <form name="lootForm">
+          <!-- class="" ng-submit="currencyconverter.convert()" -->
 
-          <div class="form-group row">
+          <div class="form-row form-group">
+            <div class="col">
+              <input class="form-control" type="number" step="any" min="0" data-ng-model="currencyconverter.fromcurrency" ng-change="currencyconverter.convert()"
+                placeholder="0" />
+            </div>
+            <div class="col">
+              <select class="form-control" data-ng-model="currencyconverter.fromcurrencytype" ng-change="currencyconverter.convert()">
+                <option>Copper</option>
+                <option>Silver</option>
+                <option>Electrum</option>
+                <option>Gold</option>
+                <option>Platinum</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row form-group">
+            <div class="col">
+              <input class="form-control" type="number" step="any" min="0" data-ng-model="currencyconverter.tocurrency" placeholder="0" ng-change="currencyconverter.convertBackward()" />
+            </div>
+            <div class="col">
+              <select class="form-control" data-ng-model="currencyconverter.tocurrencytype" ng-change="currencyconverter.convert()">
+                <option>Copper</option>
+                <option>Silver</option>
+                <option>Electrum</option>
+                <option>Gold</option>
+                <option>Platinum</option>
+              </select>
+            </div>
+          </div>
+
+          <!--<div class="form-group row">
             <input class="col-sm-6 form-control" type="number" step="any" min="0" data-ng-model="currencyconverter.fromcurrency" ng-change="currencyconverter.convert()" placeholder="0" />
             <div class="col-sm-6">
               <select class="form-control" data-ng-model="currencyconverter.fromcurrencytype" ng-change="currencyconverter.convert()">
@@ -33,7 +64,7 @@
                 <option>Platinum</option>
               </select>
             </div>
-          </div>
+          </div>-->
 
         </form>
 
