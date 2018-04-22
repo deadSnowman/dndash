@@ -5,11 +5,15 @@
 <div class="content">
   <div class="card-columns">
 
-    <div ng-repeat="plugin in home.plugins">
+    <!--<div ng-repeat="plugin in home.plugins">
       <div ng-include="plugin"></div>
+    </div>-->
+
+    <div ui-sortable ng-model="home.plugins">
+      <div ng-repeat="plugin in home.plugins">
+        <div ng-include="plugin"></div>
+      </div>
     </div>
 
   </div>
 </div>
-
-
