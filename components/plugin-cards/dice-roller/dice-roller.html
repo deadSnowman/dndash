@@ -27,6 +27,15 @@
                   <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="amount" ng-model="diceroller.amnt.d4"
                   />
                 </div>
+                <div class="col-fixed">
+                  <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                    <button type="button" class="btn btn-info"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                    <button type="button" class="btn btn-info"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                  </div>
+                </div>
+                <div class="col">
+                  <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="modifier" />
+                </div>
               </div>
             </div>
             <div ng-if="diceroller.results.d4">
