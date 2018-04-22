@@ -5,8 +5,10 @@
 <div class="content">
   <div class="card-columns">
 
-    <div ui-sortable ng-model="home.plugins">
+    <div ui-sortable="sortableOptions" ng-model="home.plugins">
+
       <div ng-repeat="plugin in home.plugins">
+        <!--<div class="handle btn btn-primary"></div>-->
         <div ng-include="plugin"></div>
       </div>
     </div>

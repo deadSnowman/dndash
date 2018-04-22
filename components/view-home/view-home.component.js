@@ -1,17 +1,22 @@
-(function() {
+(function () {
   'use strict';
 
   // Register 'viewHome' component, along with its associated controller and template
   angular.
-  module('viewHome').
-  component('viewHome', {
-    templateUrl: 'components/view-home/view-home.template.html',
-    controller: ['homeService', HomeController],
-    controllerAs: 'home',
-  });
+    module('viewHome').
+    component('viewHome', {
+      templateUrl: 'components/view-home/view-home.template.html',
+      controller: ['homeService', '$scope', HomeController],
+      controllerAs: 'home',
+    });
 
   // Controller - data binds to view-home template
-  function HomeController(homeService) {
+  function HomeController(homeService, $scope) {
+
+    /*$scope.sortableOptions = {
+      handle: '> .handle'
+    }*/
+
     const base = 'components/plugin-cards/';
 
     this.plugins = [
