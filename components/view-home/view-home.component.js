@@ -14,10 +14,10 @@
   function HomeController(homeService) {
     const base = 'components/plugin-cards/';
 
-    this.plugins = {
-      'loot-splitter': base + 'loot-splitter/loot-splitter.html',
-      'currency-converter': base + 'currency-converter/currency-converter.html',
-      'dice-roller': base + 'dice-roller/dice-roller.html'
-    }
+    this.plugins = [
+      base + 'loot-splitter/loot-splitter.html',
+      base + 'currency-converter/currency-converter.html',
+      base + 'dice-roller/dice-roller.html'
+    ]
   }
 })();
