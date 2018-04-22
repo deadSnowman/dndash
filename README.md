@@ -1,6 +1,9 @@
-# dndash
-A DnD loot splitting app written with angularjs
+# DnDash
+A DnD dashboard app written with anuglarjs
 
-Eventually, I'd like to build it into a dashboard with other neat panels for DMs
+Contains cards for
+- Loot splitting
+- Currency conversion
+- Die rolling
 
-![Split Loot](/images/split-loot.png?raw=true "Split Loot")
+![Split Loot](/images/dndash.png?raw=true "DnDash")
