@@ -125,13 +125,15 @@
                 <div class="col-fixed">
                   <button type="submit" class="btn btn-info btn-sm" ng-disabled="diceroller.totalDisabled()">Roll all</button>
                 </div>
-                <div class="col">
+                <div class="col-fixed">
+                  <button type="button" class="btn btn-light btn-sm ng-cloak" ng-hide="diceroller.clearButton" ng-click="diceroller.clear()">Clear</button>
                 </div>
               </div>
             </div>
             <div>
               <div class="col" ng-if="diceroller.total">
-                <p><strong>Total:</strong> {{diceroller.total}}</p>
+                <p>
+                  <strong>Total:</strong> {{diceroller.total}}</p>
               </div>
             </div>
           </div>
