@@ -16,8 +16,8 @@
 
     this.plugins = {
       'loot-splitter': base + 'loot-splitter/loot-splitter.html',
-      'currency-converter': base + 'currency-converter/currency-converter.html'/*,
-      'dice-roller': base + 'dice-roller/dice-roller.html'*/
+      'currency-converter': base + 'currency-converter/currency-converter.html',
+      'dice-roller': base + 'dice-roller/dice-roller.html'
     }
   }
 })();
