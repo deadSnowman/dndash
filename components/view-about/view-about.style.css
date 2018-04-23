@@ -1,0 +1,10 @@
+.centerstuff {
+  text-align:center;
+}
+
+.centerstuff ul {
+  padding:0;
+  margin:0;
+  display: inline-block;
+  text-align:left;
+}

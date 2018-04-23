@@ -1,5 +1,5 @@
 # DnDash
-A DnD dashboard app written with anuglarjs
+A DnD dashboard app written with AngularJS
 
 Contains cards for
 - Loot splitting

@@ -7,6 +7,7 @@
     'ui.bootstrap',
     'ui.sortable',
     'ngRoute',
-    'viewHome'
+    'viewHome',
+    'viewAbout'
   ]);
 })();
