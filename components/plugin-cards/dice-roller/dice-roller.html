@@ -17,15 +17,18 @@
       <div class="card-text">
 
         <form name="dieRollerForm" ng-submit="diceroller.submit()">
+
+          <!-- d4 -->
           <div class="form-row form-group">
             <div class="col">
               <div class="form-row form-group">
-                <div class="col-fixed" style="width: 60px;">
-                  <button type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(4)" ng-disabled="diceroller.amnt.d4 == null || diceroller.amnt.d4 == 0">d4</button>
-                </div>
                 <div class="col">
-                  <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="amount" ng-model="diceroller.amnt.d4"
-                  />
+                  <div class="input-group input-group-sm">
+                    <div class="input-group-prepend">
+                      <button style="width: 50px;" type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(4)" ng-disabled="diceroller.amnt.d4 == null || diceroller.amnt.d4 == 0">d4</button>
+                    </div>
+                    <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="amnt" ng-model="diceroller.amnt.d4">
+                  </div>
                 </div>
                 <div class="col-fixed">
                   <div class="btn-group btn-group-sm">
@@ -38,26 +41,59 @@
                   </div>
                 </div>
                 <div class="col">
-                  <input class="form-control form-control-sm" type="number" step="any" min="0" ng-model="diceroller.modifier.d4" placeholder="modifier"
-                  />
+                  <input class="form-control form-control-sm" type="number" step="any" min="0" ng-model="diceroller.modifier.d4" placeholder="modifier">
+                </div>
+                <div class="col-sm-2">
+                  <input class="form-control form-control-sm" type="text" placeholder="result" value="{{diceroller.results.d4}}" readonly>
                 </div>
               </div>
             </div>
-            <!--<div ng-if="diceroller.results.d4">
-              <div class="col">
-                <p>{{diceroller.results.d4}}</p>
-              </div>
-            </div>-->
           </div>
+
+
+          <!-- d6 -->
           <div class="form-row form-group">
             <div class="col">
               <div class="form-row form-group">
-                <div class="col-fixed" style="width: 60px;">
-                  <button type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(8)" ng-disabled="diceroller.amnt.d8 == null || diceroller.amnt.d8 == 0">d8</button>
+                <div class="col">
+                  <div class="input-group input-group-sm">
+                    <div class="input-group-prepend">
+                      <button style="width: 50px;" type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(6)" ng-disabled="diceroller.amnt.d6 == null || diceroller.amnt.d6 == 0">d6</button>
+                    </div>
+                    <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="amnt" ng-model="diceroller.amnt.d6">
+                  </div>
+                </div>
+                <div class="col-fixed">
+                  <div class="btn-group btn-group-sm">
+                    <label class="btn btn-info" ng-model="diceroller.radioModifier.d4" btn-radio="'plus'">
+                      <i class="fa fa-plus" aria-hidden="true"></i>
+                    </label>
+                    <label class="btn btn-info" ng-model="diceroller.radioModifier.d4" btn-radio="'minus'">
+                      <i class="fa fa-minus" aria-hidden="true"></i>
+                    </label>
+                  </div>
                 </div>
                 <div class="col">
-                  <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="amount" ng-model="diceroller.amnt.d8"
-                  />
+                  <input class="form-control form-control-sm" type="number" step="any" min="0" ng-model="diceroller.modifier.d6" placeholder="modifier">
+                </div>
+                <div class="col-sm-2">
+                  <input class="form-control form-control-sm" type="text" placeholder="result" value="{{diceroller.results.d6}}" readonly>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- d8 -->
+          <div class="form-row form-group">
+            <div class="col">
+              <div class="form-row form-group">
+                <div class="col">
+                  <div class="input-group input-group-sm">
+                    <div class="input-group-prepend">
+                      <button style="width: 50px;" type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(8)" ng-disabled="diceroller.amnt.d8 == null || diceroller.amnt.d8 == 0">d8</button>
+                    </div>
+                    <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="amnt" ng-model="diceroller.amnt.d8">
+                  </div>
                 </div>
                 <div class="col-fixed">
                   <div class="btn-group btn-group-sm">
@@ -70,26 +106,26 @@
                   </div>
                 </div>
                 <div class="col">
-                  <input class="form-control form-control-sm" type="number" step="any" min="0" ng-model="diceroller.modifier.d8" placeholder="modifier"
-                  />
+                  <input class="form-control form-control-sm" type="number" step="any" min="0" ng-model="diceroller.modifier.d8" placeholder="modifier">
+                </div>
+                <div class="col-sm-2">
+                  <input class="form-control form-control-sm" type="text" placeholder="result" value="{{diceroller.results.d8}}" readonly>
                 </div>
               </div>
             </div>
-            <!--<div ng-if="diceroller.results.d8">
-              <div class="col">
-                <p>{{diceroller.results.d8}}</p>
-              </div>
-            </div>-->
           </div>
+
+          <!-- d10 -->
           <div class="form-row form-group">
             <div class="col">
               <div class="form-row form-group">
-                <div class="col-fixed" style="width: 60px;">
-                  <button type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(10)" ng-disabled="diceroller.amnt.d10 == null || diceroller.amnt.d10 == 0">d10</button>
-                </div>
                 <div class="col">
-                  <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="amount" ng-model="diceroller.amnt.d10"
-                  />
+                  <div class="input-group input-group-sm">
+                    <div class="input-group-prepend">
+                      <button style="width: 50px;" type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(10)" ng-disabled="diceroller.amnt.d10 == null || diceroller.amnt.d10 == 0">d10</button>
+                    </div>
+                    <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="amnt" ng-model="diceroller.amnt.d10">
+                  </div>
                 </div>
                 <div class="col-fixed">
                   <div class="btn-group btn-group-sm">
@@ -102,26 +138,26 @@
                   </div>
                 </div>
                 <div class="col">
-                  <input class="form-control form-control-sm" type="number" step="any" min="0" ng-model="diceroller.modifier.d10" placeholder="modifier"
-                  />
+                  <input class="form-control form-control-sm" type="number" step="any" min="0" ng-model="diceroller.modifier.d10" placeholder="modifier">
+                </div>
+                <div class="col-sm-2">
+                  <input class="form-control form-control-sm" type="text" placeholder="result" value="{{diceroller.results.d10}}" readonly>
                 </div>
               </div>
             </div>
-            <!--<div ng-if="diceroller.results.d10">
-              <div class="col">
-                <p>{{diceroller.results.d10}}</p>
-              </div>
-            </div>-->
           </div>
+
+          <!-- d100 -->
           <div class="form-row form-group">
             <div class="col">
               <div class="form-row form-group">
-                <div class="col-fixed" style="width: 60px;">
-                  <button type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(100)" ng-disabled="diceroller.amnt.d100 == null || diceroller.amnt.d100 == 0">d100</button>
-                </div>
                 <div class="col">
-                  <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="amount" ng-model="diceroller.amnt.d100"
-                  />
+                  <div class="input-group input-group-sm">
+                    <div class="input-group-prepend">
+                      <button style="width: 50px;" type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(100)" ng-disabled="diceroller.amnt.d100 == null || diceroller.amnt.d100 == 0">d100</button>
+                    </div>
+                    <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="amnt" ng-model="diceroller.amnt.d100">
+                  </div>
                 </div>
                 <div class="col-fixed">
                   <div class="btn-group btn-group-sm">
@@ -134,26 +170,26 @@
                   </div>
                 </div>
                 <div class="col">
-                  <input class="form-control form-control-sm" type="number" step="any" min="0" ng-model="diceroller.modifier.d100" placeholder="modifier"
-                  />
+                  <input class="form-control form-control-sm" type="number" step="any" min="0" ng-model="diceroller.modifier.d100" placeholder="modifier">
+                </div>
+                <div class="col-sm-2">
+                  <input class="form-control form-control-sm" type="text" placeholder="result" value="{{diceroller.results.d100}}" readonly>
                 </div>
               </div>
             </div>
-            <!--<div ng-if="diceroller.results.d100">
-              <div class="col">
-                <p>{{diceroller.results.d100}}</p>
-              </div>
-            </div>-->
           </div>
+
+          <!-- d12 -->
           <div class="form-row form-group">
             <div class="col">
               <div class="form-row form-group">
-                <div class="col-fixed" style="width: 60px;">
-                  <button type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(12)" ng-disabled="diceroller.amnt.d12 == null || diceroller.amnt.d12 == 0">d12</button>
-                </div>
                 <div class="col">
-                  <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="amount" ng-model="diceroller.amnt.d12"
-                  />
+                  <div class="input-group input-group-sm">
+                    <div class="input-group-prepend">
+                      <button style="width: 50px;" type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(12)" ng-disabled="diceroller.amnt.d12 == null || diceroller.amnt.d12 == 0">d12</button>
+                    </div>
+                    <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="amnt" ng-model="diceroller.amnt.d12">
+                  </div>
                 </div>
                 <div class="col-fixed">
                   <div class="btn-group btn-group-sm">
@@ -166,26 +202,26 @@
                   </div>
                 </div>
                 <div class="col">
-                  <input class="form-control form-control-sm" type="number" step="any" min="0" ng-model="diceroller.modifier.d12" placeholder="modifier"
-                  />
+                  <input class="form-control form-control-sm" type="number" step="any" min="0" ng-model="diceroller.modifier.d12" placeholder="modifier">
+                </div>
+                <div class="col-sm-2">
+                  <input class="form-control form-control-sm" type="text" placeholder="result" value="{{diceroller.results.d12}}" readonly>
                 </div>
               </div>
             </div>
-            <!--<div ng-if="diceroller.results.d12">
-              <div class="col">
-                <p>{{diceroller.results.d12}}</p>
-              </div>
-            </div>-->
           </div>
+
+          <!-- d20 -->
           <div class="form-row form-group">
             <div class="col">
               <div class="form-row form-group">
-                <div class="col-fixed" style="width: 60px;">
-                  <button type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(20)" ng-disabled="diceroller.amnt.d20 == null || diceroller.amnt.d20 == 0">d20</button>
-                </div>
                 <div class="col">
-                  <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="amount" ng-model="diceroller.amnt.d20"
-                  />
+                  <div class="input-group input-group-sm">
+                    <div class="input-group-prepend">
+                      <button style="width: 50px;" type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(20)" ng-disabled="diceroller.amnt.d20 == null || diceroller.amnt.d20 == 0">d20</button>
+                    </div>
+                    <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="amnt" ng-model="diceroller.amnt.d20">
+                  </div>
                 </div>
                 <div class="col-fixed">
                   <div class="btn-group btn-group-sm">
@@ -198,18 +234,16 @@
                   </div>
                 </div>
                 <div class="col">
-                  <input class="form-control form-control-sm" type="number" step="any" min="0" ng-model="diceroller.modifier.d20" placeholder="modifier"
-                  />
+                  <input class="form-control form-control-sm" type="number" step="any" min="0" ng-model="diceroller.modifier.d20" placeholder="modifier">
+                </div>
+                <div class="col-sm-2">
+                  <input class="form-control form-control-sm" type="text" placeholder="result" value="{{diceroller.results.d20}}" readonly>
                 </div>
               </div>
             </div>
-            <!--<div ng-if="diceroller.results.d20">
-              <div class="col">
-                <p>{{diceroller.results.d20}}</p>
-              </div>
-            </div>-->
           </div>
 
+          <!-- Results -->
           <div class="form-row form-group">
             <div class="col">
               <div class="form-row form-group">
@@ -233,7 +267,7 @@
               <label for="resultsHistory">
                 <strong>Results</strong>
               </label>
-              <textarea id="resultsHistory" class="form-control" rows="4" readonly>{{diceroller.results.d4}} + {{diceroller.results.d8}} + {{diceroller.results.d10}} + {{diceroller.results.d100}} + {{diceroller.results.d12}} + {{diceroller.results.d20}}</textarea>
+              <textarea id="resultsHistory" class="form-control" rows="4" readonly>{{diceroller.results.d4}} + {{diceroller.results.d6}} + {{diceroller.results.d8}} + {{diceroller.results.d10}} + {{diceroller.results.d100}} + {{diceroller.results.d12}} + {{diceroller.results.d20}}</textarea>
             </div>
           </div>
 
