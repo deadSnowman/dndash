@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict';
 
   // Configure the DnDash Module

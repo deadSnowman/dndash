@@ -33,6 +33,7 @@
       setTotal();
       self.clearButton = false;
     }
+    self.boop = "test";
 
     self.clear = () => {
       initModifier();
