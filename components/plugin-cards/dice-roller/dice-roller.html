@@ -25,7 +25,8 @@
                 <div class="col">
                   <div class="input-group input-group-sm">
                     <div class="input-group-prepend">
-                      <button style="width: 50px;" type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(4)" ng-disabled="diceroller.amnt.d4 == null || diceroller.amnt.d4 == 0">d4</button>
+                      <!-- ng-disabled="diceroller.amnt.d4 == null || diceroller.amnt.d4 == 0" -->
+                      <button style="width: 50px;" type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(4)">d4</button>
                     </div>
                     <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="amnt" ng-model="diceroller.amnt.d4">
                   </div>
@@ -58,17 +59,18 @@
                 <div class="col">
                   <div class="input-group input-group-sm">
                     <div class="input-group-prepend">
-                      <button style="width: 50px;" type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(6)" ng-disabled="diceroller.amnt.d6 == null || diceroller.amnt.d6 == 0">d6</button>
+                      <!-- ng-disabled="diceroller.amnt.d6 == null || diceroller.amnt.d6 == 0" -->
+                      <button style="width: 50px;" type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(6)">d6</button>
                     </div>
                     <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="amnt" ng-model="diceroller.amnt.d6">
                   </div>
                 </div>
                 <div class="col-fixed">
                   <div class="btn-group btn-group-sm">
-                    <label class="btn btn-info" ng-model="diceroller.radioModifier.d4" btn-radio="'plus'">
+                    <label class="btn btn-info" ng-model="diceroller.radioModifier.d6" btn-radio="'plus'">
                       <i class="fa fa-plus" aria-hidden="true"></i>
                     </label>
-                    <label class="btn btn-info" ng-model="diceroller.radioModifier.d4" btn-radio="'minus'">
+                    <label class="btn btn-info" ng-model="diceroller.radioModifier.d6" btn-radio="'minus'">
                       <i class="fa fa-minus" aria-hidden="true"></i>
                     </label>
                   </div>
@@ -90,7 +92,8 @@
                 <div class="col">
                   <div class="input-group input-group-sm">
                     <div class="input-group-prepend">
-                      <button style="width: 50px;" type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(8)" ng-disabled="diceroller.amnt.d8 == null || diceroller.amnt.d8 == 0">d8</button>
+                      <!-- ng-disabled="diceroller.amnt.d8 == null || diceroller.amnt.d8 == 0" -->
+                      <button style="width: 50px;" type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(8)">d8</button>
                     </div>
                     <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="amnt" ng-model="diceroller.amnt.d8">
                   </div>
@@ -122,7 +125,8 @@
                 <div class="col">
                   <div class="input-group input-group-sm">
                     <div class="input-group-prepend">
-                      <button style="width: 50px;" type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(10)" ng-disabled="diceroller.amnt.d10 == null || diceroller.amnt.d10 == 0">d10</button>
+                      <!-- ng-disabled="diceroller.amnt.d10 == null || diceroller.amnt.d10 == 0" -->
+                      <button style="width: 50px;" type="button" class="btn btn-info btn-sm btn-block" ng-click="diceroller.roll(10)">d10</button>
                     </div>
                     <input class="form-control form-control-sm" type="number" step="any" min="0" placeholder="amnt" ng-model="diceroller.amnt.d10">
                   </div>
