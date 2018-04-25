@@ -74,9 +74,9 @@
 
     <div ui-sortable="sortableOptions" ng-model="home.plugins">
 
-      <div ng-repeat="plugin in home.plugins">
+      <div ng-repeat="plugin in home.plugins" ng-cloak>
         <!--<div class="handle btn btn-primary"></div>-->
-        <div ng-include="plugin"></div>
+        <div ng-include="plugin" ng-cloak></div>
       </div>
     </div>
 

@@ -63,11 +63,10 @@
   <script defer src="components/plugin-cards/dice-roller/dice-roller.component.js"></script>
   <script defer src="components/plugin-cards/dice-roller/dice-roller.service.js"></script>
 
-  <div class="">
-    <div ng-controller="DnDashController">
-      <div ng-view></div>
-    </div>
-</div>
+
+  <div ng-controller="DnDashController" ng-cloak>
+    <div ng-view ng-cloak></div>
+  </div>
 
 </body>
 
