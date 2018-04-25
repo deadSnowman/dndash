@@ -253,13 +253,9 @@
           <!-- Results -->
           <div class="form-row form-group">
             <div class="col">
-              <div class="form-row form-group">
-                <div class="col-fixed" style="width: 60px;">
-                  <button type="submit" class="btn btn-info btn-sm" ng-disabled="diceroller.totalDisabled()">Roll all</button>
-                </div>
-                <div class="col-fixed">
-                  <button type="button" class="btn btn-light btn-sm ng-cloak" ng-hide="diceroller.clearButton" ng-click="diceroller.clear()">Clear</button>
-                </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-info btn-sm" ng-disabled="diceroller.totalDisabled()">Roll all</button>
+                <button type="button" class="btn btn-light btn-sm ng-cloak" ng-hide="diceroller.clearButton" ng-click="diceroller.clear()">Clear</button>
               </div>
             </div>
             <div>
@@ -269,12 +265,14 @@
               </div>
             </div>
           </div>
-          <div class="form-row form-group" ng-if="diceroller.total">
+          <!-- ng-if="diceroller.total" -->
+          <div class="form-row form-group" ng-if="diceroller.showResultsArea">
             <div class="col">
               <label for="resultsHistory">
                 <strong>Results</strong>
               </label>
-              <textarea id="resultsHistory" class="form-control" rows="4" readonly>{{diceroller.results.d4}} + {{diceroller.results.d6}} + {{diceroller.results.d8}} + {{diceroller.results.d10}} + {{diceroller.results.d100}} + {{diceroller.results.d12}} + {{diceroller.results.d20}}</textarea>
+              <!--<textarea id="resultsHistory" class="form-control" rows="4" readonly>{{diceroller.results.d4}} + {{diceroller.results.d6}} + {{diceroller.results.d8}} + {{diceroller.results.d10}} + {{diceroller.results.d100}} + {{diceroller.results.d12}} + {{diceroller.results.d20}}</textarea>-->
+              <textarea id="resultsHistory" class="form-control" rows="4" readonly>{{diceroller.rollResults}}</textarea>
             </div>
           </div>
 

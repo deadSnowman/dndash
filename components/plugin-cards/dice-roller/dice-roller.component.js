@@ -15,6 +15,13 @@
   function DiceRollerCtrl(diceRollerService) {
     var self = this;
     self.clearButton = true;
+
+    // for the results textarea
+    self.showResultsArea = false;
+    self.rollResults = null;
+    //self.rollOverview = null;
+    //self.rollResults = null;
+    
     initAmnt();
     initResults();
     initRadioModifier();
@@ -23,7 +30,7 @@
     // roll die from d# button click
     self.roll = (dienum) => {
       clearResult(dienum);
-      if(self.amnt["d" + dienum] == null || self.amnt["d" + dienum] == 0) self.amnt["d" + dienum] = 1; // if no amnt, roll 1 die
+      if (self.amnt["d" + dienum] == null || self.amnt["d" + dienum] == 0) self.amnt["d" + dienum] = 1; // if no amnt, roll 1 die
       for (let i = 0; i < self.amnt["d" + dienum]; i++) {
         self.results["d" + dienum] = self.results["d" + dienum] + Math.floor(Math.random() * dienum) + 1;
       }
@@ -48,7 +55,9 @@
     self.submit = () => {
       self.rollAll();
       setTotal();
+      compileResultsString();
       self.clearButton = false;
+      self.showResultsArea = true;
     }
 
     // clear everything
@@ -59,12 +68,56 @@
       initResults();
       self.total = null;
       self.clearButton = true;
+      self.rollResults = null;
+      self.showResultsArea = false;
     }
 
-    // Conditions for hiding the roll all button.  Basically checks if there's > 1 somewhere in the amnt input fields
+    // conditions for hiding the roll all button
+    // basically checks if there's > 1 somewhere in the amnt input fields
     self.totalDisabled = () => {
       return !(self.amnt.d4 != null || self.amnt.d6 != null || self.amnt.d8 != null || self.amnt.d10 != null || self.amnt.d100 != null || self.amnt.d12 != null || self.amnt.d20 != null)
-      || (self.amnt.d4 < 1 && self.amnt.d6 < 1 && self.amnt.d8 < 1 && self.amnt.d10 < 1 && self.amnt.d100 < 1 && self.amnt.d12 < 1 && self.amnt.d20 < 1);
+        || (self.amnt.d4 < 1 && self.amnt.d6 < 1 && self.amnt.d8 < 1 && self.amnt.d10 < 1 && self.amnt.d100 < 1 && self.amnt.d12 < 1 && self.amnt.d20 < 1);
+    }
+
+    // res string
+    function compileResultsString() {
+      //{{diceroller.results.d4}} + {{diceroller.results.d6}} + {{diceroller.results.d8}} + {{diceroller.results.d10}} + {{diceroller.results.d100}} + {{diceroller.results.d12}} + {{diceroller.results.d20}}
+      //let set = [4, 6, 8, 10, 100, 12, 20];
+      let rollTypeArr = [];
+      let resArr = [];
+      let resTypeString = null;
+      let resString = null;
+
+      for (let key in self.results) {
+        if (self.results.hasOwnProperty(key)) {
+          if (self.results[key] != null) {
+            //console.log("(" + self.amnt[key] + key + ")");
+            //console.log(key + " -> " + self.results[key]);
+            rollTypeArr.push("(" + self.amnt[key] + key + ")");
+            resArr.push(self.results[key]);
+          }
+        }
+      }
+
+      // results string
+      if (resArr.length >= 1) {
+        resString = resArr[0];
+        resTypeString = rollTypeArr[0];
+      }
+      for (let i = 1; i < resArr.length; i++) {
+        resString += " + " + resArr[i];
+        resTypeString += " + " + rollTypeArr[i];
+      }
+
+      //console.log(resTypeString);
+      //console.log(resString);
+      
+      if(self.rollResults != null) self.rollResults = resTypeString + "\n" + resString + " = " + self.total + "\n-------------\n" + self.rollResults;
+      else self.rollResults = resTypeString + "\n" + resString + " = " + self.total;
+
+      //self.rollOverview = resTypeString;
+      //self.rollResults = resString;
+
     }
 
     // Initializing data bound json compoments tied to dice-roller.html.  Results object is also in here.
