@@ -8,3 +8,57 @@
   display: inline-block;
   text-align:left;
 }
+
+
+/* FOOTER THEMING */
+footer .footer {
+  /*border-top: 1px solid #333;*/
+  background: #212529;
+  text-align: center;
+  color: #666;
+
+  padding-top: 15px;
+  padding-bottom: 15px;
+
+  /* page too short*/
+  /*bottom: 0;
+  position: fixed;
+  width: 100%;*/
+}
+
+footer .footer p {
+  margin:0;
+}
+
+footer .footer a {
+  color: #666;
+  font-weight: bold;
+}
+
+footer .footer a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+
+/* FOOTER POSITIONING */
+html,body {
+  margin:0;
+  padding:0;
+  height:100%;
+}
+.outer-container {
+  position:absolute;
+  height:auto !important;
+  height:100%; /* IE 6 thinks this is min-height */
+  min-height:100%;
+  width:100%;
+}
+.content {
+  padding-bottom: 100px;
+}
+footer {
+  position:absolute;
+  width:100%;
+  bottom:0;
+}
