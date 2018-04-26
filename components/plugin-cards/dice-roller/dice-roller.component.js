@@ -21,7 +21,7 @@
     self.rollResults = null;
     //self.rollOverview = null;
     //self.rollResults = null;
-    
+
     initAmnt();
     initResults();
     initRadioModifier();
@@ -30,9 +30,16 @@
     // roll die from d# button click
     self.roll = (dienum) => {
       clearResult(dienum);
-      if (self.amnt["d" + dienum] == null || self.amnt["d" + dienum] == 0) self.amnt["d" + dienum] = 1; // if no amnt, roll 1 die
+      // if no amnt, roll 1 die
+      if (self.amnt["d" + dienum] == null || self.amnt["d" + dienum] == 0) self.amnt["d" + dienum] = 1;
+      // add result from multiple die roll
       for (let i = 0; i < self.amnt["d" + dienum]; i++) {
         self.results["d" + dienum] = self.results["d" + dienum] + Math.floor(Math.random() * dienum) + 1;
+      }
+      // add modifier
+      if (self.modifier["d" + dienum] > 0) {
+        if (self.radioModifier["d" + dienum] == 'plus') self.results["d" + dienum] += self.modifier["d" + dienum];
+        else self.results["d" + dienum] -= self.modifier["d" + dienum];
       }
       setTotal();
       self.clearButton = false;
@@ -44,7 +51,14 @@
       let set = [4, 6, 8, 10, 100, 12, 20];
       set.forEach(dienum => {
         for (let i = 0; i < self.amnt["d" + dienum]; i++) {
-          self.results["d" + dienum] = self.results["d" + dienum] + Math.floor(Math.random() * dienum) + 1;
+          let rand = Math.floor(Math.random() * dienum) + 1;
+          self.results["d" + dienum] = self.results["d" + dienum] + rand;
+          //console.log(rand);
+        }
+        // add modifier
+        if (self.modifier["d" + dienum] > 0) {
+          if (self.radioModifier["d" + dienum] == 'plus') self.results["d" + dienum] += self.modifier["d" + dienum];
+          else self.results["d" + dienum] -= self.modifier["d" + dienum];
         }
       });
       setTotal();
@@ -93,7 +107,16 @@
           if (self.results[key] != null) {
             //console.log("(" + self.amnt[key] + key + ")");
             //console.log(key + " -> " + self.results[key]);
-            rollTypeArr.push("(" + self.amnt[key] + key + ")");
+
+            // used for what roll input was (type of dice) with modifiers
+            if (self.modifier[key] > 0) {
+              if(self.radioModifier[key] == 'plus') rollTypeArr.push("(" + self.amnt[key] + key + " + " + self.modifier[key] + ")");
+              else rollTypeArr.push("(" + self.amnt[key] + key + " - " + self.modifier[key] + ")");
+            } else {
+              rollTypeArr.push("(" + self.amnt[key] + key + ")");
+            }
+
+            // used for displaying what was actually rolled
             resArr.push(self.results[key]);
           }
         }
@@ -111,8 +134,8 @@
 
       //console.log(resTypeString);
       //console.log(resString);
-      
-      if(self.rollResults != null) self.rollResults = resTypeString + "\n" + resString + " = " + self.total + "\n-------------\n" + self.rollResults;
+
+      if (self.rollResults != null) self.rollResults = resTypeString + "\n" + resString + " = " + self.total + "\n-------------\n" + self.rollResults;
       else self.rollResults = resTypeString + "\n" + resString + " = " + self.total;
 
       //self.rollOverview = resTypeString;
