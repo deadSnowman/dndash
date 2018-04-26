@@ -6,4 +6,4 @@ Contains cards for
 - Currency conversion
 - Die rolling
 
-![Split Loot](/images/dndash.png?raw=true "DnDash")
+![Split Loot](/images/dndash-0.png?raw=true "DnDash")
