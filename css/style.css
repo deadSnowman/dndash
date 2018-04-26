@@ -4,6 +4,11 @@
   padding-bottom: 20px;
 }
 
+.dash-content {
+  padding-top: 13px;
+  padding-bottom: 13px;
+}
+
 /* using a blue-heading in a panel without the blue border */
 .blue-heading { background-color: #337ab7!important }
 .blue-heading > strong, .blue-heading > p, .blue-heading > h1 { color: white; }
