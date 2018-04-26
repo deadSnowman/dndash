@@ -27,3 +27,7 @@ and surround the app in container-fluid when more funtionality is added to the d
     column-count: 2;
   }
 }
+
+.radfix {
+  visibility: hidden;
+}
