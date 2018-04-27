@@ -32,6 +32,7 @@ and surround the app in container-fluid when more funtionality is added to the d
 
 .as-sortable-item {
   border: 100px;
+  touch-action: auto;
 }
 
 .as-sortable-item, .as-sortable-placeholder {
