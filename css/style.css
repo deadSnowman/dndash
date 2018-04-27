@@ -28,6 +28,15 @@ and surround the app in container-fluid when more funtionality is added to the d
   }
 }
 
-/*.radfix {
-  visibility: hidden;
-}*/
+/* sortable */
+
+.as-sortable-item {
+  border: 100px;
+}
+
+.as-sortable-item, .as-sortable-placeholder {
+  min-height: 0;
+  margin: unset;
+  border-radius: 0px;
+}
+

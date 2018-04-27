@@ -73,13 +73,31 @@
 
   <div class="card-columns">
 
-    <div ui-sortable="sortableOptions" ng-model="home.plugins">
+    <!--
+    <ul data-as-sortable data-ng-model="sortableList">
+      <li ng-repeat="item in sortableList" data-as-sortable-item>
+        <div data-as-sortable-item-handle>
+          index: {{$index}} | id: {{item.id}} | title: {{item.title}}
+        </div>
+      </li>
+    </ul>
+    -->
 
+    <div data-as-sortable data-ng-model="home.plugins">
+      <div ng-repeat="plugin in home.plugins" data-as-sortable-item>
+        <!--<div data-as-sortable-item-handle>-->
+            <div ng-include="plugin" ng-cloak></div>
+        <!--</div>-->
+      </div>
+    </div>
+
+    <!--
+    <div ui-sortable="sortableOptions" ng-model="home.plugins">
       <div ng-repeat="plugin in home.plugins" ng-cloak>
-        <!--<div class="handle btn btn-primary"></div>-->
         <div ng-include="plugin" ng-cloak></div>
       </div>
     </div>
+    -->
 
   </div>
 </div>

@@ -5,7 +5,8 @@
   // modues used are injected here
   angular.module('DnDash', [
     'ui.bootstrap',
-    'ui.sortable',
+    //'ui.sortable',
+    'as.sortable',
     'ngRoute',
     'viewHome',
     'viewAbout'
