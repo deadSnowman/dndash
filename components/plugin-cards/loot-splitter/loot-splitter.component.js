@@ -12,6 +12,7 @@
     this.loot = { "copper": null, "silver": null, "electrum": null, "gold": null, "platinum": null }
     this.convert = true;
     this.electrum = true;
+    this.splitRemainder = false;
     this.isDisabled = () => {
       if (this.loot.copper > 0 || this.loot.silver > 0 || this.loot.electrum > 0 || this.loot.gold > 0 || this.loot.platinum > 0) return false;
       else return true;
@@ -26,6 +27,7 @@
       lootSplitterService.splitLoot(this.numparty, this.convert, this.loot, success => {
         this.lootReturn = success;
       });
+      console.log(this.splitRemainder);
     }
 
     this.electrumToggle = enabled => {
