@@ -73,6 +73,10 @@
                 <label for="lootsplitter.convert" class="col-form-label text-fix">Convert currency?</label>
               </div>
               <div>
+                <input type="checkbox" data-ng-model="lootsplitter.splitRemainder" />&ThinSpace;
+                <label for="lootsplitter.splitRemainder" class="col-form-label text-fix">Split to individuals?</label>
+              </div>
+              <div>
                 <input type="checkbox" data-ng-model="lootsplitter.electrum" ng-change="lootsplitter.electrumToggle(lootsplitter.electrum)"/>&ThinSpace;
                 <label for="lootsplitter.electrum" class="col-form-label text-fix">Allow electrum?</label>
               </div>
@@ -98,7 +102,7 @@
                 <div ng-if="lootsplitter.lootReturn.split_evenly.platinum > 0">{{lootsplitter.lootReturn.split_evenly.platinum}} platinum</div>
               </p>
             </div>
-            <div class="col-sm-6" ng-hide="lootsplitter.isRemainder()">
+            <div class="col-sm-6" ng-if="!lootsplitter.splitRemainder" ng-hide="lootsplitter.isRemainder()">
               <strong>Remaining</strong>
               <p>
                 <div ng-if="lootsplitter.lootReturn.remainder.copper > 0">{{lootsplitter.lootReturn.remainder.copper}} copper</div>
@@ -107,6 +111,21 @@
                 <div ng-if="lootsplitter.lootReturn.remainder.gold > 0">{{lootsplitter.lootReturn.remainder.gold}} gold</div>
                 <div ng-if="lootsplitter.lootReturn.remainder.platinum > 0">{{lootsplitter.lootReturn.remainder.platinum}} platinum</div>
               </p>
+            </div>
+            <div class="col-sm-6" ng-if="lootsplitter.splitRemainder" ng-hide="lootsplitter.isRemainder()">
+              <strong>Split Amongst</strong>
+              <div ng-repeat="value in lootsplitter.lootReturn.splitRemainders">
+                <div>
+                  <p>Player {{$index + 1}}</p>
+                  <ul>
+                    <li ng-if="value.copper > 0">{{value.copper}} copper</li>
+                    <li ng-if="value.silver > 0">{{value.silver}} silver</li>
+                    <li ng-if="value.electrum > 0">{{value.electrum}} electrum</li>
+                    <li ng-if="value.gold > 0">{{value.gold}} gold</li>
+                    <li ng-if="value.platinum > 0">{{value.platinum}} platinum</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </div>
