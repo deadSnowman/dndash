@@ -24,7 +24,7 @@
 
     this.split = nparty => {
       this.clearButton = false;
-      lootSplitterService.splitLoot(this.numparty, this.convert, this.loot, success => {
+      lootSplitterService.splitLoot(this.numparty, this.convert, this.loot, this.electrum, success => {
         this.lootReturn = success;
       });
       console.log(this.splitRemainder);

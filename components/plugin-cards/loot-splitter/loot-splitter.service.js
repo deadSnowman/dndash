@@ -56,7 +56,7 @@
       return party;
     }
 
-    function splitLoot(numparty, convert, loot, cb) {
+    function splitLoot(numparty, convert, loot, electrumFlag, cb) {
       var lootReturn = {
         "split_evenly": createEmpty(),
         "remainder": createEmpty(),
@@ -72,8 +72,10 @@
         if(lootReturn.split_evenly.platinum >= 1) copperEven = copperEven % 1000;
         lootReturn.split_evenly.gold = Math.floor(copperEven / 100);
         if(lootReturn.split_evenly.gold >= 1) copperEven = copperEven % 100;
-        lootReturn.split_evenly.electrum = Math.floor(copperEven / 50);
-        if(lootReturn.split_evenly.electrum >= 1) copperEven = copperEven % 50;
+        if(electrumFlag) {
+          lootReturn.split_evenly.electrum = Math.floor(copperEven / 50);
+          if(lootReturn.split_evenly.electrum >= 1) copperEven = copperEven % 50;
+        }
         lootReturn.split_evenly.silver = Math.floor(copperEven / 10);
         if(lootReturn.split_evenly.silver >= 1) copperEven = copperEven % 10;
         lootReturn.split_evenly.copper = Math.floor(copperEven);
@@ -85,8 +87,10 @@
         lootReturn.remainder.platinum = loot.platinum % numparty;
         lootReturn.split_evenly.gold = Math.floor(loot.gold / numparty);
         lootReturn.remainder.gold = loot.gold % numparty;
-        lootReturn.split_evenly.electrum = Math.floor(loot.electrum / numparty);
-        lootReturn.remainder.electrum = loot.electrum % numparty;
+        if(electrumFlag) {
+          lootReturn.split_evenly.electrum = Math.floor(loot.electrum / numparty);
+          lootReturn.remainder.electrum = loot.electrum % numparty;
+        }
         lootReturn.split_evenly.silver = Math.floor(loot.silver / numparty);
         lootReturn.remainder.silver = loot.silver % numparty;
         lootReturn.split_evenly.copper = Math.floor(loot.copper / numparty);
