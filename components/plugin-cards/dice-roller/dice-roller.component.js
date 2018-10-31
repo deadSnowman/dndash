@@ -48,19 +48,23 @@
     // button click for rolling all die that have a specified amount.  Amnt 0 or null wipes result for related die on rollAll
     self.rollAll = () => {
       initResults();
-      let set = [4, 6, 8, 10, 100, 12, 20];
-      set.forEach(dienum => {
-        for (let i = 0; i < self.amnt["d" + dienum]; i++) {
-          let rand = Math.floor(Math.random() * dienum) + 1;
-          self.results["d" + dienum] = self.results["d" + dienum] + rand;
-          //console.log(rand);
+      const set = [4, 6, 8, 10, 100, 12, 20];
+
+      self.dieRolls = {};
+      for (const dienum of set) {
+        const key = "d" + dienum;
+        const amount = self.amnt[key] || 0;
+        self.dieRolls[key] = Array.from(Array(amount), () => Math.floor(Math.random() * dienum) + 1);
+        self.results[key] = self.dieRolls[key].length > 0
+          ? self.dieRolls[key].reduce((a, b) => a + b)
+          : null;
+
+        if (self.modifier[key] > 0) {
+          if (self.radioModifier[key] == 'plus') self.results[key] += self.modifier[key];
+          else self.results[key] -= self.modifier[key];
         }
-        // add modifier
-        if (self.modifier["d" + dienum] > 0) {
-          if (self.radioModifier["d" + dienum] == 'plus') self.results["d" + dienum] += self.modifier["d" + dienum];
-          else self.results["d" + dienum] -= self.modifier["d" + dienum];
-        }
-      });
+      }
+
       setTotal();
       self.clearButton = false;
     }
@@ -93,6 +97,29 @@
         || (self.amnt.d4 < 1 && self.amnt.d6 < 1 && self.amnt.d8 < 1 && self.amnt.d10 < 1 && self.amnt.d100 < 1 && self.amnt.d12 < 1 && self.amnt.d20 < 1);
     }
 
+    /**
+     * Returns a text with the modifier key followed by a space and then the modifier value
+     */
+    function getModifierText(key) {
+      const modKey = self.radioModifier[key] == 'plus' ? '+' : '-';
+      return `${modKey} ${self.modifier[key]}`;
+    }
+
+    /**
+     * Takes an object with { key, rolls }.
+     *
+     * Returns ((roll + roll) + modifier) or (roll + roll + roll) depending the result of the given key
+     */
+    function getKeyText({ key, rolls }) {
+      const rollText = `(${rolls.join(' + ')})`;
+      const modKey = self.radioModifier[key] == 'plus' ? '+' : '-';
+      if (!self.modifier[key]) {
+        return rollText;
+      }
+
+      return `(${rollText} ${getModifierText(key)})`;
+    }
+
     // res string
     function compileResultsString() {
       //{{diceroller.results.d4}} + {{diceroller.results.d6}} + {{diceroller.results.d8}} + {{diceroller.results.d10}} + {{diceroller.results.d100}} + {{diceroller.results.d12}} + {{diceroller.results.d20}}
@@ -110,27 +137,21 @@
 
             // used for what roll input was (type of dice) with modifiers
             if (self.modifier[key] > 0) {
-              if(self.radioModifier[key] == 'plus') rollTypeArr.push("(" + self.amnt[key] + key + " + " + self.modifier[key] + ")");
-              else rollTypeArr.push("(" + self.amnt[key] + key + " - " + self.modifier[key] + ")");
+              const modKey = self.radioModifier[key] == 'plus' ? '+' : '-';
+              rollTypeArr.push(`(${self.amnt[key]}${key} ${getModifierText(key)})`);
             } else {
-              rollTypeArr.push("(" + self.amnt[key] + key + ")");
+              rollTypeArr.push(`(${self.amnt[key]}${key})`);
             }
-
             // used for displaying what was actually rolled
-            resArr.push(self.results[key]);
+            resArr.push({ key, rolls: self.dieRolls[key] });
           }
         }
       }
 
-      // results string
-      if (resArr.length >= 1) {
-        resString = resArr[0];
-        resTypeString = rollTypeArr[0];
-      }
-      for (let i = 1; i < resArr.length; i++) {
-        resString += " + " + resArr[i];
-        resTypeString += " + " + rollTypeArr[i];
-      }
+    resTypeString = rollTypeArr.join(' + ');
+    resString = resArr
+      .map(getKeyText)
+      .join(' + ');
 
       //console.log(resTypeString);
       //console.log(resString);
@@ -147,7 +168,11 @@
     function initModifier() { self.modifier = { "d4": null, "d6": null, "d8": null, "d10": null, "d100": null, "d12": null, "d20": null } }
     function initRadioModifier() { self.radioModifier = { "d4": 'plus', "d6": 'plus', "d8": 'plus', "d10": 'plus', "d100": 'plus', "d12": 'plus', "d20": 'plus' } }
     function initAmnt() { self.amnt = { "d4": null, "d6": null, "d8": null, "d10": null, "d100": null, "d12": null, "d20": null } }
-    function setTotal() { self.total = self.results.d4 + self.results.d6 + self.results.d8 + self.results.d10 + self.results.d100 + self.results.d12 + self.results.d20; }
+    function setTotal() {
+      self.total = Object.keys(self.results)
+        .map(key => self.results[key])
+        .reduce((a, b) => a + b);
+    }
     function initResults() { self.results = { "d4": null, "d6": null, "d8": null, "d10": null, "d100": null, "d12": null, "d20": null } }
     function clearResult(dienum) { self.results["d" + dienum] = null; }
   }
