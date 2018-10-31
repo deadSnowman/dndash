@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var cachebusting = '4';
+  var cachebusting = '5';
 
   // Register 'viewHome' component, along with its associated controller and template
   angular.
