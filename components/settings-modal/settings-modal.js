@@ -3,17 +3,16 @@ angular.module('homeSettings', ['ui.bootstrap']);
 
 angular
   .module('homeSettings')
-  .controller('SettingsModalController', function ($scope, $modalInstance) {
+  .controller('SettingsModalController', function ($scope, $uibModalInstance) {
   
-    $scope.data = "test"
+    $scope.data = "test";
 
     $scope.ok = function () {
-      // $modalInstance.close($scope.selected.item);
-      $modalInstance.close("potato: " + $scope.data);
+      $uibModalInstance.close("potato: " + $scope.data);
     };
 
     $scope.cancel = function () {
-      $modalInstance.dismiss('cancel');
+      $uibModalInstance.dismiss('cancel');
     };
 
 });

@@ -8,13 +8,13 @@
     module('viewHome').
     component('viewHome', {
       templateUrl: 'components/view-home/view-home.template.html?cb=' + cachebust,
-      controller: ['homeService', '$scope', HomeController],
+      controller: ['homeService', '$scope', '$uibModal', HomeController],
       controllerAs: 'home',
     });
     // '$modal'
 
   // Controller - data binds to view-home template
-  function HomeController(homeService, $scope) {
+  function HomeController(homeService, $scope, $uibModal) {
     // $modal
     const base = 'components/plugin-cards/';
 
@@ -30,23 +30,23 @@
     }
 
     this.open = function() {
-    //   $modal.open({
-    //     // templateUrl: '/components/settings-modal/settings-modal.template.html',
-    //     animation: true,
-    //     templateUrl: 'settings-modal.template.html',
-    //     controller: 'SettingsModalController',
-    //     controllerAs: 'smc',
-    //     resolve: {
-    //       modalData: function() {
-    //         return $scope.data;
-    //       }
-    //     }
-    //   }).result.then(function(result) {
-    //     console.info("I was closed, so do what I need to do myContent's  controller now.  Result was->");
-    //     console.info(result);
-    //   }, function(reason) {
-    //     console.info("I was dimissed, so do what I need to do myContent's controller now.  Reason was->" + reason);
-    //   });
+      $uibModal.open({
+        // templateUrl: '/components/settings-modal/settings-modal.template.html',
+        animation: true,
+        templateUrl: 'settings-modal.template.html',
+        controller: 'SettingsModalController',
+        controllerAs: 'smc',
+        resolve: {
+          modalData: function() {
+            return $scope.data;
+          }
+        }
+      }).result.then(function(result) {
+        console.info("I was closed, so do what I need to do myContent's  controller now.  Result was->");
+        console.info(result);
+      }, function(reason) {
+        console.info("I was dimissed, so do what I need to do myContent's controller now.  Reason was->" + reason);
+      });
     };
   }
 })();
