@@ -31,9 +31,9 @@
 
     this.open = function() {
       $uibModal.open({
-        // templateUrl: '/components/settings-modal/settings-modal.template.html',
         animation: true,
-        templateUrl: 'settings-modal.template.html',
+        // templateUrl: 'settings-modal.template.html',
+        templateUrl: 'components/settings-modal/settings-modal.template.html',
         controller: 'SettingsModalController',
         controllerAs: 'smc',
         resolve: {
