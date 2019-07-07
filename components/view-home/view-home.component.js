@@ -11,34 +11,41 @@
       controller: ['homeService', '$scope', '$uibModal', HomeController],
       controllerAs: 'home',
     });
-    // '$modal'
 
   // Controller - data binds to view-home template
   function HomeController(homeService, $scope, $uibModal) {
-    // $modal
+    var home = this;
     const base = 'components/plugin-cards/';
+    
+    // Properties
 
-    this.plugins = [
-      base + 'currency-converter/currency-converter.html?cb=' + cachebust,
-      base + 'loot-splitter/loot-splitter.html?cb=' + cachebust,
-      base + 'dice-roller/dice-roller.html?cb=' + cachebust
-    ]
+    home.plugins = [
+      { name: "Currency Converter",
+        uri: base + 'currency-converter/currency-converter.html?cb=' + cachebust,
+        enabled: true
+      },
+      { name: "Loot Splitter",
+        uri: base + 'loot-splitter/loot-splitter.html?cb=' + cachebust,
+        enabled: true
+      },
+      {
+        name: "Die Roller",
+        uri: base + 'dice-roller/dice-roller.html?cb=' + cachebust,
+        enabled: true
+      }
+    ];
 
-    $scope.data = {
-      name: 'NameToEdit',
-      value: 'ValueToEdit'
-    }
+    // Handlers / API
 
-    this.open = function() {
+    home.open = function() {
       $uibModal.open({
         animation: true,
-        // templateUrl: 'settings-modal.template.html',
         templateUrl: 'components/settings-modal/settings-modal.template.html',
         controller: 'SettingsModalController',
-        controllerAs: 'smc',
+        controllerAs: 'settingsModal',
         resolve: {
-          modalData: function() {
-            return $scope.data;
+          plugins: function() {
+            return home.plugins;
           }
         }
       }).result.then(function(result) {

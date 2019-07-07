@@ -21,17 +21,15 @@
   </div>
 </nav>
 
-
-
 <div class="dash-content container-fluid">
   <div class="card-columns">
-
     <!-- Fix ng-cloak-->
     <div data-as-sortable data-ng-model="home.plugins">
       <div ng-repeat="plugin in home.plugins" data-as-sortable-item>
-        <div ng-include="plugin" ng-cloak></div>
+        <div ng-if="plugin.enabled">
+          <div ng-include="plugin.uri" ng-cloak></div>
+        </div>
       </div>
     </div>
-
   </div>
 </div>
