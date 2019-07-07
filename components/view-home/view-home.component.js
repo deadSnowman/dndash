@@ -51,7 +51,7 @@
         }
       }).result.then(function(result) {
         home.plugins = result;
-      });
+      }, () => { angular.noop });
     };
   }
 })();
