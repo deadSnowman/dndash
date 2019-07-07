@@ -11,7 +11,7 @@
     this.lootReturn = null;
     this.loot = { "copper": null, "silver": null, "electrum": null, "gold": null, "platinum": null }
     this.convert = true;
-    this.electrum = true;
+    this.electrum = false;
     this.splitRemainder = false;
     this.isDisabled = () => {
       if (this.loot.copper > 0 || this.loot.silver > 0 || this.loot.electrum > 0 || this.loot.gold > 0 || this.loot.platinum > 0) return false;
