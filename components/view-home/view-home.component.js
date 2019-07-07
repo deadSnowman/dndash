@@ -1,13 +1,11 @@
 (function () {
   'use strict';
 
-  var cachebusting = '5';
-
   // Register 'viewHome' component, along with its associated controller and template
   angular.
     module('viewHome').
     component('viewHome', {
-      templateUrl: 'components/view-home/view-home.template.html?cb=' + cachebust,
+      templateUrl: 'components/view-home/view-home.template.html',
       controller: ['homeService', '$scope', '$uibModal', HomeController],
       controllerAs: 'home',
     });
@@ -21,16 +19,16 @@
 
     home.plugins = [
       { name: "Currency Converter",
-        uri: base + 'currency-converter/currency-converter.html?cb=' + cachebust,
+        uri: base + 'currency-converter/currency-converter.html',
         enabled: true
       },
       { name: "Loot Splitter",
-        uri: base + 'loot-splitter/loot-splitter.html?cb=' + cachebust,
+        uri: base + 'loot-splitter/loot-splitter.html',
         enabled: true
       },
       {
         name: "Die Roller",
-        uri: base + 'dice-roller/dice-roller.html?cb=' + cachebust,
+        uri: base + 'dice-roller/dice-roller.html',
         enabled: true
       }
     ];
@@ -50,8 +48,9 @@
           }
         }
       }).result.then(function(result) {
+        // TODO: local storage?
         home.plugins = result;
-      }, () => { angular.noop });
+      }, () => angular.noop);
     };
   }
 })();

@@ -5,7 +5,7 @@
   angular.
     module('viewAbout').
     component('viewAbout', {
-      templateUrl: 'components/view-about/view-about.template.html?cb=' + cachebust,
+      templateUrl: 'components/view-about/view-about.template.html',
       controller: [AboutController],
       controllerAs: 'about',
     });
