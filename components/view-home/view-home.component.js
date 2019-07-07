@@ -45,14 +45,12 @@
         controllerAs: 'settingsModal',
         resolve: {
           plugins: function() {
-            return home.plugins;
+            let pluginsCopy = [];
+            return angular.copy(home.plugins, pluginsCopy);
           }
         }
       }).result.then(function(result) {
-        console.info("I was closed, so do what I need to do myContent's  controller now.  Result was->");
-        console.info(result);
-      }, function(reason) {
-        console.info("I was dimissed, so do what I need to do myContent's controller now.  Reason was->" + reason);
+        home.plugins = result;
       });
     };
   }

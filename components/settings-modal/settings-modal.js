@@ -6,7 +6,7 @@ angular
     $scope.plugins = plugins;
 
     $scope.ok = function () {
-      $uibModalInstance.close("potato: " + $scope.plugins);
+      $uibModalInstance.close($scope.plugins);
     };
 
     $scope.cancel = function () {
