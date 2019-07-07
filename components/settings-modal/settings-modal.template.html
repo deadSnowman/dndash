@@ -3,8 +3,10 @@
 </div>
 <div class="modal-body">
 
-    <div ng-repeat="plugin in plugins">
-      <div><input type="checkbox" data-ng-model="plugin.enabled"> {{plugin.name}}</div>
+    <div data-as-sortable data-ng-model="plugins">
+      <div ng-repeat="plugin in plugins" data-as-sortable-item>
+        <div data-as-sortable-item-handle><input type="checkbox" data-ng-model="plugin.enabled"> {{plugin.name}}</div>
+      </div>
     </div>
 
 </div>
