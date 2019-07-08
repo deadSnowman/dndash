@@ -10,13 +10,31 @@
       controllerAs: 'home',
     });
 
-  // Controller - data binds to view-home template
+  /**
+   * This is associated with the viewHome component
+   * and manages plugins (DM tools) that are shown on the home page.
+   */
   function HomeController(homeService, $scope, $uibModal) {
     var home = this;
     const base = 'components/plugin-cards/';
     
     // Properties
 
+    /**
+     * @ngdoc property
+     * @name home.plugins
+     * 
+     * @description
+     * Contains an object array containing plugin names, associated template,
+     * and a boolean "enabled" indicating or not the plugin is showin in the home page 
+     * 
+     * ie.)
+     * [{
+     *   name: "String",
+     *   uri: "String template"
+     *   enabled: true
+     * }] 
+     */
     home.plugins = [
       { name: "Currency Converter",
         uri: base + 'currency-converter/currency-converter.html',
@@ -35,6 +53,13 @@
 
     // Handlers / API
 
+    /**
+     * @ngdoc method
+     * @name home.open
+     * 
+     * @description
+     * Opens a settings modal with the home.plugins content 
+     */
     home.open = function() {
       $uibModal.open({
         animation: true,
