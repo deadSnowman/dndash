@@ -2,6 +2,11 @@
   .scrollable {
     overflow-x: auto;
   }
+
+  .dropdown-menu {
+    top: -406%;
+    left: 155px;
+  }
 </style>
   
 <div ng-controller="StatRollerCtrl as statroller" ng-cloak>
@@ -67,7 +72,7 @@
               <div class="form-group">
                 <div class="btn-group" uib-dropdown>
                     <button type="submit" class="btn btn-info btn-sm" ng-disabled="statroller.isDisabled()" ng-click="statroller.rollStats()" disabled="disabled">Roll Stats</button>
-                    <button id="dropdownMenu" type="button" class="btn btn-info btn-sm dropdown-toggle dropdown-toggle-split" uib-dropdown-toggle>method </button>
+                    <button type="button" class="btn btn-info btn-sm dropdown-toggle dropdown-toggle-split" uib-dropdown-toggle>method </button>
                     <div class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
                       <a href="#" class="dropdown-item">Action</a>
                       <a href="#" class="dropdown-item">Another action</a>
