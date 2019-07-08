@@ -1,0 +1,89 @@
+<style>
+  .scrollable {
+    overflow-x: auto;
+  }
+</style>
+  
+<div ng-controller="StatRollerCtrl as statroller" ng-cloak>
+
+  <div class="card">
+      <div class="card-header text-white bg-info handle" ng-dblclick="statroller.isCollapsed = !statroller.isCollapsed" data-as-sortable-item-handle>
+        <strong>Stat Roller</strong>
+        <a class="float-right" ng-click="statroller.isCollapsed = !statroller.isCollapsed">
+          <div ng-if="!statroller.isCollapsed">
+            <i class="fa fa-chevron-down"></i>
+          </div>
+          <div ng-if="statroller.isCollapsed">
+            <i class="fa fa-chevron-right"></i>
+          </div>
+        </a>
+      </div>
+      <div class="card-body" uib-collapse="statroller.isCollapsed">
+        <div class="card-text">
+  
+
+            <form name="statRollerForm">
+              
+              <div class="form-group row">
+                <div class="col-sm-6">
+                  <select class="form-control form-control-sm custom-select" ng-model="statroller.selectedRace">
+                    <option ng-repeat="race in statroller.races" value="{{race.id}}">{{race.name}}</option>
+                  </select> 
+                </div>
+                <div class="col-sm-6">
+                  <!-- <select class="form-control form-control-sm custom-select"></select> -->
+                </div>
+              </div>
+
+
+              <div class="form-group scrollable">
+                <table class="table">
+                  <thead class="thead-light">
+                    <tr>
+                      <td>STR</td>
+                      <td>DEX</td>
+                      <td>CON</td>
+                      <td>INT</td>
+                      <td>WIS</td>
+                      <td>CHR</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><p>12</p><p>+1</p></td>
+                      <td>23</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+
+              </div>
+
+              <!-- Roll / roll type buttons -->
+              <div class="form-group">
+                <div class="btn-group" uib-dropdown>
+                    <button type="submit" class="btn btn-info btn-sm" ng-disabled="statroller.isDisabled()" ng-click="statroller.rollStats()" disabled="disabled">Roll Stats</button>
+                    <button id="dropdownMenu" type="button" class="btn btn-info btn-sm dropdown-toggle dropdown-toggle-split" uib-dropdown-toggle>method </button>
+                    <div class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                      <a href="#" class="dropdown-item">Action</a>
+                      <a href="#" class="dropdown-item">Another action</a>
+                      <a href="#" class="dropdown-item">Something else here</a>
+                      <div class="dropdown-divider"></div>
+                      <a href="#" class="dropdown-item">Separated link</a>
+                    </div>
+                </div>
+              </div>
+
+
+            </form>
+
+  
+        </div>
+      </div>
+    </div>
+
+</div>
