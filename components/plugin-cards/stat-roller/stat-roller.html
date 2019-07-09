@@ -4,9 +4,26 @@
   }
 
   .dropdown-menu {
-    top: -406%;
+    top: -245%;
     left: 155px;
   }
+
+  .dropdown-menu > a:focus{
+    background-color: #17a2b8;
+  }
+
+  .checkmark {
+    color: #17a2b8;
+  }
+
+  .dropdown-item {
+    padding-left: 7px;
+  }
+
+  .invisible {
+    visibility: hidden;
+  }
+
 </style>
   
 <div ng-controller="StatRollerCtrl as statroller" ng-cloak>
@@ -30,13 +47,17 @@
             <form name="statRollerForm">
               
               <div class="form-group row">
-                <div class="col-sm-6">
-                  <select class="form-control form-control-sm custom-select" ng-model="statroller.selectedRace">
-                    <option ng-repeat="race in statroller.races" value="{{race.id}}">{{race.name}}</option>
-                  </select> 
+                <div class="col">
+                  <select class="form-control form-control-sm custom-select" ng-model="statroller.selectedRace" ng-change="statroller.resetSubrace()">
+                    <option value="-1">-- Race --</option>
+                    <option ng-repeat="race in statroller.races" value="{{$index}}">{{race.name}}</option>
+                  </select>
                 </div>
-                <div class="col-sm-6">
-                  <!-- <select class="form-control form-control-sm custom-select"></select> -->
+                <div class="col" ng-if="statroller.hasSubrace()">
+                  <select class="form-control form-control-sm custom-select" ng-model="statroller.selectedSubrace">
+                      <option value="-1">-- Subrace --</option>
+                    <option ng-repeat="subrace in statroller.getSubrace()" value="{{$index}}">{{subrace.name}}</option>
+                  </select>
                 </div>
               </div>
 
@@ -74,11 +95,11 @@
                     <button type="submit" class="btn btn-info btn-sm" ng-disabled="statroller.isDisabled()" ng-click="statroller.rollStats()" disabled="disabled">Roll Stats</button>
                     <button type="button" class="btn btn-info btn-sm dropdown-toggle dropdown-toggle-split" uib-dropdown-toggle>method </button>
                     <div class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
-                      <a href="#" class="dropdown-item">Action</a>
-                      <a href="#" class="dropdown-item">Another action</a>
-                      <a href="#" class="dropdown-item">Something else here</a>
-                      <div class="dropdown-divider"></div>
-                      <a href="#" class="dropdown-item">Separated link</a>
+                      <a href="#" class="dropdown-item"><i class="checkmark fa fa-check fa-sm" aria-hidden="true"></i> 4d6 Drop Lowest</a>
+                      <a href="#" class="dropdown-item"><i class="checkmark fa fa-check fa-sm invisible" aria-hidden="true"></i> 4d6 Keep All</a>
+                      <a href="#" class="dropdown-item"><i class="checkmark fa fa-check fa-sm invisible" aria-hidden="true"></i> 3d6 Best of 3</a>
+                      <!-- <div class="dropdown-divider"></div>
+                      <a href="#" class="dropdown-item">Custom</a> -->
                     </div>
                 </div>
               </div>
