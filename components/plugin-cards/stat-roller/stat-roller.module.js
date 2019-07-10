@@ -2,7 +2,7 @@
   'use strict';
   
   angular.module('statRoller', [])
-  .constant('races', [
+  .constant('RACES', [
     { name: "Aarakocra", abilityScoreIncrease: { dex: 2, wis: 1 } },
     {
       name: "Aasimar",
