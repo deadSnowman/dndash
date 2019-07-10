@@ -18,7 +18,9 @@
     var home = this;
     const base = 'components/plugin-cards/';
     
-    // Properties
+    /*******************
+     * Properties
+     *******************/
 
     /**
      * @ngdoc property
@@ -56,7 +58,9 @@
       }
     ];
 
-    // Handlers / API
+    /*******************
+     * Handlers / API
+     *******************/
 
     /**
      * @ngdoc method

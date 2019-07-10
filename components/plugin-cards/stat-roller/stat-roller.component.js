@@ -14,7 +14,7 @@
     this.races = RACES;
     this.abilityScore = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
     this.abilityModifier = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
-    this.method = "4d6dl + ( 8d6h * 2)";
+    this.method = "4d6dl + (8d6h * 2)";
 
     this.hasSubrace = () => {
       let race = this.races[this.selectedRace];
