@@ -28,6 +28,12 @@ and surround the app in container-fluid when more funtionality is added to the d
   }
 }
 
+@media (min-width: 1140px) {
+  .card-columns {
+    column-count: 3;
+  }
+}
+
 /* sortable */
 
 .as-sortable-item {
