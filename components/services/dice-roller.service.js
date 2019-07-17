@@ -85,7 +85,10 @@
      */
     service.roll = (rollInput) => {
       let rollResultSet = this._processDieRolls(rollInput);
-      return eval(rollResultSet);
+      // TODO: keep track of dice, math, and droped / kept dice and return in object
+      return {
+        result: eval(rollResultSet)
+      }
     }
 
     return service;

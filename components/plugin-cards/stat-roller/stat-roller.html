@@ -11,7 +11,7 @@
   .dropdown-menu > a:focus{
     background-color: #17a2b8;
   }
-
+  
   .checkmark {
     color: #17a2b8;
   }
@@ -92,7 +92,7 @@
               <!-- Roll / roll type buttons -->
               <div class="form-group">
                 <div class="btn-group" uib-dropdown>
-                    <button type="submit" class="btn btn-info btn-sm" ng-disabled="statroller.isDisabled()" ng-click="statroller.rollStats()" disabled="disabled">Roll Stats</button>
+                    <button type="button" class="btn btn-info btn-sm" ng-disabled="statroller.isDisabled()" ng-click="statroller.rollStats()" disabled="disabled">Roll Stats</button>
                     <button type="button" class="btn btn-info btn-sm dropdown-toggle dropdown-toggle-split" uib-dropdown-toggle>method </button>
                     <div class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
                       <a href="#" class="dropdown-item"><i class="checkmark fa fa-check fa-sm" aria-hidden="true"></i> 4d6 Drop Lowest</a>
