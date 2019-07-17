@@ -1,6 +1,34 @@
 <style>
-  .tab-content {
+  .cheat-sheet-tab-content {
     padding-top: .75rem;
+    height: 300px;
+    overflow-y: auto;
+  }
+
+  .cheat-sheet-tab-content ul li {
+    font-size: .75rem;
+  }
+
+  .cheat-sheet-tab-content h2 {
+    font-size: .95rem;
+  }
+
+  .cheat-sheet-tab-content {
+    border: 1px solid transparent;
+    border-color: #dee2e6 #dee2e6 #dee2e6;
+    border-top: unset;
+    padding: .75rem;
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+  }
+
+  .cheat-sheet-tab-content table {
+    font-size: .75rem;
+  }
+
+  #cheatSheetTab .nav-link {
+    padding: 0;
+    color: unset;
   }
 </style>
 
@@ -20,8 +48,8 @@
     <div class="card-body" uib-collapse="cheatsheet.isCollapsed">
       <div class="card-text">
         <uib-tabset active="active" justified="true">
-          <uib-tab index="$index" ng-repeat="tab in tabs" heading="{{tab.title}}" disable="tab.disabled">
-            <div ng-include="tab.content" ng-cloak></div>
+          <uib-tab id="cheatSheetTab" index="$index" ng-repeat="tab in tabs" heading="{{tab.title}}" disable="tab.disabled">
+            <div class="cheat-sheet-tab-content" ng-include="tab.content" ng-cloak></div>
           </uib-tab>
         </uib-tabset>
       </div>
