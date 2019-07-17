@@ -15,6 +15,7 @@
     this.abilityScore = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
     this.abilityModifier = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
     this.method = "4d6dl";
+    this.statsRolled = false;
     // testing... 4d6dl + (8d6h * 2)"
 
     this.hasSubrace = () => {
@@ -26,6 +27,25 @@
       }
     }
 
+    this.clear = () => {
+      this.selectedRace = "-1";
+      this.selectedSubrace = "-1";
+      this.abilityScore = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
+    }
+
+    this.isClearButtonHidden = () => {
+      return !this.statsRolled && this.selectedRace === "-1" && this.selectedSubrace === "-1";
+    }
+
+    this.isDisabled = () => {
+      if(this.selectedRace !== "-1") {
+        if (this.hasSubrace() === false || (this.hasSubrace() === true && this.selectedSubrace !== "-1")) {
+          return false;
+        }
+      }
+      return true;
+    }
+
     this.getSubrace = () => {
       return this.races[this.selectedRace].subraces;
     }
@@ -35,12 +55,11 @@
     }
 
     this.rollStats = () => {
-      if(this.selectedRace !== "-1") {
-        if (this.hasSubrace() === false || (this.hasSubrace() === true && this.selectedSubrace !== "-1")) {
-          for(let ability in this.abilityScore) {
-            this.abilityScore[ability] = diceRollerService.roll(this.method).result;
-          }
+      if(!this.isDisabled()) {
+        for(let ability in this.abilityScore) {
+          this.abilityScore[ability] = diceRollerService.roll(this.method).result;
         }
+        this.statsRolled = true;
       }
     }
   }
