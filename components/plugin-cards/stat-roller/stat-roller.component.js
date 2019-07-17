@@ -35,9 +35,9 @@
     }
 
     this.rollStats = () => {
-      if(this.selectedRace !== "-1"){
+      if(this.selectedRace !== "-1") {
         if (this.hasSubrace() === false || (this.hasSubrace() === true && this.selectedSubrace !== "-1")) {
-          for(var ability in this.abilityScore) {
+          for(let ability in this.abilityScore) {
             this.abilityScore[ability] = diceRollerService.roll(this.method).result;
           }
         }
