@@ -48,19 +48,18 @@
               
               <div class="form-group row">
                 <div class="col">
-                  <select class="form-control form-control-sm custom-select" ng-model="statroller.selectedRace" ng-change="statroller.resetSubrace()">
+                  <select class="form-control form-control-sm custom-select" ng-model="statroller.selectedRace" ng-change="statroller.raceSelectionChanged()">
                     <option value="-1">-- Race --</option>
                     <option ng-repeat="race in statroller.races" value="{{$index}}">{{race.name}}</option>
                   </select>
                 </div>
-                <div class="col" ng-if="statroller.hasSubrace()">
-                  <select class="form-control form-control-sm custom-select" ng-model="statroller.selectedSubrace">
+                <div class="col" ng-if="statroller._hasSubrace">
+                  <select class="form-control form-control-sm custom-select" ng-model="statroller.selectedSubrace" ng-change="statroller.subraceSelectionChange()">
                       <option value="-1">-- Subrace --</option>
-                    <option ng-repeat="subrace in statroller.getSubrace()" value="{{$index}}">{{subrace.name}}</option>
+                    <option ng-repeat="subrace in statroller.getSubraces()" value="{{$index}}">{{subrace.name}}</option>
                   </select>
                 </div>
               </div>
-
 
               <div class="form-group scrollable">
                 <table class="table">
@@ -82,6 +81,14 @@
                       <td>{{statroller.abilityScore.int}}</td>
                       <td>{{statroller.abilityScore.wis}}</td>
                       <td>{{statroller.abilityScore.chr}}</td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
                     </tr>
                   </tbody>
                 </table>

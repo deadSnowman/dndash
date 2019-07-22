@@ -44,12 +44,7 @@
       },
       { name: "Loot Splitter",
         uri: base + 'loot-splitter/loot-splitter.html',
-        enabled: false
-      },
-      {
-        name: "Die Roller",
-        uri: base + 'dice-roller/dice-roller.html',
-        enabled: false
+        enabled: true
       },
       {
         name: "Stat Roller",
@@ -59,6 +54,11 @@
       {
         name: "Cheat Sheet",
         uri: base + 'cheat-sheet/cheat-sheet.html',
+        enabled: true
+      },
+      {
+        name: "Die Roller",
+        uri: base + 'dice-roller/dice-roller.html',
         enabled: true
       }
     ];

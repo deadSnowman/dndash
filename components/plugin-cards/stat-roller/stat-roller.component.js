@@ -13,6 +13,7 @@
     this.selectedSubrace = "-1";
     this.races = RACES;
     this.abilityScore = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
+    this.abilityScoreIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
     this.abilityModifier = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
     this.rollMethods = {
       "4d6 Drop Lowest": "4d6dl",
@@ -21,17 +22,15 @@
     }
     this.rollMethod = "4d6 Drop Lowest";
     this.statsRolled = false;
+    this._hasSubrace = false;
 
     this.hasSubrace = () => {
       let race = this.races[this.selectedRace];
-      if (race && race.subraces) {
-        return race.subraces.length > 0;
-      } else {
-        return false;
-      }
+      return (race && race.subraces) ? race.subraces.length > 0 : false;
     }
 
     this.clear = () => {
+      this._hasSubrace = false;
       this.selectedRace = "-1";
       this.selectedSubrace = "-1";
       this.abilityScore = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
@@ -44,15 +43,27 @@
 
     this.isDisabled = () => {
       if(this.selectedRace !== "-1") {
-        if (this.hasSubrace() === false || (this.hasSubrace() === true && this.selectedSubrace !== "-1")) {
+        if (this._hasSubrace === false || (this._hasSubrace === true && this.selectedSubrace !== "-1")) {
           return false;
         }
       }
       return true;
     }
 
-    this.getSubrace = () => {
+    this.getSubraces = () => {
       return this.races[this.selectedRace].subraces;
+    }
+
+    this.raceSelectionChanged = () => {
+      this.resetSubrace();
+      this._hasSubrace = this.hasSubrace();
+      if(!this._hasSubrace) {
+        console.log(this.races[this.selectedRace].abilityScoreIncrease);
+      }
+    }
+
+    this.subraceSelectionChange = () => {
+      console.log(this.getSubraces()[this.selectedSubrace].abilityScoreIncrease);
     }
 
     this.resetSubrace = () => {
