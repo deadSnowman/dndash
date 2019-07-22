@@ -15,8 +15,8 @@
   function DropdownCheckboxSelectCtrl() {
     var DCSelect = this;
 
-    DCSelect.selectOption = (e) => {
-      DCSelect.selected = e;
+    DCSelect.selectOption = (selectedOption) => {
+      DCSelect.selected = selectedOption;
     }
   }
 })();

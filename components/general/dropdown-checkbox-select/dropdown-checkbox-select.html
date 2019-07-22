@@ -1,3 +1,3 @@
 <div class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
-  <a href="#" class="dropdown-item" aria-hidden="true" ng-repeat="(option, value) in DCSelect.options" ng-click="DCSelect.selectOption(option)"><i class="checkmark fa fa-check fa-sm" ng-class="(DCSelect.selected == option) ? '' : 'invisible'" aria-hidden="true"></i> {{option}}</a>
+  <a class="dropdown-item" aria-hidden="true" ng-repeat="(option, value) in DCSelect.options" ng-click="DCSelect.selectOption(option)"><i class="checkmark fa fa-check fa-sm" ng-class="(DCSelect.selected == option) ? '' : 'invisible'" aria-hidden="true"></i> {{option}}</a>
 </div>
