@@ -1,0 +1,133 @@
+<style>
+  .scrollable {
+    overflow-x: auto;
+  }
+
+  .dropdown-menu {
+    top: -245%;
+    left: 155px;
+  }
+
+  .dropdown-item {
+    padding-left: 7px;
+  }
+
+  .invisible {
+    visibility: hidden;
+  }
+
+  .abilities td {
+    background-color: #f5f5f5;
+    text-align: center;
+  }
+
+  .statroller-table {
+    border-collapse: separate;
+  }
+
+  .ability-modifier {
+    font-weight: 700;
+    font-size: 1.3rem;
+  }
+
+  .ability-score {
+    border-top: 1px solid #17a2b8 !important;
+  }
+</style>
+  
+<div ng-controller="StatRollerCtrl as statroller" ng-cloak>
+
+  <div class="card">
+      <div class="card-header text-white bg-info handle" ng-dblclick="statroller.isCollapsed = !statroller.isCollapsed" data-as-sortable-item-handle>
+        <strong>Stat Roller</strong>
+        <a class="float-right" ng-click="statroller.isCollapsed = !statroller.isCollapsed">
+          <div ng-if="!statroller.isCollapsed">
+            <i class="fa fa-chevron-down"></i>
+          </div>
+          <div ng-if="statroller.isCollapsed">
+            <i class="fa fa-chevron-right"></i>
+          </div>
+        </a>
+      </div>
+      <div class="card-body" uib-collapse="statroller.isCollapsed">
+        <div class="card-text">
+  
+            <form name="statRollerForm">
+              
+              <div class="form-group row">
+                <div class="col">
+                  <select class="form-control form-control-sm custom-select" ng-model="statroller.selectedRace" ng-change="statroller.raceSelectionChanged()">
+                    <option value="-1">-- Race --</option>
+                    <option ng-repeat="race in statroller.races" value="{{$index}}">{{race.name}}</option>
+                  </select>
+                </div>
+                <div class="col" ng-if="statroller._hasSubrace">
+                  <select class="form-control form-control-sm custom-select" ng-model="statroller.selectedSubrace" ng-change="statroller.subraceSelectionChange()">
+                      <option value="-1">-- Subrace --</option>
+                    <option ng-repeat="subrace in statroller.getSubraces()" value="{{$index}}">{{subrace.name}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group scrollable">
+                <table class="table statroller-table">
+                  <thead class="thead-light">
+                    <tr>
+                      <td>STR</td>
+                      <td>DEX</td>
+                      <td>CON</td>
+                      <td>INT</td>
+                      <td>WIS</td>
+                      <td>CHR</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{statroller.abilityScoreRolls.str}}</td>
+                      <td>{{statroller.abilityScoreRolls.dex}}</td>
+                      <td>{{statroller.abilityScoreRolls.con}}</td>
+                      <td>{{statroller.abilityScoreRolls.int}}</td>
+                      <td>{{statroller.abilityScoreRolls.wis}}</td>
+                      <td>{{statroller.abilityScoreRolls.chr}}</td>
+                    </tr>
+                    <tr>
+                      <td>{{statroller.abilityScoreIncrease.str}}</td>
+                      <td>{{statroller.abilityScoreIncrease.dex}}</td>
+                      <td>{{statroller.abilityScoreIncrease.con}}</td>
+                      <td>{{statroller.abilityScoreIncrease.int}}</td>
+                      <td>{{statroller.abilityScoreIncrease.wis}}</td>
+                      <td>{{statroller.abilityScoreIncrease.chr}}</td>
+                    </tr>
+                    <tr class="abilities">
+                      <td class="border border-info"><div class="ability-modifier">{{(statroller.abilityModifiers.str > 0) ? '+' + statroller.abilityModifiers.str : statroller.abilityModifiers.str}}</div><div class="ability-score">{{statroller.abilityScores.str}}</div></td>
+                      <td class="border border-info"><div class="ability-modifier">{{(statroller.abilityModifiers.dex > 0) ? '+' + statroller.abilityModifiers.dex : statroller.abilityModifiers.dex}}</div><div class="ability-score">{{statroller.abilityScores.dex}}</div></td>
+                      <td class="border border-info"><div class="ability-modifier">{{(statroller.abilityModifiers.con > 0) ? '+' + statroller.abilityModifiers.con : statroller.abilityModifiers.con}}</div><div class="ability-score">{{statroller.abilityScores.con}}</div></td>
+                      <td class="border border-info"><div class="ability-modifier">{{(statroller.abilityModifiers.int > 0) ? '+' + statroller.abilityModifiers.int : statroller.abilityModifiers.int}}</div><div class="ability-score">{{statroller.abilityScores.int}}</div></td>
+                      <td class="border border-info"><div class="ability-modifier">{{(statroller.abilityModifiers.wis > 0) ? '+' + statroller.abilityModifiers.wis : statroller.abilityModifiers.wis}}</div><div class="ability-score">{{statroller.abilityScores.wis}}</div></td>
+                      <td class="border border-info"><div class="ability-modifier">{{(statroller.abilityModifiers.chr > 0) ? '+' + statroller.abilityModifiers.chr : statroller.abilityModifiers.chr}}</div><div class="ability-score">{{statroller.abilityScores.chr}}</div></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+
+              </div>
+
+              <!-- Roll / roll type buttons -->
+              <div class="form-group">
+                <div class="btn-group" uib-dropdown>
+                    <button type="button" class="btn btn-info btn-sm" ng-disabled="statroller.isDisabled()" ng-click="statroller.rollStats()" disabled="disabled">Roll Stats</button>
+                    <button type="button" class="btn btn-info btn-sm dropdown-toggle dropdown-toggle-split" uib-dropdown-toggle>method </button>
+                    <dropdown-checkbox-select options="statroller.rollMethods" selected="statroller.rollMethod"></dropdown-checkbox-select>
+                </div>
+                <button type="button" class="btn btn-light btn-sm" ng-hide="statroller.isClearButtonHidden()" ng-click="statroller.clear();">Clear</button>
+              </div>
+
+
+            </form>
+
+  
+        </div>
+      </div>
+    </div>
+
+</div>

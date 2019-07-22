@@ -18,7 +18,9 @@
     var home = this;
     const base = 'components/plugin-cards/';
     
-    // Properties
+    /*******************
+     * Properties
+     *******************/
 
     /**
      * @ngdoc property
@@ -45,13 +47,25 @@
         enabled: true
       },
       {
+        name: "Stat Roller",
+        uri: base + 'stat-roller/stat-roller.html',
+        enabled: true
+      },
+      {
+        name: "Cheat Sheet",
+        uri: base + 'cheat-sheet/cheat-sheet.html',
+        enabled: true
+      },
+      {
         name: "Die Roller",
         uri: base + 'dice-roller/dice-roller.html',
         enabled: true
       }
     ];
 
-    // Handlers / API
+    /*******************
+     * Handlers / API
+     *******************/
 
     /**
      * @ngdoc method

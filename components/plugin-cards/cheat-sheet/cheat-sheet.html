@@ -1,0 +1,66 @@
+<style>
+  .cheat-sheet-tab-content {
+    padding-top: .75rem;
+    height: 300px;
+    overflow-y: auto;
+  }
+
+  .cheat-sheet-tab-content ul li {
+    font-size: .75rem;
+  }
+
+  .cheat-sheet-tab-content p {
+    font-size: .75rem;
+  }
+
+  .cheat-sheet-tab-content h2 {
+    font-size: .95rem;
+  }
+
+  .cheat-sheet-tab-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .cheat-sheet-tab-content {
+    border: 1px solid transparent;
+    border-color: #dee2e6 #dee2e6 #dee2e6;
+    border-top: unset;
+    padding: .75rem;
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+  }
+
+  .cheat-sheet-tab-content table {
+    font-size: .75rem;
+  }
+
+  #cheatSheetTab .nav-link {
+    padding: 0;
+    color: unset;
+  }
+</style>
+
+<div ng-controller="CheatSheetCtrl as cheatsheet" ng-cloak>
+  <div class="card">
+    <div class="card-header text-white bg-info handle" ng-dblclick="cheatsheet.isCollapsed = !cheatsheet.isCollapsed" data-as-sortable-item-handle>
+      <strong>Cheat Sheet</strong>
+      <a class="float-right" ng-click="cheatsheet.isCollapsed = !cheatsheet.isCollapsed">
+        <div ng-if="!cheatsheet.isCollapsed">
+          <i class="fa fa-chevron-down"></i>
+        </div>
+        <div ng-if="cheatsheet.isCollapsed">
+          <i class="fa fa-chevron-right"></i>
+        </div>
+      </a>
+    </div>
+    <div class="card-body" uib-collapse="cheatsheet.isCollapsed">
+      <div class="card-text">
+        <uib-tabset active="active" justified="true">
+          <uib-tab id="cheatSheetTab" index="$index" ng-repeat="tab in tabs" heading="{{tab.title}}" disable="tab.disabled">
+            <div class="cheat-sheet-tab-content" ng-include="tab.content" ng-cloak></div>
+          </uib-tab>
+        </uib-tabset>
+      </div>
+    </div>
+  </div>
+</div>

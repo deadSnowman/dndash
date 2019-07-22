@@ -28,7 +28,18 @@ and surround the app in container-fluid when more funtionality is added to the d
   }
 }
 
+@media (min-width: 1140px) {
+  .card-columns {
+    column-count: 3;
+  }
+}
+
 /* sortable */
+
+/* move cursor for cards only */
+.card-header {
+  cursor: move;
+}
 
 .as-sortable-item {
   border: 100px;
