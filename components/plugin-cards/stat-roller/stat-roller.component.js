@@ -14,6 +14,7 @@
     this.races = RACES;
     this.abilityScoreRolls = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };        // raw rolls
     this.abilityScoreIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };     // increase from race
+    this.pickIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
     this.abilityScores = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };            // total of these two
     this.abilityModifiers = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };         // the modifier created from the ability score (increase for every 2)
     this.rollMethods = {
@@ -24,10 +25,17 @@
     this.rollMethod = "4d6 Drop Lowest";
     this.statsRolled = false;
     this._hasSubrace = false;
+    this.picks = 0;
+    this.picked = 0;
 
     this.hasSubrace = () => {
       let race = this.races[this.selectedRace];
       return (race && race.subraces) ? race.subraces.length > 0 : false;
+    }
+
+    this.setPicks = () => {
+      let race = this.races[this.selectedRace];
+      this.picks = (race.picks) ? race.picks : 0;
     }
 
     this.clear = () => {
@@ -36,9 +44,12 @@
       this.selectedSubrace = "-1";
       this.abilityScoreRolls = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
       this.abilityScoreIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
+      this.pickIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
       this.abilityScores = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
       this.abilityModifiers = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
       this.statsRolled = false;
+      this.picks = 0;
+      this.picked = 0;
     }
 
     this.isClearButtonHidden = () => {
@@ -61,7 +72,16 @@
     this.raceSelectionChanged = () => {
       this.resetSubrace();
       this.abilityScoreIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
+      this.pickIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
+      this.picks = 0;
+      this.picked = 0;
       this._hasSubrace = this.hasSubrace();
+      this.setPicks();
+
+      if(this.pickMore) {
+        this.picks = this.races[this.selectedRace].picks;
+      }
+
       if(!this._hasSubrace && this.selectedRace !== "-1") {
         this.setAbilityScoreIncrease(this.races[this.selectedRace].abilityScoreIncrease);
         if(this.statsRolled) {
@@ -73,6 +93,9 @@
 
     this.subraceSelectionChange = () => {
       this.abilityScoreIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
+      this.pickIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
+      this.picks = 0;
+      this.picked = 0;
       if(this.selectedSubrace !== "-1") {
         this.setAbilityScoreIncrease(this.getSubraces()[this.selectedSubrace].abilityScoreIncrease);
         if(this.statsRolled) {
@@ -84,6 +107,18 @@
 
     this.resetSubrace = () => {
       this.selectedSubrace = "-1";
+    }
+
+    this.pickAbilityIncrease = (pickedAbility) => {
+      if(this.pickIncrease[pickedAbility] === 0) {
+        if(this.picked < this.picks) {
+          this.pickIncrease[pickedAbility] = 1;
+          this.picked = this.picked + 1;
+        }
+      } else {
+        this.pickIncrease[pickedAbility] = 0;
+        if(this.picked > 0) this.picked = this.picked - 1;
+      }
     }
 
     this.setAbilityScoreIncrease = (scoresToSet) => {

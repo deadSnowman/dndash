@@ -18,6 +18,10 @@
 
   .abilities td {
     background-color: #f5f5f5;
+    /* text-align: center; */
+  }
+
+  .statroller-table {
     text-align: center;
   }
 
@@ -33,6 +37,12 @@
   .ability-score {
     border-top: 1px solid #17a2b8 !important;
   }
+
+  .pick-more {
+    /* font-size: .75rem; */
+    font-size: .6rem;
+  }
+
 </style>
   
 <div ng-controller="StatRollerCtrl as statroller" ng-cloak>
@@ -91,12 +101,12 @@
                       <td>{{statroller.abilityScoreRolls.chr}}</td>
                     </tr>
                     <tr>
-                      <td>{{statroller.abilityScoreIncrease.str}}</td>
-                      <td>{{statroller.abilityScoreIncrease.dex}}</td>
-                      <td>{{statroller.abilityScoreIncrease.con}}</td>
-                      <td>{{statroller.abilityScoreIncrease.int}}</td>
-                      <td>{{statroller.abilityScoreIncrease.wis}}</td>
-                      <td>{{statroller.abilityScoreIncrease.chr}}</td>
+                      <td><div>{{statroller.abilityScoreIncrease.str + statroller.pickIncrease.str}}</div><button ng-if="statroller.picks > 0 && statroller.abilityScoreIncrease.str === 0" class="pick-more btn btn-light btn-sm" ng-class="(statroller.pickIncrease.str > 0) ? 'btn-info' : 'btn-light'" ng-click="statroller.pickAbilityIncrease('str')"><i class="fa fa-plus"></i></button></td>
+                      <td><div>{{statroller.abilityScoreIncrease.dex + statroller.pickIncrease.dex}}</div><button ng-if="statroller.picks > 0 && statroller.abilityScoreIncrease.dex === 0" class="pick-more btn btn-light btn-sm" ng-class="(statroller.pickIncrease.dex > 0) ? 'btn-info' : 'btn-light'" ng-click="statroller.pickAbilityIncrease('dex')"><i class="fa fa-plus"></i></button></td>
+                      <td><div>{{statroller.abilityScoreIncrease.con + statroller.pickIncrease.con}}</div><button ng-if="statroller.picks > 0 && statroller.abilityScoreIncrease.con === 0" class="pick-more btn btn-light btn-sm" ng-class="(statroller.pickIncrease.con > 0) ? 'btn-info' : 'btn-light'" ng-click="statroller.pickAbilityIncrease('con')"><i class="fa fa-plus"></i></button></td>
+                      <td><div>{{statroller.abilityScoreIncrease.int + statroller.pickIncrease.int}}</div><button ng-if="statroller.picks > 0 && statroller.abilityScoreIncrease.int === 0" class="pick-more btn btn-light btn-sm" ng-class="(statroller.pickIncrease.int > 0) ? 'btn-info' : 'btn-light'" ng-click="statroller.pickAbilityIncrease('int')"><i class="fa fa-plus"></i></button></td>
+                      <td><div>{{statroller.abilityScoreIncrease.wis + statroller.pickIncrease.wis}}</div><button ng-if="statroller.picks > 0 && statroller.abilityScoreIncrease.wis === 0" class="pick-more btn btn-light btn-sm" ng-class="(statroller.pickIncrease.wis > 0) ? 'btn-info' : 'btn-light'" ng-click="statroller.pickAbilityIncrease('wis')"><i class="fa fa-plus"></i></button></td>
+                      <td><div>{{statroller.abilityScoreIncrease.chr + statroller.pickIncrease.chr}}</div><button ng-if="statroller.picks > 0 && statroller.abilityScoreIncrease.chr === 0" class="pick-more btn btn-light btn-sm" ng-class="(statroller.pickIncrease.chr > 0) ? 'btn-info' : 'btn-light'" ng-click="statroller.pickAbilityIncrease('chr')"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr class="abilities">
                       <td class="border border-info"><div class="ability-modifier">{{(statroller.abilityModifiers.str > 0) ? '+' + statroller.abilityModifiers.str : statroller.abilityModifiers.str}}</div><div class="ability-score">{{statroller.abilityScores.str}}</div></td>
