@@ -43,7 +43,6 @@
 </style>
   
 <div ng-controller="StatRollerCtrl as statroller" ng-cloak>
-
   <div class="card">
       <div class="card-header text-white bg-info handle" ng-dblclick="statroller.isCollapsed = !statroller.isCollapsed" data-as-sortable-item-handle>
         <strong>Stat Roller</strong>
@@ -58,24 +57,21 @@
       </div>
       <div class="card-body" uib-collapse="statroller.isCollapsed">
         <div class="card-text">
-  
             <form name="statRollerForm">
-              
               <div class="form-group row">
                 <div class="col">
-                  <select class="form-control form-control-sm custom-select" ng-model="statroller.selectedRace" ng-change="statroller.raceSelectionChanged()">
+                  <select class="form-control form-control-sm" ng-model="statroller.selectedRace" ng-change="statroller.raceSelectionChanged()">
                     <option value="-1">-- Race --</option>
                     <option ng-repeat="race in statroller.races" value="{{$index}}">{{race.name}}</option>
                   </select>
                 </div>
                 <div class="col" ng-if="statroller._hasSubrace">
-                  <select class="form-control form-control-sm custom-select" ng-model="statroller.selectedSubrace" ng-change="statroller.subraceSelectionChange()">
+                  <select class="form-control form-control-sm" ng-model="statroller.selectedSubrace" ng-change="statroller.subraceSelectionChange()">
                       <option value="-1">-- Subrace --</option>
                     <option ng-repeat="subrace in statroller.getSubraces()" value="{{$index}}">{{subrace.name}}</option>
                   </select>
                 </div>
-              </div>
-
+              </div> <!-- end form-group -->
               <div class="form-group scrollable">
                 <table class="table statroller-table">
                   <thead class="thead-light">
@@ -115,11 +111,7 @@
                     </tr>
                   </tbody>
                 </table>
-
-
-              </div>
-
-              <!-- Roll / roll type buttons -->
+              </div> <!-- end form-group -->
               <div class="form-group">
                 <div class="btn-group" uib-dropdown>
                     <button type="button" class="btn btn-info btn-sm" ng-disabled="statroller.isDisabled()" ng-click="statroller.rollStats()" disabled="disabled">Roll Stats</button>
@@ -127,14 +119,9 @@
                     <dropdown-checkbox-select options="statroller.rollMethods" selected="statroller.rollMethod"></dropdown-checkbox-select>
                 </div>
                 <button type="button" class="btn btn-light btn-sm" ng-hide="statroller.isClearButtonHidden()" ng-click="statroller.clear();">Clear</button>
-              </div>
-
-
+              </div> <!-- end form-group -->
             </form>
-
-  
-        </div>
-      </div>
+        </div> <!-- end card-text -->
+      </div> <!-- end card-body -->
     </div>
-
 </div>
