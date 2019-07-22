@@ -15,7 +15,7 @@
     this.abilityScoreRolls = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };        // raw rolls
     this.abilityScoreIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };     // increase from race
     this.abilityScores = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };            // total of these two
-    this.abilityModifier = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };          // the modifier created from the ability score (increase for every 2)
+    this.abilityModifiers = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };         // the modifier created from the ability score (increase for every 2)
     this.rollMethods = {
       "4d6 Drop Lowest": "4d6dl",
       "4d6 Keep All": "4d6",
@@ -37,7 +37,7 @@
       this.abilityScoreRolls = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
       this.abilityScoreIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
       this.abilityScores = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
-      this.abilityModifier = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
+      this.abilityModifiers = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
       this.statsRolled = false;
     }
 
@@ -79,6 +79,17 @@
       }
     }
 
+    this.setabilityModifiers = () => {
+      for(let ability in this.abilityScores) {
+        this.abilityModifiers[ability] = this.calculateModifier(this.abilityScores[ability]);
+      }
+    }
+
+    this.calculateModifier = (score) => {
+      if(score >= 30) return 10;
+      return Math.floor((score - 10)/2)
+    }
+
     this.subraceSelectionChange = () => {
       this.abilityScoreIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
       if(this.selectedSubrace !== "-1") {
@@ -109,6 +120,7 @@
           }
         }
         this.setAbilityScores();
+        this.setabilityModifiers();
         this.statsRolled = true;
       }
     }

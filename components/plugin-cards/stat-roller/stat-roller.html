@@ -99,12 +99,12 @@
                       <td>{{statroller.abilityScoreIncrease.chr}}</td>
                     </tr>
                     <tr class="abilities">
-                      <td class="border border-info"><div class="ability-modifier">5</div><div class="ability-score">{{statroller.abilityScores.str}}</div></td>
-                      <td class="border border-info"><div class="ability-modifier">5</div><div class="ability-score">{{statroller.abilityScores.dex}}</div></td>
-                      <td class="border border-info"><div class="ability-modifier">52</div><div class="ability-score">{{statroller.abilityScores.con}}</div></td>
-                      <td class="border border-info"><div class="ability-modifier">11</div><div class="ability-score">{{statroller.abilityScores.int}}</div></td>
-                      <td class="border border-info"><div class="ability-modifier">52</div><div class="ability-score">{{statroller.abilityScores.wis}}</div></td>
-                      <td class="border border-info"><div class="ability-modifier">5</div><div class="ability-score">{{statroller.abilityScores.chr}}</div></td>
+                      <td class="border border-info"><div class="ability-modifier">{{(statroller.abilityModifiers.str > 0) ? '+' + statroller.abilityModifiers.str : statroller.abilityModifiers.str}}</div><div class="ability-score">{{statroller.abilityScores.str}}</div></td>
+                      <td class="border border-info"><div class="ability-modifier">{{(statroller.abilityModifiers.dex > 0) ? '+' + statroller.abilityModifiers.dex : statroller.abilityModifiers.dex}}</div><div class="ability-score">{{statroller.abilityScores.dex}}</div></td>
+                      <td class="border border-info"><div class="ability-modifier">{{(statroller.abilityModifiers.con > 0) ? '+' + statroller.abilityModifiers.con : statroller.abilityModifiers.con}}</div><div class="ability-score">{{statroller.abilityScores.con}}</div></td>
+                      <td class="border border-info"><div class="ability-modifier">{{(statroller.abilityModifiers.int > 0) ? '+' + statroller.abilityModifiers.int : statroller.abilityModifiers.int}}</div><div class="ability-score">{{statroller.abilityScores.int}}</div></td>
+                      <td class="border border-info"><div class="ability-modifier">{{(statroller.abilityModifiers.wis > 0) ? '+' + statroller.abilityModifiers.wis : statroller.abilityModifiers.wis}}</div><div class="ability-score">{{statroller.abilityScores.wis}}</div></td>
+                      <td class="border border-info"><div class="ability-modifier">{{(statroller.abilityModifiers.chr > 0) ? '+' + statroller.abilityModifiers.chr : statroller.abilityModifiers.chr}}</div><div class="ability-score">{{statroller.abilityScores.chr}}</div></td>
                     </tr>
                   </tbody>
                 </table>
