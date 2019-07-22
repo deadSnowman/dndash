@@ -17,7 +17,7 @@
     this.rollMethods = {
       "4d6 Drop Lowest": "4d6dl",
       "4d6 Keep All": "4d6",
-      "3d6 Best of 3": "3(4d6)kh"
+      "3d6 Best of 3": "4d6"
     }
     this.rollMethod = "4d6 Drop Lowest";
     this.statsRolled = false;
@@ -59,10 +59,23 @@
       this.selectedSubrace = "-1";
     }
 
+    // TODO: Refactor.  Group rolls should be handled by die roller service
+    this.bestOfThree = () => {
+      let bestOfThree = [];
+      for(let i = 0; i < 3; i++) {
+        bestOfThree.push(diceRollerService.roll(this.rollMethods[this.rollMethod]).result);
+      }
+      return Math.max.apply(null, bestOfThree);
+    }
+
     this.rollStats = () => {
       if(!this.isDisabled()) {
         for(let ability in this.abilityScore) {
-          this.abilityScore[ability] = diceRollerService.roll(this.rollMethods[this.rollMethod]).result;
+          if(this.rollMethod === "3d6 Best of 3") {
+            this.abilityScore[ability] = this.bestOfThree();
+          } else {
+            this.abilityScore[ability] = diceRollerService.roll(this.rollMethods[this.rollMethod]).result;
+          }
         }
         this.statsRolled = true;
       }
