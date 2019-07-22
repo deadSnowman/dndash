@@ -12,9 +12,10 @@
     this.selectedRace = "-1";
     this.selectedSubrace = "-1";
     this.races = RACES;
-    this.abilityScore = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
-    this.abilityScoreIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
-    this.abilityModifier = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
+    this.abilityScoreRolls = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };        // raw rolls
+    this.abilityScoreIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };     // increase from race
+    this.abilityScores = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };            // total of these two
+    this.abilityModifier = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };          // the modifier created from the ability score (increase for every 2)
     this.rollMethods = {
       "4d6 Drop Lowest": "4d6dl",
       "4d6 Keep All": "4d6",
@@ -33,8 +34,9 @@
       this._hasSubrace = false;
       this.selectedRace = "-1";
       this.selectedSubrace = "-1";
-      this.abilityScore = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
+      this.abilityScoreRolls = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
       this.abilityScoreIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
+      this.abilityScores = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
       this.abilityModifier = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
       this.statsRolled = false;
     }
@@ -71,6 +73,12 @@
       }
     }
 
+    this.setAbilityScores = () => {
+      for(let ability in this.abilityScoreRolls) {
+        this.abilityScores[ability] = this.abilityScoreIncrease[ability] + this.abilityScoreRolls[ability];
+      }
+    }
+
     this.subraceSelectionChange = () => {
       this.abilityScoreIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
       if(this.selectedSubrace !== "-1") {
@@ -93,13 +101,14 @@
 
     this.rollStats = () => {
       if(!this.isDisabled()) {
-        for(let ability in this.abilityScore) {
+        for(let ability in this.abilityScoreRolls) {
           if(this.rollMethod === "3d6 Best of 3") {
-            this.abilityScore[ability] = this.bestOfThree();
+            this.abilityScoreRolls[ability] = this.bestOfThree();
           } else {
-            this.abilityScore[ability] = diceRollerService.roll(this.rollMethods[this.rollMethod]).result;
+            this.abilityScoreRolls[ability] = diceRollerService.roll(this.rollMethods[this.rollMethod]).result;
           }
         }
+        this.setAbilityScores();
         this.statsRolled = true;
       }
     }

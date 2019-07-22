@@ -19,20 +19,20 @@
   .abilities td {
     background-color: #f5f5f5;
     text-align: center;
-    font-weight: 700;
-    font-size: 1.3rem;
   }
 
   .statroller-table {
     border-collapse: separate;
   }
 
-  .abilities div {
-    /* position: relative; */
-    /* left: -13px; */
-    /* top: -3px; */
+  .ability-modifier {
+    font-weight: 700;
+    font-size: 1.3rem;
   }
 
+  .ability-score {
+    border-top: 1px solid #17a2b8 !important;
+  }
 </style>
   
 <div ng-controller="StatRollerCtrl as statroller" ng-cloak>
@@ -83,12 +83,12 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{{statroller.abilityScore.str}}</td>
-                      <td>{{statroller.abilityScore.dex}}</td>
-                      <td>{{statroller.abilityScore.con}}</td>
-                      <td>{{statroller.abilityScore.int}}</td>
-                      <td>{{statroller.abilityScore.wis}}</td>
-                      <td>{{statroller.abilityScore.chr}}</td>
+                      <td>{{statroller.abilityScoreRolls.str}}</td>
+                      <td>{{statroller.abilityScoreRolls.dex}}</td>
+                      <td>{{statroller.abilityScoreRolls.con}}</td>
+                      <td>{{statroller.abilityScoreRolls.int}}</td>
+                      <td>{{statroller.abilityScoreRolls.wis}}</td>
+                      <td>{{statroller.abilityScoreRolls.chr}}</td>
                     </tr>
                     <tr>
                       <td>{{statroller.abilityScoreIncrease.str}}</td>
@@ -99,12 +99,12 @@
                       <td>{{statroller.abilityScoreIncrease.chr}}</td>
                     </tr>
                     <tr class="abilities">
-                      <td class="border border-info"><div>5</div></td>
-                      <td class="border border-info"><div>5</div></td>
-                      <td class="border border-info"><div>52</div></td>
-                      <td class="border border-info"><div>11</div></td>
-                      <td class="border border-info"><div>52</div></td>
-                      <td class="border border-info"><div>5</div></td>
+                      <td class="border border-info"><div class="ability-modifier">5</div><div class="ability-score">{{statroller.abilityScores.str}}</div></td>
+                      <td class="border border-info"><div class="ability-modifier">5</div><div class="ability-score">{{statroller.abilityScores.dex}}</div></td>
+                      <td class="border border-info"><div class="ability-modifier">52</div><div class="ability-score">{{statroller.abilityScores.con}}</div></td>
+                      <td class="border border-info"><div class="ability-modifier">11</div><div class="ability-score">{{statroller.abilityScores.int}}</div></td>
+                      <td class="border border-info"><div class="ability-modifier">52</div><div class="ability-score">{{statroller.abilityScores.wis}}</div></td>
+                      <td class="border border-info"><div class="ability-modifier">5</div><div class="ability-score">{{statroller.abilityScores.chr}}</div></td>
                     </tr>
                   </tbody>
                 </table>
