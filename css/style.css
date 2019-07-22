@@ -36,6 +36,11 @@ and surround the app in container-fluid when more funtionality is added to the d
 
 /* sortable */
 
+/* move cursor for cards only */
+.card-header {
+  cursor: move;
+}
+
 .as-sortable-item {
   border: 100px;
   -ms-touch-action: auto;
