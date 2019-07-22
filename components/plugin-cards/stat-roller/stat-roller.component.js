@@ -64,7 +64,26 @@
       this._hasSubrace = this.hasSubrace();
       if(!this._hasSubrace && this.selectedRace !== "-1") {
         this.setAbilityScoreIncrease(this.races[this.selectedRace].abilityScoreIncrease);
+        if(this.statsRolled) {
+          this.setAbilityScores();
+          this.setAbilityModifiers();
+        }
       }
+    }
+
+    this.subraceSelectionChange = () => {
+      this.abilityScoreIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
+      if(this.selectedSubrace !== "-1") {
+        this.setAbilityScoreIncrease(this.getSubraces()[this.selectedSubrace].abilityScoreIncrease);
+        if(this.statsRolled) {
+          this.setAbilityScores();
+          this.setAbilityModifiers();
+        }
+      }
+    }
+
+    this.resetSubrace = () => {
+      this.selectedSubrace = "-1";
     }
 
     this.setAbilityScoreIncrease = (scoresToSet) => {
@@ -79,7 +98,7 @@
       }
     }
 
-    this.setabilityModifiers = () => {
+    this.setAbilityModifiers = () => {
       for(let ability in this.abilityScores) {
         this.abilityModifiers[ability] = this.calculateModifier(this.abilityScores[ability]);
       }
@@ -88,17 +107,6 @@
     this.calculateModifier = (score) => {
       if(score >= 30) return 10;
       return Math.floor((score - 10)/2)
-    }
-
-    this.subraceSelectionChange = () => {
-      this.abilityScoreIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
-      if(this.selectedSubrace !== "-1") {
-        this.setAbilityScoreIncrease(this.getSubraces()[this.selectedSubrace].abilityScoreIncrease);
-      }
-    }
-
-    this.resetSubrace = () => {
-      this.selectedSubrace = "-1";
     }
 
     // TODO: Refactor.  Group rolls should be handled by die roller service
@@ -120,7 +128,7 @@
           }
         }
         this.setAbilityScores();
-        this.setabilityModifiers();
+        this.setAbilityModifiers();
         this.statsRolled = true;
       }
     }
