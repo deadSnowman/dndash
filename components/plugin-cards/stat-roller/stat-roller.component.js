@@ -14,9 +14,13 @@
     this.races = RACES;
     this.abilityScore = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
     this.abilityModifier = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
-    this.method = "4d6dl";
+    this.rollMethods = {
+      "4d6 Drop Lowest": "4d6dl",
+      "4d6 Keep All": "4d6",
+      "3d6 Best of 3": "3(4d6)kh"
+    }
+    this.rollMethod = "4d6 Drop Lowest";
     this.statsRolled = false;
-    // testing... 4d6dl + (8d6h * 2)"
 
     this.hasSubrace = () => {
       let race = this.races[this.selectedRace];
@@ -58,7 +62,7 @@
     this.rollStats = () => {
       if(!this.isDisabled()) {
         for(let ability in this.abilityScore) {
-          this.abilityScore[ability] = diceRollerService.roll(this.method).result;
+          this.abilityScore[ability] = diceRollerService.roll(this.rollMethods[this.rollMethod]).result;
         }
         this.statsRolled = true;
       }

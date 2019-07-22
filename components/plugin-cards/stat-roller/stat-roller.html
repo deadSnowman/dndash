@@ -94,13 +94,7 @@
                 <div class="btn-group" uib-dropdown>
                     <button type="button" class="btn btn-info btn-sm" ng-disabled="statroller.isDisabled()" ng-click="statroller.rollStats()" disabled="disabled">Roll Stats</button>
                     <button type="button" class="btn btn-info btn-sm dropdown-toggle dropdown-toggle-split" uib-dropdown-toggle>method </button>
-                    <div class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
-                      <a href="#" class="dropdown-item"><i class="checkmark fa fa-check fa-sm" aria-hidden="true"></i> 4d6 Drop Lowest</a>
-                      <a href="#" class="dropdown-item"><i class="checkmark fa fa-check fa-sm invisible" aria-hidden="true"></i> 4d6 Keep All</a>
-                      <a href="#" class="dropdown-item"><i class="checkmark fa fa-check fa-sm invisible" aria-hidden="true"></i> 3d6 Best of 3</a>
-                      <!-- <div class="dropdown-divider"></div>
-                      <a href="#" class="dropdown-item">Custom</a> -->
-                    </div>
+                    <dropdown-checkbox-select options="statroller.rollMethods" selected="statroller.rollMethod"></dropdown-checkbox-select>
                 </div>
                 <button type="button" class="btn btn-light btn-sm" ng-hide="statroller.isClearButtonHidden()" ng-click="statroller.clear();">Clear</button>
               </div>
