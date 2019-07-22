@@ -76,13 +76,9 @@
       this.picks = 0;
       this.picked = 0;
       this._hasSubrace = this.hasSubrace();
-      this.setPicks();
-
-      if(this.pickMore) {
-        this.picks = this.races[this.selectedRace].picks;
-      }
 
       if(!this._hasSubrace && this.selectedRace !== "-1") {
+        this.setPicks();
         this.setAbilityScoreIncrease(this.races[this.selectedRace].abilityScoreIncrease);
         if(this.statsRolled) {
           this.setAbilityScores();
