@@ -119,6 +119,9 @@
         this.pickIncrease[pickedAbility] = 0;
         if(this.picked > 0) this.picked = this.picked - 1;
       }
+      if(this.statsRolled) {
+        this.setAbilityModifiers();
+      }
     }
 
     this.setAbilityScoreIncrease = (scoresToSet) => {
@@ -135,7 +138,7 @@
 
     this.setAbilityModifiers = () => {
       for(let ability in this.abilityScores) {
-        this.abilityModifiers[ability] = this.calculateModifier(this.abilityScores[ability]);
+        this.abilityModifiers[ability] = this.calculateModifier(this.abilityScores[ability] + this.pickIncrease[ability]);
       }
     }
 
