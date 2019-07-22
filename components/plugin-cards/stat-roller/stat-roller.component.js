@@ -65,6 +65,13 @@
       return true;
     }
 
+    this.areOtherStatsPicked = (ability) => {
+      if(!this.pickIncrease[ability] > 0 && this.picked > 0) {
+        return (this.picked < this.picks) ? false : true;
+      }
+      return false;
+    }
+
     this.getSubraces = () => {
       return this.races[this.selectedRace].subraces;
     }
