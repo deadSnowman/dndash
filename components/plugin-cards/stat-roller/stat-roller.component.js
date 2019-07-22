@@ -34,6 +34,8 @@
       this.selectedRace = "-1";
       this.selectedSubrace = "-1";
       this.abilityScore = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
+      this.abilityScoreIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
+      this.abilityModifier = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
       this.statsRolled = false;
     }
 
@@ -56,14 +58,24 @@
 
     this.raceSelectionChanged = () => {
       this.resetSubrace();
+      this.abilityScoreIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
       this._hasSubrace = this.hasSubrace();
-      if(!this._hasSubrace) {
-        console.log(this.races[this.selectedRace].abilityScoreIncrease);
+      if(!this._hasSubrace && this.selectedRace !== "-1") {
+        this.setAbilityScoreIncrease(this.races[this.selectedRace].abilityScoreIncrease);
+      }
+    }
+
+    this.setAbilityScoreIncrease = (scoresToSet) => {
+      for(let ability in scoresToSet) {
+        this.abilityScoreIncrease[ability] = scoresToSet[ability];
       }
     }
 
     this.subraceSelectionChange = () => {
-      console.log(this.getSubraces()[this.selectedSubrace].abilityScoreIncrease);
+      this.abilityScoreIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
+      if(this.selectedSubrace !== "-1") {
+        this.setAbilityScoreIncrease(this.getSubraces()[this.selectedSubrace].abilityScoreIncrease);
+      }
     }
 
     this.resetSubrace = () => {
