@@ -76,6 +76,26 @@
       return this.races[this.selectedRace].subraces;
     }
 
+    this.randomGeneratePickIncrease = () => {
+      if(this.picks) {
+        let spliceCount = 0;
+        let statList = ['str', 'dex', 'con', 'int', 'wis', 'chr'];
+        for(let ability in this.abilityScoreIncrease) {
+          if(this.abilityScoreIncrease[ability] > 0) {
+            statList.splice(statList.indexOf("ability"), 1);
+            spliceCount = spliceCount + 1;
+          }
+        }
+        let abilityIndex;
+        for(let i = 0; i < this.picks; i++) {
+          abilityIndex = Math.floor(Math.random() * (6 - spliceCount));
+          this.pickAbilityIncrease(statList[abilityIndex]);
+          statList.splice(abilityIndex, 1);
+          spliceCount = spliceCount + 1;
+        }
+      }
+    }
+
     this.raceSelectionChanged = () => {
       this.resetSubrace();
       this.abilityScoreIncrease = { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
@@ -87,6 +107,9 @@
       if(!this._hasSubrace && this.selectedRace !== "-1") {
         this.setPicks();
         this.setAbilityScoreIncrease(this.races[this.selectedRace].abilityScoreIncrease);
+        // ng-class doesn't change after calling pickAbilityIncrease() without ng-click, probably because the method is being triggered out of the digest cycle.
+        // Look into scope.$apply
+        // this.randomGeneratePickIncrease();
         if(this.statsRolled) {
           this.setAbilityScores();
           this.setAbilityModifiers();
@@ -101,6 +124,7 @@
       this.picked = 0;
       if(this.selectedSubrace !== "-1") {
         this.setAbilityScoreIncrease(this.getSubraces()[this.selectedSubrace].abilityScoreIncrease);
+        // this.randomGeneratePickIncrease();
         if(this.statsRolled) {
           this.setAbilityScores();
           this.setAbilityModifiers();
@@ -147,7 +171,7 @@
 
     this.calculateModifier = (score) => {
       if(score >= 30) return 10;
-      return Math.floor((score - 10)/2)
+      return Math.floor((score - 10)/2);
     }
 
     // TODO: Refactor.  Group rolls should be handled by die roller service
