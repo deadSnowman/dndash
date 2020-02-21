@@ -1,0 +1,62 @@
+<style>
+  .scrollable {
+    overflow-x: auto;
+  }
+
+  .dropdown-menu {
+    top: -245%;
+    left: 155px;
+  }
+
+  .dropdown-item {
+    padding-left: 7px;
+  }
+
+  .invisible {
+    visibility: hidden;
+  }
+
+  .abilities td {
+    background-color: #f5f5f5;
+  }
+
+  .statroller-table {
+    text-align: center;
+  }
+
+  .statroller-table {
+    border-collapse: separate;
+  }
+
+  .ability-modifier {
+    font-weight: 700;
+    font-size: 1.3rem;
+  }
+
+  .ability-score {
+    border-top: 1px solid #17a2b8 !important;
+  }
+
+  .pick-more {
+    font-size: .6rem;
+  }
+</style>
+  
+<div ng-cloak>
+  <div class="card">
+      <div class="card-header text-white bg-info handle" ng-dblclick="pluginCard.isCollapsed = !pluginCard.isCollapsed" data-as-sortable-item-handle>
+        <strong>{{pluginCard.cardTitle}}</strong>
+        <a class="float-right" ng-click="pluginCard.isCollapsed = !pluginCard.isCollapsed">
+          <div ng-if="!pluginCard.isCollapsed">
+            <i class="fa fa-chevron-down"></i>
+          </div>
+          <div ng-if="pluginCard.isCollapsed">
+            <i class="fa fa-chevron-right"></i>
+          </div>
+        </a>
+      </div>
+      <div class="card-body" uib-collapse="pluginCard.isCollapsed">
+        <div class="card-text" ng-transclude></div>
+      </div>
+    </div>
+</div>
