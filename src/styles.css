@@ -1404,8 +1404,40 @@ body {
   padding: .75rem 1rem;
 }
 
+.modal-backdrop-custom .modal-header {
+  align-items: center;
+}
+
 .modal-backdrop-custom .modal-footer {
   gap: .5rem;
+}
+
+.modal-backdrop-custom .close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  margin: 0 0 0 .75rem;
+  padding: 0;
+  border-radius: .25rem;
+  color: #495057;
+  font-size: 1.5rem;
+  line-height: 1;
+  opacity: 1;
+}
+
+.modal-backdrop-custom .close span {
+  display: block;
+  line-height: 1;
+  transform: translateY(-.06rem);
+}
+
+.modal-backdrop-custom .close:hover,
+.modal-backdrop-custom .close:focus {
+  color: #212529;
+  background: #f8f9fa;
+  outline: 0;
 }
 
 .modal-backdrop-custom .modal-body {
@@ -1800,6 +1832,17 @@ body {
   color: var(--app-text);
   border-color: #17a2b8;
   background: #303741;
+}
+
+:is(.app-shell, body)[data-theme="dark"] .modal-backdrop-custom .close {
+  color: var(--app-muted);
+  text-shadow: none;
+}
+
+:is(.app-shell, body)[data-theme="dark"] .modal-backdrop-custom .close:hover,
+:is(.app-shell, body)[data-theme="dark"] .modal-backdrop-custom .close:focus {
+  color: var(--app-text);
+  background: var(--app-panel-soft);
 }
 
 :is(.app-shell, body)[data-theme="dark"] .text-muted,
