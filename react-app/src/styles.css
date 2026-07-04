@@ -2,6 +2,15 @@
   font-family: Arial, Helvetica, sans-serif;
   color: #212529;
   background: #fff;
+  --app-bg: #fff;
+  --app-text: #212529;
+  --app-muted: #6c757d;
+  --app-panel: #fff;
+  --app-panel-soft: #f8f9fa;
+  --app-border: #dee2e6;
+  --app-input-bg: #fff;
+  --app-input-text: #212529;
+  --app-shadow: rgba(15, 23, 42, .18);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -16,6 +25,23 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  color: var(--app-text);
+  background: var(--app-bg);
+}
+
+.app-shell[data-theme="dark"] {
+  --app-bg: #15181c;
+  --app-text: #e9ecef;
+  --app-muted: #adb5bd;
+  --app-panel: #20242a;
+  --app-panel-soft: #2a2f36;
+  --app-border: #3a414a;
+  --app-input-bg: #171a1f;
+  --app-input-text: #f1f3f5;
+  --app-shadow: rgba(0, 0, 0, .38);
+  min-height: 100%;
+  color: var(--app-text);
+  background: var(--app-bg);
 }
 
 .content {
@@ -102,7 +128,7 @@ body {
 }
 
 .dashboard-muuri-item.muuri-item-dragging .dashboard-muuri-item-content {
-  box-shadow: 0 16px 32px rgba(15, 23, 42, .18);
+  box-shadow: 0 16px 32px var(--app-shadow);
   cursor: grabbing;
 }
 
@@ -994,6 +1020,7 @@ body {
   align-items: center;
   justify-content: center;
   min-width: 2rem;
+  margin-left: .35rem;
   line-height: 1;
   font-size: 1rem;
 }
@@ -1136,6 +1163,133 @@ body {
   }
 }
 
+.app-shell[data-theme="dark"] .content,
+.app-shell[data-theme="dark"] .dash-content {
+  background: var(--app-bg);
+}
+
+.app-shell[data-theme="dark"] .card,
+.app-shell[data-theme="dark"] .modal-content,
+.app-shell[data-theme="dark"] .about-feature-group,
+.app-shell[data-theme="dark"] .die-row,
+.app-shell[data-theme="dark"] .npc-detail-row,
+.app-shell[data-theme="dark"] .item-quirk-row,
+.app-shell[data-theme="dark"] .encounter-thresholds div,
+.app-shell[data-theme="dark"] .encounter-picker {
+  color: var(--app-text);
+  border-color: var(--app-border);
+  background: var(--app-panel);
+}
+
+.app-shell[data-theme="dark"] .card-body,
+.app-shell[data-theme="dark"] .modal-body,
+.app-shell[data-theme="dark"] .settings-section,
+.app-shell[data-theme="dark"] .cheat-sheet-tab-content {
+  color: var(--app-text);
+  border-color: var(--app-border);
+  background: var(--app-panel);
+}
+
+.app-shell[data-theme="dark"] .form-control,
+.app-shell[data-theme="dark"] .custom-select,
+.app-shell[data-theme="dark"] select,
+.app-shell[data-theme="dark"] input,
+.app-shell[data-theme="dark"] textarea {
+  color: var(--app-input-text);
+  border-color: var(--app-border);
+  background-color: var(--app-input-bg);
+}
+
+.app-shell[data-theme="dark"] .form-control:disabled,
+.app-shell[data-theme="dark"] input:disabled,
+.app-shell[data-theme="dark"] select:disabled,
+.app-shell[data-theme="dark"] textarea:disabled {
+  color: var(--app-muted);
+  background-color: #252a31;
+}
+
+.app-shell[data-theme="dark"] .table,
+.app-shell[data-theme="dark"] .table td,
+.app-shell[data-theme="dark"] .table th {
+  color: var(--app-text);
+  border-color: var(--app-border);
+}
+
+.app-shell[data-theme="dark"] .thead-light td,
+.app-shell[data-theme="dark"] .thead-light th,
+.app-shell[data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) {
+  color: var(--app-text);
+  background-color: var(--app-panel-soft);
+}
+
+.app-shell[data-theme="dark"] .abilities td,
+.app-shell[data-theme="dark"] .die-result strong,
+.app-shell[data-theme="dark"] .die-total,
+.app-shell[data-theme="dark"] .npc-name-panel,
+.app-shell[data-theme="dark"] .item-quirk-title,
+.app-shell[data-theme="dark"] .encounter-summary,
+.app-shell[data-theme="dark"] .stat-flexible-panel,
+.app-shell[data-theme="dark"] .encounter-picker-toggle,
+.app-shell[data-theme="dark"] .settings-plugin-row,
+.app-shell[data-theme="dark"] .cheat-sheet-link-list a,
+.app-shell[data-theme="dark"] #cheatSheetTab .nav-link {
+  color: var(--app-text);
+  border-color: var(--app-border);
+  background: var(--app-panel-soft);
+}
+
+.app-shell[data-theme="dark"] #cheatSheetTab .nav-link.active,
+.app-shell[data-theme="dark"] .cheat-sheet-link-list a:hover,
+.app-shell[data-theme="dark"] .cheat-sheet-link-list a:focus {
+  color: #9eeaf9;
+  border-color: #17a2b8;
+  background: var(--app-panel);
+}
+
+.app-shell[data-theme="dark"] .btn-light {
+  color: var(--app-text);
+  border-color: var(--app-border);
+  background: var(--app-panel-soft);
+}
+
+.app-shell[data-theme="dark"] .btn-light:hover,
+.app-shell[data-theme="dark"] .btn-light:focus {
+  color: var(--app-text);
+  border-color: #17a2b8;
+  background: #303741;
+}
+
+.app-shell[data-theme="dark"] .text-muted,
+.app-shell[data-theme="dark"] .about-note,
+.app-shell[data-theme="dark"] .encounter-note,
+.app-shell[data-theme="dark"] .npc-actions small,
+.app-shell[data-theme="dark"] .item-quirk-actions small,
+.app-shell[data-theme="dark"] .settings-section-header p,
+.app-shell[data-theme="dark"] .die-roll-summary,
+.app-shell[data-theme="dark"] .settings-drag-handle,
+.app-shell[data-theme="dark"] .about-feature-group h2,
+.app-shell[data-theme="dark"] .die-field span,
+.app-shell[data-theme="dark"] .die-modifier span,
+.app-shell[data-theme="dark"] .die-result span,
+.app-shell[data-theme="dark"] .die-results-panel label,
+.app-shell[data-theme="dark"] .die-total span,
+.app-shell[data-theme="dark"] .npc-field span,
+.app-shell[data-theme="dark"] .npc-name-panel span,
+.app-shell[data-theme="dark"] .npc-detail-row span,
+.app-shell[data-theme="dark"] .item-quirk-field span,
+.app-shell[data-theme="dark"] .item-quirk-title span,
+.app-shell[data-theme="dark"] .item-quirk-row span,
+.app-shell[data-theme="dark"] .encounter-field span,
+.app-shell[data-theme="dark"] .encounter-summary span,
+.app-shell[data-theme="dark"] .encounter-thresholds span,
+.app-shell[data-theme="dark"] .encounter-monster-header span,
+.app-shell[data-theme="dark"] .encounter-monster-row label span,
+.app-shell[data-theme="dark"] .stat-field span,
+.app-shell[data-theme="dark"] .stat-section-title,
+.app-shell[data-theme="dark"] .settings-section-title {
+  color: var(--app-muted);
+}
+
 footer .footer {
   background: #212529;
   text-align: center;
@@ -1172,6 +1326,7 @@ body,
   position: absolute;
   min-height: 100%;
   width: 100%;
+  background: var(--app-bg);
 }
 
 .outer-container .content {

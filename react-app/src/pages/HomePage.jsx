@@ -85,7 +85,7 @@ function saveDashboardSettings(settings) {
   );
 }
 
-export default function HomePage() {
+export default function HomePage({ darkTheme = false, onToggleTheme }) {
   const [dashboardSettings, setDashboardSettings] = useState(loadDashboardSettings);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { plugins, columns, cheatSheetTabIds } = dashboardSettings;
@@ -122,7 +122,13 @@ export default function HomePage() {
 
   return (
     <>
-      <NavBar active="home" showSettings onSettings={() => setSettingsOpen(true)} />
+      <NavBar
+        active="home"
+        darkTheme={darkTheme}
+        showSettings
+        onSettings={() => setSettingsOpen(true)}
+        onToggleTheme={onToggleTheme}
+      />
       <div className="dash-content container-fluid">
         <div
           ref={gridRef}

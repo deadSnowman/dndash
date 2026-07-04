@@ -17,12 +17,12 @@ const featureGroups = [
   }
 ];
 
-export default function AboutPage() {
+export default function AboutPage({ darkTheme = false, onToggleTheme }) {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
     <div className="outer-container">
-      <NavBar active="about" />
+      <NavBar active="about" darkTheme={darkTheme} onToggleTheme={onToggleTheme} />
       <div className="content container body">
         <div className="about-layout">
           <section className="about-copy">
