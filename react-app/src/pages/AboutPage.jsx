@@ -32,7 +32,7 @@ export default function AboutPage() {
             Fork me on <a href="https://github.com/deadSnowman/dndash">Github</a>
           </p>
           <p>
-            Check out my other site <a href="http://www.dsm-comics.com">DSM Comics</a>
+            Check out my other site <a href="https://skribblecats.com/">Skribble Cats</a>
           </p>
         </div>
       </footer>
