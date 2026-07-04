@@ -21,6 +21,10 @@ export default function App() {
   const darkTheme = theme === 'dark';
 
   useEffect(() => {
+    document.body.dataset.theme = theme;
+  }, [theme]);
+
+  useEffect(() => {
     if (!window.location.hash) {
       window.location.hash = '/home';
     }

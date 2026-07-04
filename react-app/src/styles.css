@@ -29,7 +29,7 @@ body {
   background: var(--app-bg);
 }
 
-.app-shell[data-theme="dark"] {
+:is(.app-shell, body)[data-theme="dark"] {
   --app-bg: #15181c;
   --app-text: #e9ecef;
   --app-muted: #adb5bd;
@@ -1340,139 +1340,139 @@ body {
   }
 }
 
-.app-shell[data-theme="dark"] .content,
-.app-shell[data-theme="dark"] .dash-content {
+:is(.app-shell, body)[data-theme="dark"] .content,
+:is(.app-shell, body)[data-theme="dark"] .dash-content {
   background: var(--app-bg);
 }
 
-.app-shell[data-theme="dark"] .card,
-.app-shell[data-theme="dark"] .modal-content,
-.app-shell[data-theme="dark"] .about-feature-group,
-.app-shell[data-theme="dark"] .die-row,
-.app-shell[data-theme="dark"] .loot-options,
-.app-shell[data-theme="dark"] .npc-detail-row,
-.app-shell[data-theme="dark"] .item-quirk-row,
-.app-shell[data-theme="dark"] .encounter-thresholds div,
-.app-shell[data-theme="dark"] .encounter-picker {
+:is(.app-shell, body)[data-theme="dark"] .card,
+:is(.app-shell, body)[data-theme="dark"] .modal-content,
+:is(.app-shell, body)[data-theme="dark"] .about-feature-group,
+:is(.app-shell, body)[data-theme="dark"] .die-row,
+:is(.app-shell, body)[data-theme="dark"] .loot-options,
+:is(.app-shell, body)[data-theme="dark"] .npc-detail-row,
+:is(.app-shell, body)[data-theme="dark"] .item-quirk-row,
+:is(.app-shell, body)[data-theme="dark"] .encounter-thresholds div,
+:is(.app-shell, body)[data-theme="dark"] .encounter-picker {
   color: var(--app-text);
   border-color: var(--app-border);
   background: var(--app-panel);
 }
 
-.app-shell[data-theme="dark"] .card-body,
-.app-shell[data-theme="dark"] .modal-body,
-.app-shell[data-theme="dark"] .settings-section,
-.app-shell[data-theme="dark"] .cheat-sheet-tab-content {
+:is(.app-shell, body)[data-theme="dark"] .card-body,
+:is(.app-shell, body)[data-theme="dark"] .modal-body,
+:is(.app-shell, body)[data-theme="dark"] .settings-section,
+:is(.app-shell, body)[data-theme="dark"] .cheat-sheet-tab-content {
   color: var(--app-text);
   border-color: var(--app-border);
   background: var(--app-panel);
 }
 
-.app-shell[data-theme="dark"] .form-control,
-.app-shell[data-theme="dark"] .custom-select,
-.app-shell[data-theme="dark"] select,
-.app-shell[data-theme="dark"] input,
-.app-shell[data-theme="dark"] textarea {
+:is(.app-shell, body)[data-theme="dark"] .form-control,
+:is(.app-shell, body)[data-theme="dark"] .custom-select,
+:is(.app-shell, body)[data-theme="dark"] select,
+:is(.app-shell, body)[data-theme="dark"] input,
+:is(.app-shell, body)[data-theme="dark"] textarea {
   color: var(--app-input-text);
   border-color: var(--app-border);
   background-color: var(--app-input-bg);
 }
 
-.app-shell[data-theme="dark"] .form-control:disabled,
-.app-shell[data-theme="dark"] input:disabled,
-.app-shell[data-theme="dark"] select:disabled,
-.app-shell[data-theme="dark"] textarea:disabled {
+:is(.app-shell, body)[data-theme="dark"] .form-control:disabled,
+:is(.app-shell, body)[data-theme="dark"] input:disabled,
+:is(.app-shell, body)[data-theme="dark"] select:disabled,
+:is(.app-shell, body)[data-theme="dark"] textarea:disabled {
   color: var(--app-muted);
   background-color: #252a31;
 }
 
-.app-shell[data-theme="dark"] .table,
-.app-shell[data-theme="dark"] .table td,
-.app-shell[data-theme="dark"] .table th {
+:is(.app-shell, body)[data-theme="dark"] .table,
+:is(.app-shell, body)[data-theme="dark"] .table td,
+:is(.app-shell, body)[data-theme="dark"] .table th {
   color: var(--app-text);
   border-color: var(--app-border);
 }
 
-.app-shell[data-theme="dark"] .thead-light td,
-.app-shell[data-theme="dark"] .thead-light th,
-.app-shell[data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) {
+:is(.app-shell, body)[data-theme="dark"] .thead-light td,
+:is(.app-shell, body)[data-theme="dark"] .thead-light th,
+:is(.app-shell, body)[data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) {
   color: var(--app-text);
   background-color: var(--app-panel-soft);
 }
 
-.app-shell[data-theme="dark"] .abilities td,
-.app-shell[data-theme="dark"] .die-result strong,
-.app-shell[data-theme="dark"] .die-total,
-.app-shell[data-theme="dark"] .loot-coin-field,
-.app-shell[data-theme="dark"] .loot-result-card,
-.app-shell[data-theme="dark"] .loot-coin-pill,
-.app-shell[data-theme="dark"] .npc-name-panel,
-.app-shell[data-theme="dark"] .item-quirk-title,
-.app-shell[data-theme="dark"] .encounter-summary,
-.app-shell[data-theme="dark"] .stat-flexible-panel,
-.app-shell[data-theme="dark"] .encounter-picker-toggle,
-.app-shell[data-theme="dark"] .settings-plugin-row,
-.app-shell[data-theme="dark"] .cheat-sheet-link-list a,
-.app-shell[data-theme="dark"] #cheatSheetTab .nav-link {
+:is(.app-shell, body)[data-theme="dark"] .abilities td,
+:is(.app-shell, body)[data-theme="dark"] .die-result strong,
+:is(.app-shell, body)[data-theme="dark"] .die-total,
+:is(.app-shell, body)[data-theme="dark"] .loot-coin-field,
+:is(.app-shell, body)[data-theme="dark"] .loot-result-card,
+:is(.app-shell, body)[data-theme="dark"] .loot-coin-pill,
+:is(.app-shell, body)[data-theme="dark"] .npc-name-panel,
+:is(.app-shell, body)[data-theme="dark"] .item-quirk-title,
+:is(.app-shell, body)[data-theme="dark"] .encounter-summary,
+:is(.app-shell, body)[data-theme="dark"] .stat-flexible-panel,
+:is(.app-shell, body)[data-theme="dark"] .encounter-picker-toggle,
+:is(.app-shell, body)[data-theme="dark"] .settings-plugin-row,
+:is(.app-shell, body)[data-theme="dark"] .cheat-sheet-link-list a,
+:is(.app-shell, body)[data-theme="dark"] #cheatSheetTab .nav-link {
   color: var(--app-text);
   border-color: var(--app-border);
   background: var(--app-panel-soft);
 }
 
-.app-shell[data-theme="dark"] #cheatSheetTab .nav-link.active,
-.app-shell[data-theme="dark"] .cheat-sheet-link-list a:hover,
-.app-shell[data-theme="dark"] .cheat-sheet-link-list a:focus {
+:is(.app-shell, body)[data-theme="dark"] #cheatSheetTab .nav-link.active,
+:is(.app-shell, body)[data-theme="dark"] .cheat-sheet-link-list a:hover,
+:is(.app-shell, body)[data-theme="dark"] .cheat-sheet-link-list a:focus {
   color: #9eeaf9;
   border-color: #17a2b8;
   background: var(--app-panel);
 }
 
-.app-shell[data-theme="dark"] .btn-light {
+:is(.app-shell, body)[data-theme="dark"] .btn-light {
   color: var(--app-text);
   border-color: var(--app-border);
   background: var(--app-panel-soft);
 }
 
-.app-shell[data-theme="dark"] .btn-light:hover,
-.app-shell[data-theme="dark"] .btn-light:focus {
+:is(.app-shell, body)[data-theme="dark"] .btn-light:hover,
+:is(.app-shell, body)[data-theme="dark"] .btn-light:focus {
   color: var(--app-text);
   border-color: #17a2b8;
   background: #303741;
 }
 
-.app-shell[data-theme="dark"] .text-muted,
-.app-shell[data-theme="dark"] .about-note,
-.app-shell[data-theme="dark"] .encounter-note,
-.app-shell[data-theme="dark"] .npc-actions small,
-.app-shell[data-theme="dark"] .item-quirk-actions small,
-.app-shell[data-theme="dark"] .settings-section-header p,
-.app-shell[data-theme="dark"] .die-roll-summary,
-.app-shell[data-theme="dark"] .settings-drag-handle,
-.app-shell[data-theme="dark"] .about-feature-group h2,
-.app-shell[data-theme="dark"] .die-field span,
-.app-shell[data-theme="dark"] .die-modifier span,
-.app-shell[data-theme="dark"] .die-result span,
-.app-shell[data-theme="dark"] .die-results-panel label,
-.app-shell[data-theme="dark"] .die-total span,
-.app-shell[data-theme="dark"] .loot-party-field span,
-.app-shell[data-theme="dark"] .loot-coin-field span,
-.app-shell[data-theme="dark"] .loot-coin-field small,
-.app-shell[data-theme="dark"] .loot-result-card > span,
-.app-shell[data-theme="dark"] .loot-empty,
-.app-shell[data-theme="dark"] .npc-field span,
-.app-shell[data-theme="dark"] .npc-name-panel span,
-.app-shell[data-theme="dark"] .npc-detail-row span,
-.app-shell[data-theme="dark"] .item-quirk-field span,
-.app-shell[data-theme="dark"] .item-quirk-title span,
-.app-shell[data-theme="dark"] .item-quirk-row span,
-.app-shell[data-theme="dark"] .encounter-field span,
-.app-shell[data-theme="dark"] .encounter-summary span,
-.app-shell[data-theme="dark"] .encounter-thresholds span,
-.app-shell[data-theme="dark"] .encounter-monster-header span,
-.app-shell[data-theme="dark"] .encounter-monster-row label span,
-.app-shell[data-theme="dark"] .stat-field span,
-.app-shell[data-theme="dark"] .stat-section-title,
-.app-shell[data-theme="dark"] .settings-section-title {
+:is(.app-shell, body)[data-theme="dark"] .text-muted,
+:is(.app-shell, body)[data-theme="dark"] .about-note,
+:is(.app-shell, body)[data-theme="dark"] .encounter-note,
+:is(.app-shell, body)[data-theme="dark"] .npc-actions small,
+:is(.app-shell, body)[data-theme="dark"] .item-quirk-actions small,
+:is(.app-shell, body)[data-theme="dark"] .settings-section-header p,
+:is(.app-shell, body)[data-theme="dark"] .die-roll-summary,
+:is(.app-shell, body)[data-theme="dark"] .settings-drag-handle,
+:is(.app-shell, body)[data-theme="dark"] .about-feature-group h2,
+:is(.app-shell, body)[data-theme="dark"] .die-field span,
+:is(.app-shell, body)[data-theme="dark"] .die-modifier span,
+:is(.app-shell, body)[data-theme="dark"] .die-result span,
+:is(.app-shell, body)[data-theme="dark"] .die-results-panel label,
+:is(.app-shell, body)[data-theme="dark"] .die-total span,
+:is(.app-shell, body)[data-theme="dark"] .loot-party-field span,
+:is(.app-shell, body)[data-theme="dark"] .loot-coin-field span,
+:is(.app-shell, body)[data-theme="dark"] .loot-coin-field small,
+:is(.app-shell, body)[data-theme="dark"] .loot-result-card > span,
+:is(.app-shell, body)[data-theme="dark"] .loot-empty,
+:is(.app-shell, body)[data-theme="dark"] .npc-field span,
+:is(.app-shell, body)[data-theme="dark"] .npc-name-panel span,
+:is(.app-shell, body)[data-theme="dark"] .npc-detail-row span,
+:is(.app-shell, body)[data-theme="dark"] .item-quirk-field span,
+:is(.app-shell, body)[data-theme="dark"] .item-quirk-title span,
+:is(.app-shell, body)[data-theme="dark"] .item-quirk-row span,
+:is(.app-shell, body)[data-theme="dark"] .encounter-field span,
+:is(.app-shell, body)[data-theme="dark"] .encounter-summary span,
+:is(.app-shell, body)[data-theme="dark"] .encounter-thresholds span,
+:is(.app-shell, body)[data-theme="dark"] .encounter-monster-header span,
+:is(.app-shell, body)[data-theme="dark"] .encounter-monster-row label span,
+:is(.app-shell, body)[data-theme="dark"] .stat-field span,
+:is(.app-shell, body)[data-theme="dark"] .stat-section-title,
+:is(.app-shell, body)[data-theme="dark"] .settings-section-title {
   color: var(--app-muted);
 }
 
@@ -1524,3 +1524,4 @@ body,
   width: 100%;
   bottom: 0;
 }
+
