@@ -107,6 +107,16 @@ export default function EncounterBuilder({ cardProps = {} }) {
     setCustomMonsterOpen(false);
   }
 
+  function removeCustomMonster(monsterId) {
+    const customIndex = Number(monsterId?.replace('custom-', ''));
+    if (!Number.isInteger(customIndex)) return;
+
+    const nextCustomMonsters = customMonsters.filter((_, index) => index !== customIndex);
+    setCustomMonsters(nextCustomMonsters);
+    saveCustomMonsters(nextCustomMonsters);
+    setPickerMonsterId('');
+  }
+
   function removeMonster(id) {
     setMonsters((current) =>
       current.length > 1 ? current.filter((monster) => monster.id !== id) : current
@@ -290,6 +300,16 @@ export default function EncounterBuilder({ cardProps = {} }) {
                   <Shuffle size={14} strokeWidth={2.5} />
                   Random CR {pickerCr}
                 </button>
+                {selectedMonster?.source === 'Custom' && (
+                  <button
+                    type="button"
+                    className="btn btn-light btn-sm"
+                    onClick={() => removeCustomMonster(selectedMonster.id)}
+                  >
+                    <Trash2 size={14} strokeWidth={2.4} />
+                    Delete Custom
+                  </button>
+                )}
                 <button
                   type="button"
                   className="btn btn-light btn-sm"
