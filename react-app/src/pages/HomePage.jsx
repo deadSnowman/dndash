@@ -90,9 +90,18 @@ export default function HomePage({ darkTheme = false, onToggleTheme }) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { plugins, columns, cheatSheetTabIds } = dashboardSettings;
   const enabledPlugins = plugins.filter((plugin) => plugin.enabled);
+  const dashboardOrderKey = enabledPlugins.map((plugin) => plugin.id).join('|');
 
   const updatePluginOrder = useCallback((nextOrder) => {
     setDashboardSettings((currentSettings) => {
+      const currentEnabledOrder = currentSettings.plugins
+        .filter((plugin) => plugin.enabled)
+        .map((plugin) => plugin.id);
+
+      if (nextOrder.join('|') === currentEnabledOrder.join('|')) {
+        return currentSettings;
+      }
+
       const byId = new Map(currentSettings.plugins.map((plugin) => [plugin.id, plugin]));
       const ordered = nextOrder.map((id) => byId.get(id)).filter(Boolean);
       const hidden = currentSettings.plugins.filter((plugin) => !nextOrder.includes(plugin.id));
@@ -131,6 +140,7 @@ export default function HomePage({ darkTheme = false, onToggleTheme }) {
       />
       <div className="dash-content container-fluid">
         <div
+          key={dashboardOrderKey}
           ref={gridRef}
           className="dashboard-muuri"
           style={{ '--dashboard-columns': columns }}

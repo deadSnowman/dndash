@@ -1,6 +1,25 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import Muuri from 'muuri';
 
+function getVisualOrder(grid) {
+  return grid
+    .getItems()
+    .map((item, index) => {
+      const element = item.getElement();
+      const rect = element.getBoundingClientRect();
+
+      return {
+        id: element.dataset.pluginId,
+        index,
+        left: Math.round(rect.left),
+        top: Math.round(rect.top)
+      };
+    })
+    .filter((item) => item.id)
+    .sort((a, b) => a.top - b.top || a.left - b.left || a.index - b.index)
+    .map((item) => item.id);
+}
+
 export function useMuuriDashboard(enabledPlugins, onOrderChange) {
   const gridRef = useRef(null);
   const muuriRef = useRef(null);
@@ -43,14 +62,17 @@ export function useMuuriDashboard(enabledPlugins, onOrderChange) {
     });
 
     muuriRef.current = grid;
+    let orderSyncFrame = null;
 
     const syncPluginOrder = () => {
-      const nextOrder = grid
-        .getItems()
-        .map((item) => item.getElement().dataset.pluginId)
-        .filter(Boolean);
+      if (orderSyncFrame) {
+        window.cancelAnimationFrame(orderSyncFrame);
+      }
 
-      onOrderChange(nextOrder);
+      orderSyncFrame = window.requestAnimationFrame(() => {
+        orderSyncFrame = null;
+        onOrderChange(getVisualOrder(grid));
+      });
     };
 
     const resizeObserver = new ResizeObserver(() => {
@@ -62,6 +84,9 @@ export function useMuuriDashboard(enabledPlugins, onOrderChange) {
     grid.refreshItems().layout(true);
 
     return () => {
+      if (orderSyncFrame) {
+        window.cancelAnimationFrame(orderSyncFrame);
+      }
       grid.off('dragReleaseEnd', syncPluginOrder);
       resizeObserver.disconnect();
       grid.destroy(false);
