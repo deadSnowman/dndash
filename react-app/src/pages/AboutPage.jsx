@@ -1,28 +1,74 @@
+import { useState } from 'react';
 import NavBar from '../components/NavBar.jsx';
 import aboutImage from '../../../images/ledrungorogin_colored.png';
 
+const featureGroups = [
+  {
+    title: 'Table Utilities',
+    items: ['Currency conversion', 'Loot splitting', 'Dice rolling', 'Stat rolling']
+  },
+  {
+    title: 'DM Generators',
+    items: ['NPCs and names', 'Encounters', 'Magic item flavor', 'Monster picking']
+  },
+  {
+    title: 'Reference Tools',
+    items: ['Combat actions', 'Conditions', 'Movement', 'Spellcasting basics']
+  }
+];
+
 export default function AboutPage() {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   return (
     <div className="outer-container">
       <NavBar active="about" />
       <div className="content container body">
-        <div className="row">
-          <div className="col-sm-6">
-            <div className="centerstuff">
-              <h1>Welcome to DnDash!</h1>
-              <h3>A DnD dash board application written with React</h3>
-              <br />
-              <p>Contains functionality for...</p>
-              <ul>
-                <li>Loot splitting</li>
-                <li>Currency conversion</li>
-                <li>Die rolling</li>
-              </ul>
+        <div className="about-layout">
+          <section className="about-copy">
+            <p className="about-eyebrow">DnDash</p>
+            <h1>A virtual DM screen for D&amp;D</h1>
+            <p className="about-lede">
+              DnDash keeps the little table jobs close at hand: rolling dice, splitting loot,
+              checking rules, sketching NPCs, shaping encounters, and adding quick flavor when
+              the session turns in an unexpected direction.
+            </p>
+            <p>
+              It is built as a collection of draggable cards, so each DM or player can keep the
+              tools they use most visible and hide the rest. Settings save your layout, card order,
+              visible cards, and Cheat Sheet tabs locally in the browser.
+            </p>
+
+            <div className="about-feature-grid">
+              {featureGroups.map((group) => (
+                <div className="about-feature-group" key={group.title}>
+                  <h2>{group.title}</h2>
+                  <ul>
+                    {group.items.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
-          </div>
-          <div className="col-sm-6">
-            <img src={aboutImage} className="about-image" alt="DnDash character illustration" />
-          </div>
+
+            <p className="about-note">
+              The goal isn't to replace your books or notes, but help with the flow
+              to help keep the story in motion.
+            </p>
+          </section>
+
+          <aside className={`about-image-panel ${imageLoaded ? 'is-loaded' : ''}`}>
+            <div className="about-image-placeholder" aria-hidden="true" />
+            <img
+              src={aboutImage}
+              className="about-image"
+              alt="DnDash character illustration"
+              decoding="async"
+              loading="eager"
+              onLoad={() => setImageLoaded(true)}
+            />
+          </aside>
         </div>
       </div>
       <footer>

@@ -1009,10 +1009,131 @@ body {
   text-align: left;
 }
 
+.about-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(16rem, .9fr);
+  gap: 2rem;
+  align-items: center;
+}
+
+.about-copy {
+  max-width: 42rem;
+}
+
+.about-eyebrow {
+  margin: 0 0 .35rem;
+  color: #17a2b8;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.about-copy h1 {
+  margin-bottom: .75rem;
+  font-size: 2rem;
+  line-height: 1.15;
+}
+
+.about-lede {
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+.about-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: .75rem;
+  margin: 1.25rem 0;
+}
+
+.about-feature-group {
+  padding: .75rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #fff;
+}
+
+.about-feature-group h2 {
+  margin: 0 0 .5rem;
+  color: #6c757d;
+  font-size: .75rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.about-feature-group ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.about-feature-group li {
+  margin-bottom: .25rem;
+}
+
+.about-note {
+  color: #6c757d;
+}
+
+.about-image-panel {
+  position: relative;
+  min-height: 24rem;
+  overflow: hidden;
+}
+
+.about-image-placeholder {
+  position: absolute;
+  inset: 7% 10%;
+  border-radius: .25rem;
+  background:
+    linear-gradient(90deg, rgba(248, 249, 250, .72), rgba(233, 236, 239, .95), rgba(248, 249, 250, .72));
+  background-size: 200% 100%;
+  animation: about-image-loading 1.2s ease-in-out infinite;
+  opacity: 1;
+  transition: opacity .2s ease;
+}
+
 .about-image {
+  position: relative;
   width: 100%;
-  height: 100%;
+  max-height: 32rem;
   object-fit: contain;
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+
+.about-image-panel.is-loaded .about-image {
+  opacity: 1;
+}
+
+.about-image-panel.is-loaded .about-image-placeholder {
+  opacity: 0;
+}
+
+@keyframes about-image-loading {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .about-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .about-copy h1 {
+    font-size: 1.65rem;
+  }
+
+  .about-image-panel {
+    min-height: 18rem;
+  }
 }
 
 footer .footer {
