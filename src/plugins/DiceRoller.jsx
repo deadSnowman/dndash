@@ -1,223 +1,269 @@
-import { useState } from 'react';
-import { Minus, Plus, RotateCcw } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Dices, Minus, Plus, RotateCcw } from 'lucide-react';
 import PluginCard from '../components/PluginCard.jsx';
-import {
-  diceSet,
-  emptyDice,
-  formatRollHistoryLine,
-  getDiceTotal,
-  hasDiceToRoll,
-  rollDiceGroup
-} from '../lib/diceRoller.js';
+import NumberInput from '../components/forms/NumberInput.jsx';
+import { diceSet, rollDiceGroup } from '../lib/diceRoller.js';
 
-function DieRow({ sides, amount, modifier, modifierType, result, rolls, onAmount, onModifier, onModifierType, onRoll }) {
-  const rollSummary = rolls.length > 0 ? rolls.join(' + ') : 'No roll yet';
+const commonRolls = [
+  { label: 'Check', expression: '1d20' },
+  { label: 'Attack', expression: '1d20+5' },
+  { label: 'Save', expression: '1d20+2' },
+  { label: 'Damage', expression: '2d6+3' },
+  { label: 'Healing', expression: '1d8+3' },
+  { label: 'Percent', expression: '1d100' }
+];
 
+const modeLabels = {
+  normal: 'Norm',
+  advantage: 'Adv',
+  disadvantage: 'Dis'
+};
+
+function sanitizeExpression(value) {
+  return value.replace(/\s+/g, '');
+}
+
+function rollToken(token) {
+  const match = token.match(/^(\d+)d(\d+)(?:d?([lh]))?$/i);
+  if (!match) return null;
+
+  const amount = Number(match[1]);
+  const sides = Number(match[2]);
+  const drop = match[3]?.toLowerCase();
+  const rolls = Array.from({ length: amount }, () => rollDiceGroup(sides, 1, 0, 'plus').rolls[0]);
+  let droppedIndex = -1;
+
+  if (drop === 'h') droppedIndex = rolls.indexOf(Math.max(...rolls));
+  if (drop === 'l') droppedIndex = rolls.indexOf(Math.min(...rolls));
+
+  const kept = rolls.filter((_, index) => index !== droppedIndex);
+
+  return {
+    token,
+    rolls,
+    kept,
+    subtotal: kept.reduce((sum, value) => sum + value, 0)
+  };
+}
+
+function formatBreakdown(parts) {
+  if (parts.length === 0) return 'Flat modifier';
+
+  return parts
+    .map((part) => {
+      const keptText = part.kept.join(' + ');
+      return part.kept.length !== part.rolls.length ? `${part.token}: ${keptText} kept` : `${part.token}: ${keptText}`;
+    })
+    .join(' | ');
+}
+
+function evaluateExpression(expression) {
+  const cleanExpression = sanitizeExpression(expression);
+  if (!cleanExpression) throw new Error('Enter a roll first.');
+  if (!/^[\dd+\-*/().]+$/i.test(cleanExpression)) throw new Error('Use dice, numbers, and basic math only.');
+
+  const parts = [];
+  const resolvedExpression = cleanExpression.replace(/\b\d+d\d+(?:d?[lh])?\b/gi, (token) => {
+    const roll = rollToken(token);
+    if (!roll) throw new Error(`Could not read ${token}.`);
+    parts.push(roll);
+    return roll.subtotal;
+  });
+
+  const result = Function(`"use strict"; return (${resolvedExpression});`)();
+  if (!Number.isFinite(result)) throw new Error('That roll did not resolve to a number.');
+
+  return {
+    expression: cleanExpression,
+    result,
+    breakdown: formatBreakdown(parts)
+  };
+}
+
+function rollD20(mode, modifier) {
+  const first = rollDiceGroup(20, 1, 0, 'plus').rolls[0];
+  const second = mode === 'normal' ? null : rollDiceGroup(20, 1, 0, 'plus').rolls[0];
+  const base = mode === 'advantage' ? Math.max(first, second) : mode === 'disadvantage' ? Math.min(first, second) : first;
+  const mod = Number(modifier) || 0;
+
+  return {
+    expression: `${modeLabels[mode]} ${mod >= 0 ? '+' : ''}${mod}`,
+    result: base + mod,
+    breakdown: second === null ? `d20: ${first}` : `d20: ${first}, ${second} | kept ${base}`
+  };
+}
+
+function HistoryItem({ item, onUse }) {
   return (
-    <div className="die-row">
-      <div className="die-row-top">
-        <button className="btn btn-info btn-sm die-roll-button" type="button" onClick={onRoll}>
-          d{sides}
-        </button>
-        <div className="die-result">
-          <span>Last</span>
-          <strong>{result ?? '-'}</strong>
-        </div>
-      </div>
-
-      <div className="die-row-fields">
-        <label className="die-field">
-          <span>Count</span>
-          <input
-            className="form-control form-control-sm"
-            type="number"
-            step="1"
-            min="0"
-            placeholder="1"
-            value={amount}
-            onChange={(event) => onAmount(event.target.value)}
-          />
-        </label>
-
-        <div className="die-modifier">
-          <span>Mod</span>
-          <div className="die-modifier-controls">
-            <div className="btn-group btn-group-sm">
-              <button
-                type="button"
-                className={`btn btn-info ${modifierType === 'plus' ? 'active' : ''}`}
-                aria-label={`Add d${sides} modifier`}
-                onClick={() => onModifierType('plus')}
-              >
-                <Plus size={13} strokeWidth={2.6} />
-              </button>
-              <button
-                type="button"
-                className={`btn btn-info ${modifierType === 'minus' ? 'active' : ''}`}
-                aria-label={`Subtract d${sides} modifier`}
-                onClick={() => onModifierType('minus')}
-              >
-                <Minus size={13} strokeWidth={2.6} />
-              </button>
-            </div>
-            <input
-              className="form-control form-control-sm"
-              type="number"
-              step="1"
-              min="0"
-              value={modifier}
-              onChange={(event) => onModifier(event.target.value)}
-              placeholder="0"
-            />
-          </div>
-        </div>
-      </div>
-
-      <small className="die-roll-summary">{rollSummary}</small>
-    </div>
+    <button className="die-history-item" type="button" onClick={() => onUse(item.expression)}>
+      <span>
+        <strong>{item.result}</strong>
+        <small>{item.expression}</small>
+      </span>
+      <em>{item.breakdown}</em>
+    </button>
   );
 }
 
 export default function DiceRoller({ cardProps = {} }) {
-  const [amounts, setAmounts] = useState(() => emptyDice());
-  const [modifiers, setModifiers] = useState(() => emptyDice());
-  const [modifierTypes, setModifierTypes] = useState(() => emptyDice('plus'));
-  const [results, setResults] = useState(() => emptyDice(null));
-  const [dieRolls, setDieRolls] = useState(() => emptyDice([]));
-  const [total, setTotal] = useState(null);
-  const [rollResults, setRollResults] = useState('');
-  const [showResultsArea, setShowResultsArea] = useState(false);
+  const [expression, setExpression] = useState('1d20');
+  const [modifier, setModifier] = useState(0);
+  const [d20Mode, setD20Mode] = useState('normal');
+  const [currentRoll, setCurrentRoll] = useState(null);
+  const [history, setHistory] = useState([]);
+  const [error, setError] = useState('');
 
-  function appendHistory(line) {
-    setRollResults((current) => (current ? `${line}\n-------------\n${current}` : line));
-    setShowResultsArea(true);
+  const canRollExpression = useMemo(() => sanitizeExpression(expression).length > 0, [expression]);
+
+  function recordRoll(roll) {
+    const nextRoll = { ...roll, id: crypto.randomUUID() };
+    setCurrentRoll(nextRoll);
+    setHistory((items) => [nextRoll, ...items].slice(0, 8));
+    setError('');
   }
 
-  function setResultsAndTotal(nextResults) {
-    setResults(nextResults);
-    const nextTotal = getDiceTotal(nextResults);
-    setTotal(nextTotal);
-    return nextTotal;
-  }
-
-  function rollSingle(sides) {
-    const key = `d${sides}`;
-    const amount = Number(amounts[key]) || 1;
-    const roll = rollDiceGroup(sides, amount, modifiers[key], modifierTypes[key]);
-    const nextResults = { ...results, [key]: roll.result };
-    const nextAmounts = { ...amounts, [key]: amounts[key] || 1 };
-    setAmounts(nextAmounts);
-    setDieRolls((current) => ({ ...current, [key]: roll.rolls }));
-    setResultsAndTotal(nextResults);
-    appendHistory(formatRollHistoryLine({
-      amounts: { ...emptyDice(), [key]: amount },
-      modifiers,
-      modifierTypes,
-      rolls: { ...emptyDice([]), [key]: roll.rolls },
-      results: { ...emptyDice(null), [key]: roll.result },
-      total: roll.result
-    }));
-  }
-
-  function rollAll() {
-    const nextRolls = {};
-    const nextResults = {};
-
-    for (const sides of diceSet) {
-      const key = `d${sides}`;
-      const amount = Number(amounts[key]) || 0;
-      const roll = rollDiceGroup(sides, amount, modifiers[key], modifierTypes[key]);
-      nextRolls[key] = roll.rolls;
-      nextResults[key] = roll.rolls.length > 0 ? roll.result : null;
-    }
-
-    setDieRolls(nextRolls);
-    const nextTotal = setResultsAndTotal(nextResults);
-    return { nextRolls, nextResults, nextTotal };
-  }
-
-  function compileResultsString(nextRolls, nextResults, nextTotal) {
-    const line = formatRollHistoryLine({
-      amounts,
-      modifiers,
-      modifierTypes,
-      rolls: nextRolls,
-      results: nextResults,
-      total: nextTotal
-    });
-    appendHistory(line);
-  }
-
-  function submit(event) {
+  function rollCurrentExpression(event) {
     event.preventDefault();
-    const { nextRolls, nextResults, nextTotal } = rollAll();
-    compileResultsString(nextRolls, nextResults, nextTotal);
-    setShowResultsArea(true);
+
+    try {
+      recordRoll(evaluateExpression(expression));
+    } catch (caughtError) {
+      setError(caughtError.message);
+    }
+  }
+
+  function rollPreset(presetExpression) {
+    setExpression(presetExpression);
+
+    try {
+      recordRoll(evaluateExpression(presetExpression));
+    } catch (caughtError) {
+      setError(caughtError.message);
+    }
+  }
+
+  function rollQuickDie(sides) {
+    const nextExpression = `1d${sides}`;
+    setExpression(nextExpression);
+    recordRoll(evaluateExpression(nextExpression));
+  }
+
+  function rollCurrentD20() {
+    recordRoll(rollD20(d20Mode, modifier));
   }
 
   function clear() {
-    setAmounts(emptyDice());
-    setModifiers(emptyDice());
-    setModifierTypes(emptyDice('plus'));
-    setResults(emptyDice(null));
-    setDieRolls(emptyDice([]));
-    setTotal(null);
-    setRollResults('');
-    setShowResultsArea(false);
+    setExpression('1d20');
+    setModifier(0);
+    setD20Mode('normal');
+    setCurrentRoll(null);
+    setHistory([]);
+    setError('');
   }
 
   return (
     <PluginCard title="Die Roller" dragHandleProps={cardProps.dragHandleProps}>
-      <form name="dieRollerForm" onSubmit={submit}>
-        <div className="die-roller-list">
-          {diceSet.map((sides) => {
-            const key = `d${sides}`;
-            return (
-              <DieRow
-                key={key}
-                sides={sides}
-                amount={amounts[key]}
-                modifier={modifiers[key]}
-                modifierType={modifierTypes[key]}
-                result={results[key]}
-                rolls={dieRolls[key]}
-                onAmount={(value) => setAmounts((current) => ({ ...current, [key]: value }))}
-                onModifier={(value) => setModifiers((current) => ({ ...current, [key]: value }))}
-                onModifierType={(value) => setModifierTypes((current) => ({ ...current, [key]: value }))}
-                onRoll={() => rollSingle(sides)}
-              />
-            );
-          })}
+      <form name="dieRollerForm" className="die-roller" onSubmit={rollCurrentExpression}>
+        <section className="die-current-panel" aria-live="polite">
+          <div>
+            <span>Result</span>
+            <strong>{currentRoll?.result ?? '-'}</strong>
+          </div>
+          <p>{currentRoll ? currentRoll.breakdown : 'Ready for the next roll.'}</p>
+        </section>
+
+        <label className="die-expression-field">
+          <span>Expression</span>
+          <div className="die-expression-control">
+            <input
+              className="form-control form-control-sm"
+              type="text"
+              value={expression}
+              onChange={(event) => setExpression(event.target.value)}
+              placeholder="2d6+3"
+              spellCheck="false"
+            />
+            <button type="submit" className="btn btn-info btn-sm" disabled={!canRollExpression}>
+              <Dices size={15} strokeWidth={2.4} />
+              Roll
+            </button>
+          </div>
+        </label>
+
+        {error && <div className="die-error">{error}</div>}
+
+        <div className="die-preset-grid">
+          {commonRolls.map((preset) => (
+            <button className="btn btn-light btn-sm" type="button" key={preset.label} onClick={() => rollPreset(preset.expression)}>
+              <span>{preset.label}</span>
+              <small>{preset.expression}</small>
+            </button>
+          ))}
         </div>
 
-        <div className="die-actions">
-          <button type="submit" className="btn btn-info btn-sm" disabled={!hasDiceToRoll(amounts)}>
-            Roll Group
-          </button>
-          {total !== null && (
+        <div className="die-quick-grid">
+          {diceSet.map((sides) => (
+            <button className="btn btn-light btn-sm" type="button" key={sides} onClick={() => rollQuickDie(sides)}>
+              d{sides}
+            </button>
+          ))}
+        </div>
+
+        <section className="die-d20-panel" aria-labelledby="d20ControlsLabel">
+          <div className="die-d20-header">
+            <span id="d20ControlsLabel">d20</span>
+            <small>Mode and modifier</small>
+          </div>
+          <div className="die-d20-controls">
+            <div className="btn-group btn-group-sm die-mode-toggle" role="group" aria-label="d20 roll mode">
+              {Object.entries(modeLabels).map(([mode, label]) => (
+                <button
+                  className={`btn btn-sm ${d20Mode === mode ? 'btn-info active' : 'btn-light'}`}
+                  type="button"
+                  key={mode}
+                  onClick={() => setD20Mode(mode)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <label className="die-mod-field">
+              <span>Mod</span>
+              <div>
+                <NumberInput value={modifier} onChange={(event) => setModifier(event.target.value)} />
+                <span className="btn-group btn-group-sm die-mod-stepper" role="group" aria-label="Adjust d20 modifier">
+                  <button type="button" className="btn btn-light" aria-label="Decrease modifier" onClick={() => setModifier((value) => Number(value || 0) - 1)}>
+                    <Minus size={13} strokeWidth={2.6} />
+                  </button>
+                  <button type="button" className="btn btn-light" aria-label="Increase modifier" onClick={() => setModifier((value) => Number(value || 0) + 1)}>
+                    <Plus size={13} strokeWidth={2.6} />
+                  </button>
+                </span>
+              </div>
+            </label>
+            <button type="button" className="btn btn-info btn-sm die-d20-roll" onClick={rollCurrentD20} aria-label="Roll d20">
+              <span className="die-d20-icon" aria-hidden="true">20</span>
+              Roll
+            </button>
+          </div>
+        </section>
+
+        <div className="die-history-header">
+          <span>Recent</span>
+          {history.length > 0 && (
             <button type="button" className="btn btn-light btn-sm die-clear-button" onClick={clear}>
               <RotateCcw size={14} strokeWidth={2.4} />
               Clear
             </button>
           )}
-          {total !== null && (
-            <div className="die-total">
-              <span>Total</span>
-              <strong>{total}</strong>
-            </div>
-          )}
         </div>
 
-        <div className="die-results-panel">
-          <label htmlFor="resultsHistory">Results</label>
-          <textarea
-            id="resultsHistory"
-            className="form-control"
-            rows="5"
-            value={showResultsArea ? rollResults : ''}
-            placeholder="Individual rolls and group rolls appear here."
-            readOnly
-          />
+        <div className="die-history-list">
+          {history.length > 0 ? (
+            history.map((item) => <HistoryItem item={item} key={item.id} onUse={setExpression} />)
+          ) : (
+            <span className="die-empty-history">No rolls yet.</span>
+          )}
         </div>
       </form>
     </PluginCard>
