@@ -12,6 +12,11 @@ export function usePluginDrafts(plugins) {
     );
   }
 
+  function resetPlugins(nextPlugins) {
+    setDraftPlugins(nextPlugins.map((plugin) => ({ ...plugin })));
+    endDrag();
+  }
+
   function moveDragged(targetId) {
     const activeId = draggedIdRef.current;
     if (!activeId || activeId === targetId) return;
@@ -51,6 +56,7 @@ export function usePluginDrafts(plugins) {
     draggedId,
     dragOverId,
     updateEnabled,
+    resetPlugins,
     startDrag,
     dragOver,
     endDrag

@@ -58,12 +58,13 @@ body {
 .dashboard-muuri {
   position: relative;
   min-height: 12rem;
+  --dashboard-effective-columns: var(--dashboard-columns, 3);
 }
 
 .dashboard-muuri-item {
   position: absolute;
   z-index: 1;
-  width: 33.333%;
+  width: calc(100% / var(--dashboard-effective-columns));
   padding: 0 .425rem .85rem;
 }
 
@@ -95,14 +96,17 @@ body {
 }
 
 @media (max-width: 899px) {
-  .dashboard-muuri-item {
-    width: 50%;
+  .dashboard-muuri {
+    --dashboard-effective-columns: min(var(--dashboard-columns, 3), 2);
   }
 }
 
 @media (max-width: 574px) {
+  .dashboard-muuri {
+    --dashboard-effective-columns: 1;
+  }
+
   .dashboard-muuri-item {
-    width: 100%;
     padding-right: 0;
     padding-left: 0;
   }
@@ -383,6 +387,34 @@ body {
 
 .modal-backdrop-custom .modal-body {
   padding: .75rem 1rem;
+}
+
+.settings-section {
+  margin-bottom: .75rem;
+}
+
+.settings-section:last-child {
+  margin-bottom: 0;
+}
+
+.settings-section-title,
+.settings-field span {
+  display: block;
+  margin-bottom: .35rem;
+  color: #6c757d;
+  font-size: .72rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.settings-field {
+  display: block;
+  margin: 0;
+}
+
+.settings-columns-input {
+  width: 5rem;
 }
 
 .settings-plugin-row {
