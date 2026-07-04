@@ -1,10 +1,19 @@
 # DnDash
-A DnD dashboard app built with React and Vite.
+A virtual DM screen for D&D built with React and Vite.
 
-Contains cards for
-- Loot splitting
-- Currency conversion
-- Die rolling
+DnDash keeps the little table jobs close at hand: rolling dice, splitting loot,
+checking rules, sketching NPCs, shaping encounters, and adding quick flavor when
+the session turns in an unexpected direction.
+
+It is built as a collection of draggable cards, so each DM or player can keep the
+tools they use most visible and hide the rest. Settings save your layout, card
+order, visible cards, and Cheat Sheet tabs locally in the browser.
+
+Includes tools for:
+
+- Table utilities: currency conversion, loot splitting, dice rolling, and stat rolling
+- DM generators: NPCs and names, encounters, magic item flavor, and monster picking
+- Reference tools: combat actions, conditions, movement, and spellcasting basics
 
 ## Development
 
