@@ -20,6 +20,25 @@ function getVisualOrder(grid) {
     .map((item) => item.id);
 }
 
+function freezeDraggedItemWidth(item) {
+  const element = item.getElement();
+  const width = element.getBoundingClientRect().width;
+
+  if (width > 0) {
+    const lockedWidth = `${width}px`;
+    element.style.width = lockedWidth;
+    element.style.minWidth = lockedWidth;
+    element.style.maxWidth = lockedWidth;
+  }
+}
+
+function clearDraggedItemWidth(item) {
+  const element = item.getElement();
+  element.style.width = '';
+  element.style.minWidth = '';
+  element.style.maxWidth = '';
+}
+
 export function useMuuriDashboard(enabledPlugins, onOrderChange) {
   const gridRef = useRef(null);
   const muuriRef = useRef(null);
@@ -80,6 +99,8 @@ export function useMuuriDashboard(enabledPlugins, onOrderChange) {
     });
 
     grid.getItems().forEach((item) => resizeObserver.observe(item.getElement()));
+    grid.on('dragInit', freezeDraggedItemWidth);
+    grid.on('dragReleaseEnd', clearDraggedItemWidth);
     grid.on('dragReleaseEnd', syncPluginOrder);
     grid.refreshItems().layout(true);
 
@@ -87,6 +108,8 @@ export function useMuuriDashboard(enabledPlugins, onOrderChange) {
       if (orderSyncFrame) {
         window.cancelAnimationFrame(orderSyncFrame);
       }
+      grid.off('dragInit', freezeDraggedItemWidth);
+      grid.off('dragReleaseEnd', clearDraggedItemWidth);
       grid.off('dragReleaseEnd', syncPluginOrder);
       resizeObserver.disconnect();
       grid.destroy(false);
