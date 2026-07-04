@@ -162,7 +162,7 @@ export default function DiceRoller({ cardProps = {} }) {
   }
 
   return (
-    <PluginCard title="Die Roller" dragHandleProps={cardProps.dragHandleProps}>
+    <PluginCard title="Die Roller" {...cardProps}>
       <form name="dieRollerForm" className="die-roller" onSubmit={rollCurrentExpression}>
         <section className="die-current-panel" aria-live="polite">
           <div>

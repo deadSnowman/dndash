@@ -269,7 +269,7 @@ export default function StatRoller({ cardProps = {} }) {
   }
 
   return (
-    <PluginCard title="Stat Roller" dragHandleProps={cardProps.dragHandleProps}>
+    <PluginCard title="Stat Roller" {...cardProps}>
       <form name="statRollerForm" className="stat-roller-form">
         <RaceSelector
           selectedRace={selectedRace}

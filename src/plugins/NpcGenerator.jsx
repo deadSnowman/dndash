@@ -133,7 +133,7 @@ export default function NpcGenerator({ cardProps = {}, embedded = false }) {
   if (embedded) return content;
 
   return (
-    <PluginCard title="NPC Generator" dragHandleProps={cardProps.dragHandleProps}>
+    <PluginCard title="NPC Generator" {...cardProps}>
       {content}
     </PluginCard>
   );

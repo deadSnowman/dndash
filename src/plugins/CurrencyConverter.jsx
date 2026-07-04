@@ -22,7 +22,7 @@ export default function CurrencyConverter({ cardProps = {} }) {
   }
 
   return (
-    <PluginCard title="Currency Converter" dragHandleProps={cardProps.dragHandleProps}>
+    <PluginCard title="Currency Converter" {...cardProps}>
       <form name="currencyForm">
         <FormColumns>
           <div className="col">

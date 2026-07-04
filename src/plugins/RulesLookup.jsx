@@ -370,7 +370,7 @@ export default function RulesLookup({ cardProps = {} }) {
   const resultFields = getResultFields(selectedResult);
 
   return (
-    <PluginCard title="Rules Lookup" dragHandleProps={cardProps.dragHandleProps}>
+    <PluginCard title="Rules Lookup" {...cardProps}>
       <div className="rules-lookup">
         <label className="rules-search-field">
           <span>Open5e search</span>

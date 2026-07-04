@@ -132,7 +132,7 @@ export default function LocationGenerator({ cardProps = {}, embedded = false }) 
   if (embedded) return content;
 
   return (
-    <PluginCard title="Location Generator" dragHandleProps={cardProps.dragHandleProps}>
+    <PluginCard title="Location Generator" {...cardProps}>
       {content}
     </PluginCard>
   );

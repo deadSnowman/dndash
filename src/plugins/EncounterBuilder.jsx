@@ -124,7 +124,7 @@ export default function EncounterBuilder({ cardProps = {} }) {
   }
 
   return (
-    <PluginCard title="Encounter Builder" dragHandleProps={cardProps.dragHandleProps}>
+    <PluginCard title="Encounter Builder" {...cardProps}>
       <div className="encounter-builder">
         <div className="encounter-controls">
           <label className="encounter-field">

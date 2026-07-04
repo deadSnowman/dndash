@@ -1,9 +1,26 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
-export default function PluginCard({ title, children, dragHandleProps = {} }) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const toggleCollapsed = () => setIsCollapsed((value) => !value);
+export default function PluginCard({
+  title,
+  children,
+  dragHandleProps = {},
+  isCollapsed: controlledCollapsed,
+  onCollapsedChange
+}) {
+  const [localCollapsed, setLocalCollapsed] = useState(false);
+  const isControlled = typeof controlledCollapsed === 'boolean';
+  const isCollapsed = isControlled ? controlledCollapsed : localCollapsed;
+
+  const toggleCollapsed = () => {
+    const nextCollapsed = !isCollapsed;
+
+    if (!isControlled) {
+      setLocalCollapsed(nextCollapsed);
+    }
+
+    onCollapsedChange?.(nextCollapsed);
+  };
 
   return (
     <div className="card">

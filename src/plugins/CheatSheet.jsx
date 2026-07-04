@@ -29,7 +29,7 @@ export default function CheatSheet({ cardProps = {}, visibleCheatSheetTabIds }) 
   }
 
   return (
-    <PluginCard title="Cheat Sheet" dragHandleProps={cardProps.dragHandleProps}>
+    <PluginCard title="Cheat Sheet" {...cardProps}>
       <ul className="nav nav-tabs cheat-sheet-tabs" id="cheatSheetTab">
         {tabs.map((tab, index) => (
           <li className="nav-item" key={tab.title}>

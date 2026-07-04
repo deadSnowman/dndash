@@ -266,7 +266,7 @@ export default function InitiativeTracker({ cardProps = {} }) {
   }
 
   return (
-    <PluginCard title="Initiative Tracker" dragHandleProps={cardProps.dragHandleProps}>
+    <PluginCard title="Initiative Tracker" {...cardProps}>
       <div className="initiative-tracker">
         <div className="initiative-status">
           <div>

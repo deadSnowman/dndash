@@ -120,7 +120,7 @@ export default function MagicItemQuirkGenerator({ cardProps = {}, embedded = fal
   if (embedded) return content;
 
   return (
-    <PluginCard title="Magic Item Forge" dragHandleProps={cardProps.dragHandleProps}>
+    <PluginCard title="Magic Item Forge" {...cardProps}>
       {content}
     </PluginCard>
   );

@@ -30,7 +30,8 @@ function mergeSavedPlugins(savedPlugins) {
       return {
         ...defaultPlugin,
         enabled:
-          typeof savedPlugin.enabled === 'boolean' ? savedPlugin.enabled : defaultPlugin.enabled
+          typeof savedPlugin.enabled === 'boolean' ? savedPlugin.enabled : defaultPlugin.enabled,
+        collapsed: typeof savedPlugin.collapsed === 'boolean' ? savedPlugin.collapsed : false
       };
     })
     .filter(Boolean);
@@ -80,7 +81,11 @@ function saveDashboardSettings(settings) {
     JSON.stringify({
       columns: clampColumnCount(settings.columns),
       cheatSheetTabIds: mergeSavedCheatSheetTabIds(settings.cheatSheetTabIds),
-      plugins: settings.plugins.map(({ id, enabled }) => ({ id, enabled }))
+      plugins: settings.plugins.map(({ id, enabled, collapsed }) => ({
+        id,
+        enabled,
+        collapsed: collapsed === true
+      }))
     })
   );
 }
@@ -108,6 +113,21 @@ export default function HomePage({ darkTheme = false, onToggleTheme }) {
       const nextSettings = {
         ...currentSettings,
         plugins: [...ordered, ...hidden]
+      };
+
+      saveDashboardSettings(nextSettings);
+      return nextSettings;
+    });
+  }, []);
+
+  const updatePluginCollapsed = useCallback((pluginId, collapsed) => {
+    setDashboardSettings((currentSettings) => {
+      const nextPlugins = currentSettings.plugins.map((plugin) =>
+        plugin.id === pluginId ? { ...plugin, collapsed } : plugin
+      );
+      const nextSettings = {
+        ...currentSettings,
+        plugins: nextPlugins
       };
 
       saveDashboardSettings(nextSettings);
@@ -152,7 +172,13 @@ export default function HomePage({ darkTheme = false, onToggleTheme }) {
             return (
               <div className="dashboard-muuri-item" data-plugin-id={plugin.id} key={plugin.id}>
                 <div className="dashboard-muuri-item-content">
-                  <Component visibleCheatSheetTabIds={cheatSheetTabIds} />
+                  <Component
+                    cardProps={{
+                      isCollapsed: plugin.collapsed === true,
+                      onCollapsedChange: (collapsed) => updatePluginCollapsed(plugin.id, collapsed)
+                    }}
+                    visibleCheatSheetTabIds={cheatSheetTabIds}
+                  />
                 </div>
               </div>
             );

@@ -14,7 +14,7 @@ export default function GeneratorSuite({ cardProps = {} }) {
   const [activeTab, setActiveTab] = useState(generatorTabs[0].id);
 
   return (
-    <PluginCard title="Quick Generators" dragHandleProps={cardProps.dragHandleProps}>
+    <PluginCard title="Quick Generators" {...cardProps}>
       <div className="generator-suite">
         <div className="generator-suite-tabs" role="tablist" aria-label="Quick generators">
           {generatorTabs.map((tab) => (

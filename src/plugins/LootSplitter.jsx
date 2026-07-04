@@ -64,7 +64,7 @@ export default function LootSplitter({ cardProps = {} }) {
   }
 
   return (
-    <PluginCard title="Loot Splitter" dragHandleProps={cardProps.dragHandleProps}>
+    <PluginCard title="Loot Splitter" {...cardProps}>
       <form name="lootForm" className="loot-splitter" onSubmit={split}>
         <div className="loot-top-row">
           <label className="loot-party-field">
