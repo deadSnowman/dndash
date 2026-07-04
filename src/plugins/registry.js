@@ -6,6 +6,7 @@ import DiceRoller from './DiceRoller.jsx';
 import EncounterBuilder from './EncounterBuilder.jsx';
 import RulesLookup from './RulesLookup.jsx';
 import InitiativeTracker from './InitiativeTracker.jsx';
+import PartySnapshot from './PartySnapshot.jsx';
 import GeneratorSuite from './GeneratorSuite.jsx';
 // These standalone generators are intentionally kept available in code.
 // The dashboard exposes them through Quick Generators, so they are hidden from Settings by default.
@@ -21,6 +22,7 @@ export const pluginRegistry = [
   { id: 'rulesLookup', name: 'Rules Lookup', Component: RulesLookup, enabled: true },
   { id: 'diceRoller', name: 'Die Roller', Component: DiceRoller, enabled: true },
   { id: 'initiativeTracker', name: 'Initiative Tracker', Component: InitiativeTracker, enabled: true },
+  { id: 'partySnapshot', name: 'Party Snapshot', Component: PartySnapshot, enabled: true },
   { id: 'generatorSuite', name: 'Quick Generators', Component: GeneratorSuite, enabled: true },
   { id: 'encounterBuilder', name: 'Encounter Builder', Component: EncounterBuilder, enabled: true },
   { id: 'npcGenerator', name: 'NPC Generator', Component: NpcGenerator, enabled: false, hidden: true },
