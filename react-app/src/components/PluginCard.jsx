@@ -19,7 +19,7 @@ export default function PluginCard({ title, children, dragHandleProps = {} }) {
         <strong>{title}</strong>
         <button
           type="button"
-          className="card-toggle float-right"
+          className="card-toggle"
           onPointerDown={(event) => event.stopPropagation()}
           onMouseDown={(event) => event.stopPropagation()}
           onTouchStart={(event) => event.stopPropagation()}
