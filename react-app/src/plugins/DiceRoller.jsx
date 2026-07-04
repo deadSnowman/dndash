@@ -1,15 +1,14 @@
 import { useState } from 'react';
 import { Minus, Plus } from 'lucide-react';
 import PluginCard from '../components/PluginCard.jsx';
-import { diceSet, rollDie } from '../lib/diceRoller.js';
-
-function emptyDice(value = '') {
-  return Object.fromEntries(diceSet.map((sides) => [`d${sides}`, value]));
-}
-
-function modifierText(modifierType, modifier) {
-  return `${modifierType === 'plus' ? '+' : '-'} ${modifier}`;
-}
+import {
+  diceSet,
+  emptyDice,
+  formatRollHistoryLine,
+  getDiceTotal,
+  hasDiceToRoll,
+  rollDiceGroup
+} from '../lib/diceRoller.js';
 
 function DieRow({ sides, amount, modifier, modifierType, result, onAmount, onModifier, onModifierType, onRoll }) {
   return (
@@ -28,7 +27,7 @@ function DieRow({ sides, amount, modifier, modifierType, result, onAmount, onMod
                 type="number"
                 step="any"
                 min="0"
-                placeholder="amnt"
+                placeholder="amount"
                 value={amount}
                 onChange={(event) => onAmount(event.target.value)}
               />
@@ -73,39 +72,29 @@ function DieRow({ sides, amount, modifier, modifierType, result, onAmount, onMod
 }
 
 export default function DiceRoller({ cardProps = {} }) {
-  const [amnt, setAmnt] = useState(() => emptyDice());
-  const [modifier, setModifier] = useState(() => emptyDice());
-  const [radioModifier, setRadioModifier] = useState(() => emptyDice('plus'));
+  const [amounts, setAmounts] = useState(() => emptyDice());
+  const [modifiers, setModifiers] = useState(() => emptyDice());
+  const [modifierTypes, setModifierTypes] = useState(() => emptyDice('plus'));
   const [results, setResults] = useState(() => emptyDice(null));
   const [dieRolls, setDieRolls] = useState(() => emptyDice([]));
   const [total, setTotal] = useState(null);
   const [rollResults, setRollResults] = useState('');
   const [showResultsArea, setShowResultsArea] = useState(false);
 
-  function totalDisabled() {
-    return !diceSet.some((sides) => Number(amnt[`d${sides}`]) > 0);
-  }
-
-  function applyModifier(key, value) {
-    const mod = Number(modifier[key]) || 0;
-    if (mod <= 0) return value;
-    return radioModifier[key] === 'plus' ? value + mod : value - mod;
-  }
-
   function setResultsAndTotal(nextResults) {
     setResults(nextResults);
-    const nextTotal = Object.values(nextResults).reduce((sum, value) => sum + (Number(value) || 0), 0);
+    const nextTotal = getDiceTotal(nextResults);
     setTotal(nextTotal);
     return nextTotal;
   }
 
   function rollSingle(sides) {
     const key = `d${sides}`;
-    const amount = Number(amnt[key]) || 1;
-    const rolls = Array.from({ length: amount }, () => rollDie(sides));
-    const nextResults = { ...results, [key]: applyModifier(key, rolls.reduce((a, b) => a + b, 0)) };
-    setAmnt((current) => ({ ...current, [key]: current[key] || 1 }));
-    setDieRolls((current) => ({ ...current, [key]: rolls }));
+    const amount = Number(amounts[key]) || 1;
+    const roll = rollDiceGroup(sides, amount, modifiers[key], modifierTypes[key]);
+    const nextResults = { ...results, [key]: roll.result };
+    setAmounts((current) => ({ ...current, [key]: current[key] || 1 }));
+    setDieRolls((current) => ({ ...current, [key]: roll.rolls }));
     setResultsAndTotal(nextResults);
   }
 
@@ -115,11 +104,10 @@ export default function DiceRoller({ cardProps = {} }) {
 
     for (const sides of diceSet) {
       const key = `d${sides}`;
-      const amount = Number(amnt[key]) || 0;
-      nextRolls[key] = Array.from({ length: amount }, () => rollDie(sides));
-      nextResults[key] = nextRolls[key].length > 0
-        ? applyModifier(key, nextRolls[key].reduce((a, b) => a + b, 0))
-        : null;
+      const amount = Number(amounts[key]) || 0;
+      const roll = rollDiceGroup(sides, amount, modifiers[key], modifierTypes[key]);
+      nextRolls[key] = roll.rolls;
+      nextResults[key] = roll.rolls.length > 0 ? roll.result : null;
     }
 
     setDieRolls(nextRolls);
@@ -128,19 +116,14 @@ export default function DiceRoller({ cardProps = {} }) {
   }
 
   function compileResultsString(nextRolls, nextResults, nextTotal) {
-    const rollTypeArr = [];
-    const resArr = [];
-
-    for (const sides of diceSet) {
-      const key = `d${sides}`;
-      if (nextResults[key] !== null || Number(amnt[key]) > 0) {
-        rollTypeArr.push(Number(modifier[key]) > 0 ? `(${amnt[key]}${key} ${modifierText(radioModifier[key], modifier[key])})` : `(${amnt[key]}${key})`);
-        const rollText = `(${(nextRolls[key] || []).join(' + ')})`;
-        resArr.push(Number(modifier[key]) > 0 ? `(${rollText} ${modifierText(radioModifier[key], modifier[key])})` : rollText);
-      }
-    }
-
-    const line = `${rollTypeArr.join(' + ')}\n${resArr.join(' + ')} = ${nextTotal}`;
+    const line = formatRollHistoryLine({
+      amounts,
+      modifiers,
+      modifierTypes,
+      rolls: nextRolls,
+      results: nextResults,
+      total: nextTotal
+    });
     setRollResults((current) => (current ? `${line}\n-------------\n${current}` : line));
   }
 
@@ -152,9 +135,9 @@ export default function DiceRoller({ cardProps = {} }) {
   }
 
   function clear() {
-    setAmnt(emptyDice());
-    setModifier(emptyDice());
-    setRadioModifier(emptyDice('plus'));
+    setAmounts(emptyDice());
+    setModifiers(emptyDice());
+    setModifierTypes(emptyDice('plus'));
     setResults(emptyDice(null));
     setDieRolls(emptyDice([]));
     setTotal(null);
@@ -171,13 +154,13 @@ export default function DiceRoller({ cardProps = {} }) {
             <DieRow
               key={key}
               sides={sides}
-              amount={amnt[key]}
-              modifier={modifier[key]}
-              modifierType={radioModifier[key]}
+              amount={amounts[key]}
+              modifier={modifiers[key]}
+              modifierType={modifierTypes[key]}
               result={results[key]}
-              onAmount={(value) => setAmnt((current) => ({ ...current, [key]: value }))}
-              onModifier={(value) => setModifier((current) => ({ ...current, [key]: value }))}
-              onModifierType={(value) => setRadioModifier((current) => ({ ...current, [key]: value }))}
+              onAmount={(value) => setAmounts((current) => ({ ...current, [key]: value }))}
+              onModifier={(value) => setModifiers((current) => ({ ...current, [key]: value }))}
+              onModifierType={(value) => setModifierTypes((current) => ({ ...current, [key]: value }))}
               onRoll={() => rollSingle(sides)}
             />
           );
@@ -186,7 +169,7 @@ export default function DiceRoller({ cardProps = {} }) {
         <div className="form-row form-group">
           <div className="col">
             <div className="form-group">
-              <button type="submit" className="btn btn-info btn-sm" disabled={totalDisabled()}>
+              <button type="submit" className="btn btn-info btn-sm" disabled={!hasDiceToRoll(amounts)}>
                 Roll all
               </button>{' '}
               {total !== null && (

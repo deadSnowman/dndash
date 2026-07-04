@@ -1,38 +1,15 @@
-import { useRef, useState } from 'react';
+import { usePluginDrafts } from '../hooks/usePluginDrafts.js';
 
 export default function SettingsModal({ plugins, onCancel, onSave }) {
-  const [draftPlugins, setDraftPlugins] = useState(() => plugins.map((plugin) => ({ ...plugin })));
-  const [draggedId, setDraggedId] = useState(null);
-  const [dragOverId, setDragOverId] = useState(null);
-  const draggedIdRef = useRef(null);
-
-  function updateEnabled(id, enabled) {
-    setDraftPlugins((current) =>
-      current.map((plugin) => (plugin.id === id ? { ...plugin, enabled } : plugin))
-    );
-  }
-
-  function moveDragged(targetId) {
-    const activeId = draggedIdRef.current;
-    if (!activeId || activeId === targetId) return;
-
-    setDraftPlugins((current) => {
-      const next = [...current];
-      const from = next.findIndex((plugin) => plugin.id === activeId);
-      const to = next.findIndex((plugin) => plugin.id === targetId);
-      if (from === -1 || to === -1 || from === to) return current;
-
-      const [moved] = next.splice(from, 1);
-      next.splice(to, 0, moved);
-      return next;
-    });
-  }
-
-  function endDrag() {
-    draggedIdRef.current = null;
-    setDraggedId(null);
-    setDragOverId(null);
-  }
+  const {
+    draftPlugins,
+    draggedId,
+    dragOverId,
+    updateEnabled,
+    startDrag,
+    dragOver,
+    endDrag
+  } = usePluginDrafts(plugins);
 
   return (
     <div
@@ -69,16 +46,8 @@ export default function SettingsModal({ plugins, onCancel, onSave }) {
                 <div
                   className={`settings-plugin-row ${draggedId === plugin.id ? 'is-dragging' : ''}`}
                   draggable
-                  onDragStart={(event) => {
-                    draggedIdRef.current = plugin.id;
-                    setDraggedId(plugin.id);
-                    event.dataTransfer.effectAllowed = 'move';
-                  }}
-                  onDragOver={(event) => {
-                    event.preventDefault();
-                    setDragOverId(plugin.id);
-                    moveDragged(plugin.id);
-                  }}
+                  onDragStart={(event) => startDrag(plugin.id, event)}
+                  onDragOver={(event) => dragOver(plugin.id, event)}
                   onDrop={(event) => {
                     event.preventDefault();
                     endDrag();

@@ -1,80 +1,77 @@
 import { useState } from 'react';
 import PluginCard from '../components/PluginCard.jsx';
+import { FormColumns } from '../components/forms/FormRow.jsx';
+import NumberInput from '../components/forms/NumberInput.jsx';
+import SelectField from '../components/forms/SelectField.jsx';
 import { convertCurrency, currencyTypes } from '../lib/currency.js';
 
 export default function CurrencyConverter({ cardProps = {} }) {
-  const [fromcurrency, setFromcurrency] = useState('');
-  const [tocurrency, setTocurrency] = useState('');
-  const [fromcurrencytype, setFromcurrencytype] = useState('Electrum');
-  const [tocurrencytype, setTocurrencytype] = useState('Copper');
+  const [fromCurrency, setFromCurrency] = useState('');
+  const [toCurrency, setToCurrency] = useState('');
+  const [fromCurrencyType, setFromCurrencyType] = useState('Electrum');
+  const [toCurrencyType, setToCurrencyType] = useState('Copper');
 
-  function convert(nextValue = fromcurrency, nextFromType = fromcurrencytype, nextToType = tocurrencytype) {
-    setFromcurrency(nextValue);
-    setTocurrency(convertCurrency(nextValue, nextFromType, nextToType));
+  function convert(nextValue = fromCurrency, nextFromType = fromCurrencyType, nextToType = toCurrencyType) {
+    setFromCurrency(nextValue);
+    setToCurrency(convertCurrency(nextValue, nextFromType, nextToType));
   }
 
-  function convertBackward(nextValue = tocurrency, nextToType = tocurrencytype, nextFromType = fromcurrencytype) {
-    setTocurrency(nextValue);
-    setFromcurrency(convertCurrency(nextValue, nextToType, nextFromType));
+  function convertBackward(nextValue = toCurrency, nextToType = toCurrencyType, nextFromType = fromCurrencyType) {
+    setToCurrency(nextValue);
+    setFromCurrency(convertCurrency(nextValue, nextToType, nextFromType));
   }
 
   return (
     <PluginCard title="Currency Converter" dragHandleProps={cardProps.dragHandleProps}>
       <form name="currencyForm">
-        <div className="form-row form-group">
+        <FormColumns>
           <div className="col">
-            <input
-              className="form-control form-control-sm"
-              type="number"
+            <NumberInput
               step="any"
               min="0"
-              value={fromcurrency}
+              value={fromCurrency}
               onChange={(event) => convert(event.target.value)}
               placeholder="0"
             />
           </div>
           <div className="col">
-            <select
-              className="form-control form-control-sm"
-              value={fromcurrencytype}
+            <SelectField
+              value={fromCurrencyType}
               onChange={(event) => {
-                setFromcurrencytype(event.target.value);
-                convert(fromcurrency, event.target.value, tocurrencytype);
+                setFromCurrencyType(event.target.value);
+                convert(fromCurrency, event.target.value, toCurrencyType);
               }}
             >
               {currencyTypes.map((type) => (
                 <option key={type}>{type}</option>
               ))}
-            </select>
+            </SelectField>
           </div>
-        </div>
-        <div className="form-row form-group">
+        </FormColumns>
+        <FormColumns>
           <div className="col">
-            <input
-              className="form-control form-control-sm"
-              type="number"
+            <NumberInput
               step="any"
               min="0"
-              value={tocurrency}
+              value={toCurrency}
               onChange={(event) => convertBackward(event.target.value)}
               placeholder="0"
             />
           </div>
           <div className="col">
-            <select
-              className="form-control form-control-sm"
-              value={tocurrencytype}
+            <SelectField
+              value={toCurrencyType}
               onChange={(event) => {
-                setTocurrencytype(event.target.value);
-                convert(fromcurrency, fromcurrencytype, event.target.value);
+                setToCurrencyType(event.target.value);
+                convert(fromCurrency, fromCurrencyType, event.target.value);
               }}
             >
               {currencyTypes.map((type) => (
                 <option key={type}>{type}</option>
               ))}
-            </select>
+            </SelectField>
           </div>
-        </div>
+        </FormColumns>
       </form>
     </PluginCard>
   );

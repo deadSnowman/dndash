@@ -1,23 +1,135 @@
 import { useState } from 'react';
 import { Check, Plus } from 'lucide-react';
 import PluginCard from '../components/PluginCard.jsx';
-import { rollExpression } from '../lib/diceRoller.js';
 import { abilities, emptyAbilities, races } from '../lib/races.js';
+import {
+  abilityLabels,
+  abilityObjectFrom,
+  formatModifier,
+  getAbilityModifiers,
+  getAbilityScores,
+  rollAbilityScores,
+  rollMethods
+} from '../lib/statRoller.js';
 
-const abilityLabels = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHR'];
-const rollMethods = {
-  '4d6 Drop Lowest': '4d6dl',
-  '4d6 Keep All': '4d6',
-  '3d6 Best of 3': '4d6'
-};
-
-function calculateModifier(score) {
-  if (score >= 30) return 10;
-  return Math.floor((score - 10) / 2);
+function RaceSelector({ selectedRace, selectedSubrace, race, hasSubrace, onRaceChange, onSubraceChange }) {
+  return (
+    <div className="form-group row">
+      <div className="col">
+        <select className="form-control form-control-sm" value={selectedRace} onChange={(event) => onRaceChange(event.target.value)}>
+          <option value="-1">-- Race --</option>
+          {races.map((item, index) => <option key={item.name} value={index}>{item.name}</option>)}
+        </select>
+      </div>
+      {hasSubrace && (
+        <div className="col">
+          <select className="form-control form-control-sm" value={selectedSubrace} onChange={(event) => onSubraceChange(event.target.value)}>
+            <option value="-1">-- Subrace --</option>
+            {race.subraces.map((subrace, index) => <option key={subrace.name} value={index}>{subrace.name}</option>)}
+          </select>
+        </div>
+      )}
+    </div>
+  );
 }
 
-function formatModifier(value) {
-  return value > 0 ? `+${value}` : value;
+function AbilityTable({
+  abilityScoreRolls,
+  abilityScoreIncrease,
+  abilityModifiers,
+  abilityScores,
+  pickIncrease,
+  picks,
+  statsRolled,
+  isPickDisabled,
+  onPick
+}) {
+  return (
+    <div className="form-group scrollable">
+      <table className="table statroller-table">
+        <thead className="thead-light">
+          <tr>{abilityLabels.map((label) => <td key={label}>{label}</td>)}</tr>
+        </thead>
+        <tbody>
+          <tr>{abilities.map((ability) => <td key={ability}>{abilityScoreRolls[ability]}</td>)}</tr>
+          <tr>
+            {abilities.map((ability) => (
+              <td key={ability}>
+                <div>{abilityScoreIncrease[ability] + pickIncrease[ability]}</div>
+                {picks > 0 && abilityScoreIncrease[ability] === 0 && !isPickDisabled(ability) && (
+                  <button
+                    type="button"
+                    className={`pick-more btn btn-sm ${pickIncrease[ability] > 0 ? 'btn-info' : 'btn-light'}`}
+                    onClick={() => onPick(ability)}
+                  >
+                    <Plus size={12} strokeWidth={2.6} />
+                  </button>
+                )}
+              </td>
+            ))}
+          </tr>
+          <tr className="abilities">
+            {abilities.map((ability) => (
+              <td className="border border-info" key={ability}>
+                <div className="ability-modifier">{formatModifier(abilityModifiers[ability])}</div>
+                <div className="ability-score">{abilityScores[ability] + (statsRolled ? pickIncrease[ability] : 0)}</div>
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function RollMethodControls({
+  raceReady,
+  rollMethod,
+  methodMenuOpen,
+  showClear,
+  onRoll,
+  onClear,
+  onToggleMenu,
+  onSelectMethod
+}) {
+  return (
+    <div className="form-group">
+      <div className="btn-group stat-method-group">
+        <button type="button" className="btn btn-info btn-sm" disabled={!raceReady} onClick={onRoll}>
+          Roll Stats
+        </button>
+        <button
+          type="button"
+          className="btn btn-info btn-sm dropdown-toggle dropdown-toggle-split stat-method-toggle"
+          onClick={onToggleMenu}
+        >
+          method
+        </button>
+        {methodMenuOpen && (
+          <div className="dropdown-menu stat-method-menu show" role="menu">
+            {Object.keys(rollMethods).map((method) => (
+              <button
+                key={method}
+                type="button"
+                className={`dropdown-item ${rollMethod === method ? 'active' : ''}`}
+                onClick={() => onSelectMethod(method)}
+              >
+                <span className={`checkmark ${rollMethod === method ? '' : 'invisible'}`}>
+                  <Check size={13} strokeWidth={2.7} />
+                </span>{' '}
+                {method}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>{' '}
+      {showClear && (
+        <button type="button" className="btn btn-light btn-sm" onClick={onClear}>
+          Clear
+        </button>
+      )}
+    </div>
+  );
 }
 
 export default function StatRoller({ cardProps = {} }) {
@@ -35,20 +147,8 @@ export default function StatRoller({ cardProps = {} }) {
   const race = selectedRace === '-1' ? null : races[Number(selectedRace)];
   const hasSubrace = Boolean(race?.subraces?.length);
   const raceReady = selectedRace !== '-1' && (!hasSubrace || selectedSubrace !== '-1');
-  const abilityScores = statsRolled
-    ? Object.fromEntries(abilities.map((ability) => [ability, abilityScoreIncrease[ability] + abilityScoreRolls[ability]]))
-    : emptyAbilities();
-  const abilityModifiers = statsRolled
-    ? Object.fromEntries(abilities.map((ability) => [ability, calculateModifier(abilityScores[ability] + pickIncrease[ability])]))
-    : emptyAbilities();
-
-  function applyIncrease(source) {
-    const next = emptyAbilities();
-    for (const ability of Object.keys(source || {})) {
-      next[ability] = source[ability];
-    }
-    setAbilityScoreIncrease(next);
-  }
+  const abilityScores = getAbilityScores(statsRolled, abilityScoreRolls, abilityScoreIncrease);
+  const abilityModifiers = getAbilityModifiers(statsRolled, abilityScores, pickIncrease);
 
   function raceSelectionChanged(value) {
     const nextRace = value === '-1' ? null : races[Number(value)];
@@ -58,7 +158,7 @@ export default function StatRoller({ cardProps = {} }) {
     setPicked(0);
 
     if (nextRace && !nextRace.subraces?.length) {
-      applyIncrease(nextRace.abilityScoreIncrease);
+      setAbilityScoreIncrease(abilityObjectFrom(nextRace.abilityScoreIncrease));
       setPicks(nextRace.picks || 0);
     } else {
       setAbilityScoreIncrease(emptyAbilities());
@@ -72,7 +172,7 @@ export default function StatRoller({ cardProps = {} }) {
     setPicked(0);
     setPicks(0);
     if (value !== '-1') {
-      applyIncrease(race.subraces[Number(value)].abilityScoreIncrease);
+      setAbilityScoreIncrease(abilityObjectFrom(race.subraces[Number(value)].abilityScoreIncrease));
     } else {
       setAbilityScoreIncrease(emptyAbilities());
     }
@@ -112,117 +212,49 @@ export default function StatRoller({ cardProps = {} }) {
     });
   }
 
-  function bestOfThree() {
-    return Math.max(...Array.from({ length: 3 }, () => rollExpression(rollMethods[rollMethod]).result));
-  }
-
   function rollStats() {
     if (!raceReady) return;
-    setAbilityScoreRolls(
-      Object.fromEntries(
-        abilities.map((ability) => [
-          ability,
-          rollMethod === '3d6 Best of 3' ? bestOfThree() : rollExpression(rollMethods[rollMethod]).result
-        ])
-      )
-    );
+    setAbilityScoreRolls(rollAbilityScores(rollMethod));
     setStatsRolled(true);
   }
 
   return (
     <PluginCard title="Stat Roller" dragHandleProps={cardProps.dragHandleProps}>
       <form name="statRollerForm">
-        <div className="form-group row">
-          <div className="col">
-            <select className="form-control form-control-sm" value={selectedRace} onChange={(event) => raceSelectionChanged(event.target.value)}>
-              <option value="-1">-- Race --</option>
-              {races.map((item, index) => <option key={item.name} value={index}>{item.name}</option>)}
-            </select>
-          </div>
-          {hasSubrace && (
-            <div className="col">
-              <select className="form-control form-control-sm" value={selectedSubrace} onChange={(event) => subraceSelectionChange(event.target.value)}>
-                <option value="-1">-- Subrace --</option>
-                {race.subraces.map((subrace, index) => <option key={subrace.name} value={index}>{subrace.name}</option>)}
-              </select>
-            </div>
-          )}
-        </div>
+        <RaceSelector
+          selectedRace={selectedRace}
+          selectedSubrace={selectedSubrace}
+          race={race}
+          hasSubrace={hasSubrace}
+          onRaceChange={raceSelectionChanged}
+          onSubraceChange={subraceSelectionChange}
+        />
 
-        <div className="form-group scrollable">
-          <table className="table statroller-table">
-            <thead className="thead-light">
-              <tr>{abilityLabels.map((label) => <td key={label}>{label}</td>)}</tr>
-            </thead>
-            <tbody>
-              <tr>{abilities.map((ability) => <td key={ability}>{abilityScoreRolls[ability]}</td>)}</tr>
-              <tr>
-                {abilities.map((ability) => (
-                  <td key={ability}>
-                    <div>{abilityScoreIncrease[ability] + pickIncrease[ability]}</div>
-                    {picks > 0 && abilityScoreIncrease[ability] === 0 && !areOtherStatsPicked(ability) && (
-                      <button
-                        type="button"
-                        className={`pick-more btn btn-sm ${pickIncrease[ability] > 0 ? 'btn-info' : 'btn-light'}`}
-                        onClick={() => pickAbilityIncrease(ability)}
-                      >
-                        <Plus size={12} strokeWidth={2.6} />
-                      </button>
-                    )}
-                  </td>
-                ))}
-              </tr>
-              <tr className="abilities">
-                {abilities.map((ability) => (
-                  <td className="border border-info" key={ability}>
-                    <div className="ability-modifier">{formatModifier(abilityModifiers[ability])}</div>
-                    <div className="ability-score">{abilityScores[ability] + (statsRolled ? pickIncrease[ability] : 0)}</div>
-                  </td>
-                ))}
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <AbilityTable
+          abilityScoreRolls={abilityScoreRolls}
+          abilityScoreIncrease={abilityScoreIncrease}
+          abilityModifiers={abilityModifiers}
+          abilityScores={abilityScores}
+          pickIncrease={pickIncrease}
+          picks={picks}
+          statsRolled={statsRolled}
+          isPickDisabled={areOtherStatsPicked}
+          onPick={pickAbilityIncrease}
+        />
 
-        <div className="form-group">
-          <div className="btn-group stat-method-group">
-            <button type="button" className="btn btn-info btn-sm" disabled={!raceReady} onClick={rollStats}>
-              Roll Stats
-            </button>
-            <button
-              type="button"
-              className="btn btn-info btn-sm dropdown-toggle dropdown-toggle-split stat-method-toggle"
-              onClick={() => setMethodMenuOpen((value) => !value)}
-            >
-              method
-            </button>
-            {methodMenuOpen && (
-              <div className="dropdown-menu stat-method-menu show" role="menu">
-                {Object.keys(rollMethods).map((method) => (
-                  <button
-                    key={method}
-                    type="button"
-                    className={`dropdown-item ${rollMethod === method ? 'active' : ''}`}
-                    onClick={() => {
-                      setRollMethod(method);
-                      setMethodMenuOpen(false);
-                    }}
-                  >
-                    <span className={`checkmark ${rollMethod === method ? '' : 'invisible'}`}>
-                      <Check size={13} strokeWidth={2.7} />
-                    </span>{' '}
-                    {method}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>{' '}
-          {(statsRolled || selectedRace !== '-1' || selectedSubrace !== '-1') && (
-            <button type="button" className="btn btn-light btn-sm" onClick={clear}>
-              Clear
-            </button>
-          )}
-        </div>
+        <RollMethodControls
+          raceReady={raceReady}
+          rollMethod={rollMethod}
+          methodMenuOpen={methodMenuOpen}
+          showClear={statsRolled || selectedRace !== '-1' || selectedSubrace !== '-1'}
+          onRoll={rollStats}
+          onClear={clear}
+          onToggleMenu={() => setMethodMenuOpen((value) => !value)}
+          onSelectMethod={(method) => {
+            setRollMethod(method);
+            setMethodMenuOpen(false);
+          }}
+        />
       </form>
     </PluginCard>
   );

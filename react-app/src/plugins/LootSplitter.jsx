@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import PluginCard from '../components/PluginCard.jsx';
-import { coins, createEmptyLoot, hasAnyLoot, hasRemainder, splitLoot } from '../lib/lootSplitter.js';
+import CheckboxField from '../components/forms/CheckboxField.jsx';
+import { FormRow } from '../components/forms/FormRow.jsx';
+import NumberInput from '../components/forms/NumberInput.jsx';
+import { coins, hasAnyLoot, hasRemainder, splitLoot } from '../lib/lootSplitter.js';
 
 const coinLabels = {
   copper: 'Copper (cp)',
@@ -43,65 +46,40 @@ export default function LootSplitter({ cardProps = {} }) {
   return (
     <PluginCard title="Loot Splitter" dragHandleProps={cardProps.dragHandleProps}>
       <form name="lootForm" onSubmit={split}>
-        <div className="form-group row">
-          <label className="col-sm-4 control-label">Num Party</label>
-          <div className="col-sm-4">
-            <input
-              className="form-control form-control-sm party-count-input"
-              type="number"
-              min="1"
-              value={numparty}
-              onChange={(event) => setNumparty(event.target.value)}
-              placeholder="0"
-            />
-          </div>
-        </div>
+        <FormRow label="Num Party" controlWidth="col-sm-4">
+          <NumberInput
+            className="party-count-input"
+            min="1"
+            value={numparty}
+            onChange={(event) => setNumparty(event.target.value)}
+            placeholder="0"
+          />
+        </FormRow>
 
         {coins.map((coin) => (
-          <div className="form-group row" key={coin}>
-            <label className="col-sm-4 control-label">{coinLabels[coin]}</label>
-            <div className="col-sm-8">
-              <input
-                className="form-control form-control-sm"
-                type="number"
-                min="0"
-                value={loot[coin]}
-                onChange={(event) => updateLoot(coin, event.target.value)}
-                placeholder="0"
-                disabled={coin === 'electrum' && !electrum}
-              />
-            </div>
-          </div>
+          <FormRow label={coinLabels[coin]} key={coin}>
+            <NumberInput
+              min="0"
+              value={loot[coin]}
+              onChange={(event) => updateLoot(coin, event.target.value)}
+              placeholder="0"
+              disabled={coin === 'electrum' && !electrum}
+            />
+          </FormRow>
         ))}
 
-        <div className="form-group row">
-          <span className="col-sm-4 control-label" />
-          <div className="col-sm-8">
-            <div>
-              <input type="checkbox" checked={convert} onChange={(event) => setConvert(event.target.checked)} />{' '}
-              <label className="col-form-label text-fix">Convert currency?</label>
-            </div>
-            <div>
-              <input
-                type="checkbox"
-                checked={splitRemainder}
-                onChange={(event) => setSplitRemainder(event.target.checked)}
-              />{' '}
-              <label className="col-form-label text-fix">Split to individuals?</label>
-            </div>
-            <div>
-              <input
-                type="checkbox"
-                checked={electrum}
-                onChange={(event) => {
-                  setElectrum(event.target.checked);
-                  if (!event.target.checked) updateLoot('electrum', 0);
-                }}
-              />{' '}
-              <label className="col-form-label text-fix">Allow electrum?</label>
-            </div>
-          </div>
-        </div>
+        <FormRow>
+          <CheckboxField checked={convert} label="Convert currency?" onChange={setConvert} />
+          <CheckboxField checked={splitRemainder} label="Split to individuals?" onChange={setSplitRemainder} />
+          <CheckboxField
+            checked={electrum}
+            label="Allow electrum?"
+            onChange={(checked) => {
+              setElectrum(checked);
+              if (!checked) updateLoot('electrum', 0);
+            }}
+          />
+        </FormRow>
 
         <div className="form-group">
           <button type="submit" disabled={!hasAnyLoot(loot)} className="btn btn-info btn-sm">
