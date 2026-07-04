@@ -527,6 +527,83 @@ body {
   background: #fff;
 }
 
+.item-quirk-generator {
+  display: grid;
+  gap: .65rem;
+}
+
+.item-quirk-controls,
+.item-quirk-actions {
+  display: flex;
+  align-items: end;
+  gap: .5rem;
+}
+
+.item-quirk-controls .btn,
+.item-quirk-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  white-space: nowrap;
+}
+
+.item-quirk-field {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+.item-quirk-field span,
+.item-quirk-title span,
+.item-quirk-row span {
+  display: block;
+  margin-bottom: .2rem;
+  color: #6c757d;
+  font-size: .68rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.item-quirk-title {
+  padding: .5rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #f8f9fa;
+}
+
+.item-quirk-title strong {
+  display: block;
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+.item-quirk-list {
+  display: grid;
+  gap: .35rem;
+}
+
+.item-quirk-row {
+  padding: .45rem .5rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #fff;
+}
+
+.item-quirk-row p {
+  margin: 0;
+  font-size: .82rem;
+  line-height: 1.25;
+}
+
+.item-quirk-actions {
+  align-items: center;
+}
+
+.item-quirk-actions small {
+  color: #6c757d;
+}
+
 @media (max-width: 574px) {
   .die-roller-list {
     grid-template-columns: 1fr;

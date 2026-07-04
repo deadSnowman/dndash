@@ -5,6 +5,7 @@ import CheatSheet from './CheatSheet.jsx';
 import DiceRoller from './DiceRoller.jsx';
 import NpcGenerator from './NpcGenerator.jsx';
 import EncounterBuilder from './EncounterBuilder.jsx';
+import MagicItemQuirkGenerator from './MagicItemQuirkGenerator.jsx';
 
 export const pluginRegistry = [
   { id: 'currencyConverter', name: 'Currency Converter', Component: CurrencyConverter, enabled: true },
@@ -13,7 +14,8 @@ export const pluginRegistry = [
   { id: 'cheatSheet', name: 'Cheat Sheet', Component: CheatSheet, enabled: true },
   { id: 'diceRoller', name: 'Die Roller', Component: DiceRoller, enabled: true },
   { id: 'npcGenerator', name: 'NPC Generator', Component: NpcGenerator, enabled: true },
-  { id: 'encounterBuilder', name: 'Encounter Builder', Component: EncounterBuilder, enabled: true }
+  { id: 'encounterBuilder', name: 'Encounter Builder', Component: EncounterBuilder, enabled: true },
+  { id: 'magicItemQuirks', name: 'Magic Item Quirks', Component: MagicItemQuirkGenerator, enabled: true }
 ];
 
 export function createInitialPlugins() {
