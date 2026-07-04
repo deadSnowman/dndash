@@ -1,19 +1,15 @@
 import { useRef, useState } from 'react';
 import PluginCard from '../components/PluginCard.jsx';
-import conditionsHtml from '../../../components/plugin-cards/cheat-sheet/conditions.html?raw';
-import actionsHtml from '../../../components/plugin-cards/cheat-sheet/actions.html?raw';
+import { getVisibleCheatSheetTabs } from './cheatSheetTabs.js';
 
-const tabs = [
-  { title: 'Conditions', content: conditionsHtml },
-  { title: 'Actions', content: actionsHtml }
-];
-
-export default function CheatSheet({ cardProps = {} }) {
+export default function CheatSheet({ cardProps = {}, visibleCheatSheetTabIds }) {
   const [active, setActive] = useState(0);
   const contentRef = useRef(null);
+  const tabs = getVisibleCheatSheetTabs(visibleCheatSheetTabIds);
+  const activeIndex = Math.min(active, tabs.length - 1);
 
-  function jumpToCondition(event) {
-    const link = event.target.closest('.condition-list a');
+  function jumpToSection(event) {
+    const link = event.target.closest('.cheat-sheet-link-list a');
     if (!link || !contentRef.current?.contains(link)) return;
 
     const id = link.getAttribute('href')?.slice(1);
@@ -27,6 +23,11 @@ export default function CheatSheet({ cardProps = {} }) {
     });
   }
 
+  function selectTab(index) {
+    setActive(index);
+    contentRef.current?.scrollTo({ top: 0 });
+  }
+
   return (
     <PluginCard title="Cheat Sheet" dragHandleProps={cardProps.dragHandleProps}>
       <ul className="nav nav-tabs cheat-sheet-tabs" id="cheatSheetTab">
@@ -34,8 +35,8 @@ export default function CheatSheet({ cardProps = {} }) {
           <li className="nav-item" key={tab.title}>
             <button
               type="button"
-              className={`nav-link ${active === index ? 'active' : ''}`}
-              onClick={() => setActive(index)}
+              className={`nav-link ${activeIndex === index ? 'active' : ''}`}
+              onClick={() => selectTab(index)}
             >
               {tab.title}
             </button>
@@ -45,8 +46,8 @@ export default function CheatSheet({ cardProps = {} }) {
       <div
         className="cheat-sheet-tab-content"
         ref={contentRef}
-        onClick={jumpToCondition}
-        dangerouslySetInnerHTML={{ __html: tabs[active].content }}
+        onClick={jumpToSection}
+        dangerouslySetInnerHTML={{ __html: tabs[activeIndex].content }}
       />
     </PluginCard>
   );

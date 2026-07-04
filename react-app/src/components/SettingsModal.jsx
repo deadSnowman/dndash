@@ -1,9 +1,18 @@
 import { useState } from 'react';
 import NumberInput from './forms/NumberInput.jsx';
 import { usePluginDrafts } from '../hooks/usePluginDrafts.js';
+import { cheatSheetTabs } from '../plugins/cheatSheetTabs.js';
 
-export default function SettingsModal({ columns, defaultPlugins, plugins, onCancel, onSave }) {
+export default function SettingsModal({
+  cheatSheetTabIds,
+  columns,
+  defaultPlugins,
+  plugins,
+  onCancel,
+  onSave
+}) {
   const [draftColumns, setDraftColumns] = useState(columns);
+  const [draftCheatSheetTabIds, setDraftCheatSheetTabIds] = useState(cheatSheetTabIds);
   const {
     draftPlugins,
     draggedId,
@@ -14,6 +23,17 @@ export default function SettingsModal({ columns, defaultPlugins, plugins, onCanc
     dragOver,
     endDrag
   } = usePluginDrafts(plugins);
+
+  function updateCheatSheetTab(id, enabled) {
+    setDraftCheatSheetTabIds((current) => {
+      if (enabled) {
+        return current.includes(id) ? current : [...current, id];
+      }
+
+      if (current.length <= 1) return current;
+      return current.filter((tabId) => tabId !== id);
+    });
+  }
 
   return (
     <div
@@ -87,6 +107,26 @@ export default function SettingsModal({ columns, defaultPlugins, plugins, onCanc
                 </div>
               ))}
             </div>
+            <div className="settings-section">
+              <div className="settings-section-title">Cheat Sheet Tabs</div>
+              <div className="settings-checkbox-grid">
+                {cheatSheetTabs.map((tab) => {
+                  const checked = draftCheatSheetTabIds.includes(tab.id);
+
+                  return (
+                    <label className="settings-checkbox" key={tab.id}>
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        disabled={checked && draftCheatSheetTabIds.length <= 1}
+                        onChange={(event) => updateCheatSheetTab(tab.id, event.target.checked)}
+                      />{' '}
+                      {tab.title}
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
           </div>
           <div className="modal-footer">
             <button
@@ -99,7 +139,13 @@ export default function SettingsModal({ columns, defaultPlugins, plugins, onCanc
             <button
               className="btn btn-info btn-sm"
               type="button"
-              onClick={() => onSave({ columns: draftColumns, plugins: draftPlugins })}
+              onClick={() =>
+                onSave({
+                  cheatSheetTabIds: draftCheatSheetTabIds,
+                  columns: draftColumns,
+                  plugins: draftPlugins
+                })
+              }
             >
               OK
             </button>

@@ -336,10 +336,8 @@ body {
   overflow-y: auto;
   scroll-behavior: smooth;
   border: 1px solid #dee2e6;
-  border-top: unset;
   padding: .75rem;
-  border-bottom-left-radius: .25rem;
-  border-bottom-right-radius: .25rem;
+  border-radius: .25rem;
 }
 
 .cheat-sheet-tab-content ul li,
@@ -358,9 +356,12 @@ body {
 }
 
 .cheat-sheet-tabs {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem;
   width: 100%;
+  margin-bottom: .35rem;
+  border-bottom: 0;
 }
 
 .cheat-sheet-tabs .nav-item {
@@ -368,26 +369,38 @@ body {
 }
 
 #cheatSheetTab .nav-link {
-  width: 100%;
-  padding: .35rem .5rem;
-  color: unset;
-  font-size: .85rem;
+  width: auto;
+  padding: .25rem .45rem;
+  border: 1px solid #dee2e6;
+  border-radius: .2rem;
+  color: #212529;
+  background: #f8f9fa;
+  font-size: .72rem;
+  font-weight: 700;
   line-height: 1.2;
   text-align: center;
+  white-space: nowrap;
 }
 
 #cheatSheetTab .nav-link.active {
+  color: #0f6674;
   background: #fff;
+  border-color: #17a2b8;
 }
 
-.condition-list {
+#cheatSheetTab .nav-link:hover,
+#cheatSheetTab .nav-link:focus {
+  border-color: #17a2b8;
+}
+
+.cheat-sheet-link-list {
   display: flex;
   flex-wrap: wrap;
   gap: .35rem;
   margin-bottom: .75rem;
 }
 
-.condition-list a {
+.cheat-sheet-link-list a {
   display: inline-flex;
   align-items: center;
   min-height: 1.6rem;
@@ -401,8 +414,8 @@ body {
   line-height: 1.1;
 }
 
-.condition-list a:hover,
-.condition-list a:focus {
+.cheat-sheet-link-list a:hover,
+.cheat-sheet-link-list a:focus {
   color: #0f6674;
   border-color: #17a2b8;
   text-decoration: none;
@@ -422,12 +435,17 @@ body {
   width: min(420px, calc(100vw - 2rem));
 }
 
+.modal-backdrop-custom .modal-content {
+  max-height: calc(100vh - 2rem);
+}
+
 .modal-backdrop-custom .modal-header,
 .modal-backdrop-custom .modal-footer {
   padding: .75rem 1rem;
 }
 
 .modal-backdrop-custom .modal-body {
+  overflow-y: auto;
   padding: .75rem 1rem;
 }
 
@@ -457,6 +475,33 @@ body {
 
 .settings-columns-input {
   width: 5rem;
+}
+
+.settings-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: .35rem .75rem;
+}
+
+.settings-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: .35rem;
+  min-width: 0;
+  margin: 0;
+  font-size: .85rem;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.settings-checkbox input {
+  flex: 0 0 auto;
+  margin-top: .12rem;
+}
+
+.settings-checkbox:has(input:disabled) {
+  color: #6c757d;
+  cursor: default;
 }
 
 .settings-plugin-row {

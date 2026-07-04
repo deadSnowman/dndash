@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import NavBar from '../components/NavBar.jsx';
 import SettingsModal from '../components/SettingsModal.jsx';
 import { useMuuriDashboard } from '../hooks/useMuuriDashboard.js';
+import { defaultCheatSheetTabIds } from '../plugins/cheatSheetTabs.js';
 import { createInitialPlugins, getPluginComponent } from '../plugins/registry.js';
 
 const DASHBOARD_SETTINGS_KEY = 'dndash.dashboardSettings';
@@ -38,10 +39,19 @@ function mergeSavedPlugins(savedPlugins) {
   return [...ordered, ...newPlugins];
 }
 
+function mergeSavedCheatSheetTabIds(savedTabIds) {
+  if (!Array.isArray(savedTabIds)) return defaultCheatSheetTabIds;
+
+  const savedIds = new Set(savedTabIds);
+  const visibleIds = defaultCheatSheetTabIds.filter((id) => savedIds.has(id));
+  return visibleIds.length > 0 ? visibleIds : defaultCheatSheetTabIds;
+}
+
 function loadDashboardSettings() {
   if (typeof window === 'undefined') {
     return {
       columns: DEFAULT_COLUMN_COUNT,
+      cheatSheetTabIds: defaultCheatSheetTabIds,
       plugins: createInitialPlugins()
     };
   }
@@ -50,11 +60,13 @@ function loadDashboardSettings() {
     const savedSettings = JSON.parse(window.localStorage.getItem(DASHBOARD_SETTINGS_KEY) || '{}');
     return {
       columns: clampColumnCount(savedSettings.columns),
+      cheatSheetTabIds: mergeSavedCheatSheetTabIds(savedSettings.cheatSheetTabIds),
       plugins: mergeSavedPlugins(savedSettings.plugins)
     };
   } catch {
     return {
       columns: DEFAULT_COLUMN_COUNT,
+      cheatSheetTabIds: defaultCheatSheetTabIds,
       plugins: createInitialPlugins()
     };
   }
@@ -67,6 +79,7 @@ function saveDashboardSettings(settings) {
     DASHBOARD_SETTINGS_KEY,
     JSON.stringify({
       columns: clampColumnCount(settings.columns),
+      cheatSheetTabIds: mergeSavedCheatSheetTabIds(settings.cheatSheetTabIds),
       plugins: settings.plugins.map(({ id, enabled }) => ({ id, enabled }))
     })
   );
@@ -75,7 +88,7 @@ function saveDashboardSettings(settings) {
 export default function HomePage() {
   const [dashboardSettings, setDashboardSettings] = useState(loadDashboardSettings);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const { plugins, columns } = dashboardSettings;
+  const { plugins, columns, cheatSheetTabIds } = dashboardSettings;
   const enabledPlugins = plugins.filter((plugin) => plugin.enabled);
 
   const updatePluginOrder = useCallback((nextOrder) => {
@@ -98,6 +111,7 @@ export default function HomePage() {
   function saveSettings(nextSettings) {
     const settings = {
       columns: clampColumnCount(nextSettings.columns),
+      cheatSheetTabIds: mergeSavedCheatSheetTabIds(nextSettings.cheatSheetTabIds),
       plugins: nextSettings.plugins.map((plugin) => ({ ...plugin }))
     };
 
@@ -122,7 +136,7 @@ export default function HomePage() {
             return (
               <div className="dashboard-muuri-item" data-plugin-id={plugin.id} key={plugin.id}>
                 <div className="dashboard-muuri-item-content">
-                  <Component />
+                  <Component visibleCheatSheetTabIds={cheatSheetTabIds} />
                 </div>
               </div>
             );
@@ -131,6 +145,7 @@ export default function HomePage() {
       </div>
       {settingsOpen && (
         <SettingsModal
+          cheatSheetTabIds={cheatSheetTabIds}
           columns={columns}
           defaultPlugins={createInitialPlugins()}
           plugins={plugins}
