@@ -815,6 +815,12 @@ body {
   .rules-results-shell {
     grid-template-columns: 1fr;
   }
+
+  .initiative-status,
+  .initiative-row-fields,
+  .initiative-notes-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .npc-generator {
@@ -1005,6 +1011,217 @@ body {
 
 .location-actions small {
   color: #6c757d;
+}
+
+.initiative-tracker {
+  display: grid;
+  gap: .65rem;
+}
+
+.initiative-status {
+  display: grid;
+  grid-template-columns: minmax(4rem, .45fr) minmax(0, 1fr);
+  gap: .45rem;
+}
+
+.initiative-status div {
+  display: grid;
+  gap: .2rem;
+  min-width: 0;
+  padding: .5rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #f8f9fa;
+}
+
+.initiative-status span,
+.initiative-row-summary,
+.initiative-row-fields label span {
+  color: #6c757d;
+  font-size: .68rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.initiative-status strong {
+  overflow: hidden;
+  font-size: 1.05rem;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.initiative-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem;
+}
+
+.initiative-actions .btn,
+.initiative-row-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .25rem;
+  white-space: nowrap;
+}
+
+.initiative-list {
+  display: grid;
+  gap: .45rem;
+}
+
+.initiative-empty {
+  padding: .55rem;
+  border: 1px dashed #dee2e6;
+  border-radius: .25rem;
+  color: #6c757d;
+  background: #f8f9fa;
+  font-size: .82rem;
+  line-height: 1.25;
+}
+
+.initiative-row {
+  display: grid;
+  gap: .45rem;
+  padding: .5rem;
+  border: 1px solid #dee2e6;
+  border-left: .3rem solid #dee2e6;
+  border-radius: .25rem;
+  background: #fff;
+}
+
+.initiative-row.active {
+  border-left-color: #17a2b8;
+}
+
+.initiative-row-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: .18rem .45rem;
+  align-items: start;
+}
+
+.initiative-row-main > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .3rem;
+  min-width: 0;
+}
+
+.initiative-health-dot {
+  flex: 0 0 auto;
+  width: .65rem;
+  height: .65rem;
+  border: 1px solid rgba(0, 0, 0, .15);
+  border-radius: 50%;
+  background: #adb5bd;
+  box-shadow: 0 0 0 .16rem rgba(173, 181, 189, .18);
+}
+
+.initiative-health-dot.steady {
+  border-color: #198754;
+  background: #28a745;
+  box-shadow: 0 0 0 .16rem rgba(40, 167, 69, .14);
+}
+
+.initiative-health-dot.bloodied {
+  border-color: #d39e00;
+  background: #ffc107;
+  box-shadow: 0 0 0 .16rem rgba(255, 193, 7, .18);
+}
+
+.initiative-health-dot.down {
+  border-color: #bd2130;
+  background: #dc3545;
+  box-shadow: 0 0 0 .16rem rgba(220, 53, 69, .16);
+}
+
+.initiative-row-main strong {
+  overflow-wrap: anywhere;
+  font-size: .95rem;
+  line-height: 1.15;
+}
+
+.initiative-row-main small {
+  padding: .1rem .32rem;
+  border-radius: 999px;
+  color: #0f6674;
+  background: #d7f3f7;
+  font-size: .64rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.initiative-row-summary {
+  grid-column: 1;
+}
+
+.initiative-edit {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  align-self: start;
+}
+
+.initiative-row-details {
+  display: grid;
+  gap: .28rem;
+  padding: .42rem .5rem;
+  border: 1px solid #e9ecef;
+  border-radius: .25rem;
+  background: #f8f9fa;
+}
+
+.initiative-row-details span {
+  color: #495057;
+  font-size: .78rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.initiative-row-details p {
+  margin: 0;
+  color: #495057;
+  font-size: .78rem;
+  line-height: 1.3;
+}
+
+.initiative-row-fields {
+  display: grid;
+  grid-template-columns: minmax(6rem, 1.5fr) repeat(4, minmax(3.35rem, .65fr));
+  gap: .35rem;
+}
+
+.initiative-row-fields label {
+  display: grid;
+  gap: .18rem;
+  min-width: 0;
+  margin: 0;
+}
+
+.initiative-notes-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.initiative-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .35rem;
+}
+
+.initiative-remove {
+  width: 2rem;
+  padding-right: 0;
+  padding-left: 0;
 }
 
 .encounter-builder {
@@ -1843,6 +2060,7 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .loot-options,
 :is(.app-shell, body)[data-theme="dark"] .npc-detail-row,
 :is(.app-shell, body)[data-theme="dark"] .location-detail-row,
+:is(.app-shell, body)[data-theme="dark"] .initiative-row,
 :is(.app-shell, body)[data-theme="dark"] .item-quirk-row,
 :is(.app-shell, body)[data-theme="dark"] .encounter-thresholds div,
 :is(.app-shell, body)[data-theme="dark"] .encounter-picker {
@@ -1896,11 +2114,14 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .die-current-panel,
 :is(.app-shell, body)[data-theme="dark"] .die-d20-panel,
 :is(.app-shell, body)[data-theme="dark"] .rules-card,
+:is(.app-shell, body)[data-theme="dark"] .initiative-empty,
 :is(.app-shell, body)[data-theme="dark"] .loot-coin-field,
 :is(.app-shell, body)[data-theme="dark"] .loot-result-card,
 :is(.app-shell, body)[data-theme="dark"] .loot-coin-pill,
 :is(.app-shell, body)[data-theme="dark"] .npc-name-panel,
 :is(.app-shell, body)[data-theme="dark"] .location-name-panel,
+:is(.app-shell, body)[data-theme="dark"] .initiative-status div,
+:is(.app-shell, body)[data-theme="dark"] .initiative-row-details,
 :is(.app-shell, body)[data-theme="dark"] .item-quirk-title,
 :is(.app-shell, body)[data-theme="dark"] .encounter-summary,
 :is(.app-shell, body)[data-theme="dark"] .stat-flexible-panel,
@@ -1981,6 +2202,9 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .location-field span,
 :is(.app-shell, body)[data-theme="dark"] .location-name-panel span,
 :is(.app-shell, body)[data-theme="dark"] .location-detail-row span,
+:is(.app-shell, body)[data-theme="dark"] .initiative-status span,
+:is(.app-shell, body)[data-theme="dark"] .initiative-row-summary,
+:is(.app-shell, body)[data-theme="dark"] .initiative-row-fields label span,
 :is(.app-shell, body)[data-theme="dark"] .item-quirk-field span,
 :is(.app-shell, body)[data-theme="dark"] .item-quirk-title span,
 :is(.app-shell, body)[data-theme="dark"] .item-quirk-row span,
@@ -2000,6 +2224,20 @@ body {
 }
 
 :is(.app-shell, body)[data-theme="dark"] .rules-summary {
+  color: var(--app-text);
+}
+
+:is(.app-shell, body)[data-theme="dark"] .initiative-row-main small {
+  color: #9eeaf9;
+  background: rgba(23, 162, 184, .18);
+}
+
+:is(.app-shell, body)[data-theme="dark"] .initiative-health-dot {
+  border-color: rgba(255, 255, 255, .18);
+}
+
+:is(.app-shell, body)[data-theme="dark"] .initiative-row-details span,
+:is(.app-shell, body)[data-theme="dark"] .initiative-row-details p {
   color: var(--app-text);
 }
 

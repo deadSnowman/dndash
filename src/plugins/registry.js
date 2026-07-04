@@ -8,6 +8,7 @@ import EncounterBuilder from './EncounterBuilder.jsx';
 import MagicItemQuirkGenerator from './MagicItemQuirkGenerator.jsx';
 import RulesLookup from './RulesLookup.jsx';
 import LocationGenerator from './LocationGenerator.jsx';
+import InitiativeTracker from './InitiativeTracker.jsx';
 
 export const pluginRegistry = [
   { id: 'currencyConverter', name: 'Currency Converter', Component: CurrencyConverter, enabled: true },
@@ -16,6 +17,7 @@ export const pluginRegistry = [
   { id: 'cheatSheet', name: 'Cheat Sheet', Component: CheatSheet, enabled: true },
   { id: 'rulesLookup', name: 'Rules Lookup', Component: RulesLookup, enabled: true },
   { id: 'diceRoller', name: 'Die Roller', Component: DiceRoller, enabled: true },
+  { id: 'initiativeTracker', name: 'Initiative Tracker', Component: InitiativeTracker, enabled: true },
   { id: 'npcGenerator', name: 'NPC Generator', Component: NpcGenerator, enabled: true },
   { id: 'locationGenerator', name: 'Location Generator', Component: LocationGenerator, enabled: true },
   { id: 'encounterBuilder', name: 'Encounter Builder', Component: EncounterBuilder, enabled: true },
