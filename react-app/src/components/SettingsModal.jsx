@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { GripVertical, RotateCcw } from 'lucide-react';
 import NumberInput from './forms/NumberInput.jsx';
 import { usePluginDrafts } from '../hooks/usePluginDrafts.js';
-import { cheatSheetTabs } from '../plugins/cheatSheetTabs.js';
+import { cheatSheetTabs, defaultCheatSheetTabIds } from '../plugins/cheatSheetTabs.js';
 
 export default function SettingsModal({
   cheatSheetTabIds,
@@ -35,6 +36,10 @@ export default function SettingsModal({
     });
   }
 
+  function showAllCheatSheetTabs() {
+    setDraftCheatSheetTabIds(defaultCheatSheetTabIds);
+  }
+
   return (
     <div
       className="modal-backdrop-custom"
@@ -63,52 +68,86 @@ export default function SettingsModal({
           </div>
           <div className="modal-body">
             <div className="settings-section">
-              <label className="settings-field">
-                <span>Columns</span>
+              <div className="settings-section-header">
+                <div>
+                  <div className="settings-section-title">Layout</div>
+                  <p>Choose how many dashboard columns to use on larger screens.</p>
+                </div>
+              </div>
+              <div className="settings-inline-field">
+                <label htmlFor="settings-columns">Columns</label>
                 <NumberInput
+                  id="settings-columns"
                   className="settings-columns-input"
                   min="1"
                   max="5"
                   value={draftColumns}
                   onChange={(event) => setDraftColumns(event.target.value)}
                 />
-              </label>
+              </div>
             </div>
             <div className="settings-section">
-              <div className="settings-section-title">Cards</div>
-              {draftPlugins.map((plugin) => (
-                <div key={plugin.id}>
-                  {draggedId && dragOverId === plugin.id && draggedId !== plugin.id && (
-                    <div className="settings-drop-preview" aria-hidden="true" />
-                  )}
-                  <div
-                    className={`settings-plugin-row ${draggedId === plugin.id ? 'is-dragging' : ''}`}
-                    draggable
-                    onDragStart={(event) => startDrag(plugin.id, event)}
-                    onDragOver={(event) => dragOver(plugin.id, event)}
-                    onDrop={(event) => {
-                      event.preventDefault();
-                      endDrag();
-                    }}
-                    onDragEnd={endDrag}
-                  >
-                    <span className="settings-drag-handle" aria-hidden="true">
-                      {'\u2630'}
-                    </span>
-                    <label className="settings-plugin-label">
-                      <input
-                        type="checkbox"
-                        checked={plugin.enabled}
-                        onChange={(event) => updateEnabled(plugin.id, event.target.checked)}
-                      />{' '}
-                      {plugin.name}
-                    </label>
-                  </div>
+              <div className="settings-section-header">
+                <div>
+                  <div className="settings-section-title">Cards</div>
+                  <p>Drag cards to reorder them and uncheck cards you want hidden.</p>
                 </div>
-              ))}
+                <button
+                  className="btn btn-light btn-sm settings-small-action"
+                  type="button"
+                  onClick={() => resetPlugins(defaultPlugins)}
+                >
+                  <RotateCcw size={14} strokeWidth={2.4} />
+                  Reset
+                </button>
+              </div>
+              <div className="settings-card-list">
+                {draftPlugins.map((plugin) => (
+                  <div key={plugin.id}>
+                    {draggedId && dragOverId === plugin.id && draggedId !== plugin.id && (
+                      <div className="settings-drop-preview" aria-hidden="true" />
+                    )}
+                    <div
+                      className={`settings-plugin-row ${draggedId === plugin.id ? 'is-dragging' : ''}`}
+                      draggable
+                      onDragStart={(event) => startDrag(plugin.id, event)}
+                      onDragOver={(event) => dragOver(plugin.id, event)}
+                      onDrop={(event) => {
+                        event.preventDefault();
+                        endDrag();
+                      }}
+                      onDragEnd={endDrag}
+                    >
+                      <span className="settings-drag-handle" aria-hidden="true">
+                        <GripVertical size={16} strokeWidth={2.4} />
+                      </span>
+                      <label className="settings-plugin-label">
+                        <input
+                          type="checkbox"
+                          checked={plugin.enabled}
+                          onChange={(event) => updateEnabled(plugin.id, event.target.checked)}
+                        />{' '}
+                        {plugin.name}
+                      </label>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="settings-section">
-              <div className="settings-section-title">Cheat Sheet Tabs</div>
+              <div className="settings-section-header">
+                <div>
+                  <div className="settings-section-title">Cheat Sheet Tabs</div>
+                  <p>Pick the reference tabs shown inside the Cheat Sheet card.</p>
+                </div>
+                <button
+                  className="btn btn-light btn-sm settings-small-action"
+                  type="button"
+                  onClick={showAllCheatSheetTabs}
+                >
+                  Show all
+                </button>
+              </div>
               <div className="settings-checkbox-grid">
                 {cheatSheetTabs.map((tab) => {
                   const checked = draftCheatSheetTabIds.includes(tab.id);
@@ -129,12 +168,8 @@ export default function SettingsModal({
             </div>
           </div>
           <div className="modal-footer">
-            <button
-              className="btn btn-outline-secondary btn-sm mr-auto"
-              type="button"
-              onClick={() => resetPlugins(defaultPlugins)}
-            >
-              Reset cards
+            <button className="btn btn-light btn-sm" type="button" onClick={onCancel}>
+              Cancel
             </button>
             <button
               className="btn btn-info btn-sm"
@@ -147,10 +182,7 @@ export default function SettingsModal({
                 })
               }
             >
-              OK
-            </button>
-            <button className="btn btn-light btn-sm" type="button" onClick={onCancel}>
-              Cancel
+              Save Settings
             </button>
           </div>
         </div>
