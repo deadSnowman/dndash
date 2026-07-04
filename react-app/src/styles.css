@@ -147,10 +147,187 @@ body {
     padding-right: 0;
     padding-left: 0;
   }
+
 }
 
 .party-count-input {
   width: 5rem;
+}
+
+.loot-splitter {
+  display: grid;
+  gap: .65rem;
+}
+
+.loot-top-row {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  align-items: end;
+  gap: .75rem;
+}
+
+.loot-party-field,
+.loot-coin-field {
+  display: grid;
+  gap: .2rem;
+  min-width: 0;
+  margin: 0;
+}
+
+.loot-party-field span,
+.loot-coin-field span,
+.loot-result-card > span {
+  color: #6c757d;
+  font-size: .68rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.loot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .4rem;
+}
+
+.loot-actions .btn,
+.loot-clear-button {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  white-space: nowrap;
+}
+
+.loot-coin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(4rem, 1fr));
+  gap: .45rem;
+}
+
+.loot-coin-field {
+  position: relative;
+  padding: .45rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #f8f9fa;
+}
+
+.loot-coin-field small {
+  color: #6c757d;
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.loot-coin-input-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .3rem;
+}
+
+.loot-coin-input {
+  min-width: 0;
+}
+
+.loot-options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: .35rem;
+  padding: .55rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #fff;
+}
+
+.loot-options > div {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  min-height: 1.35rem;
+}
+
+.loot-options input {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.loot-options label {
+  margin-bottom: 0;
+  padding: 0;
+  line-height: 1.2;
+}
+
+.loot-results {
+  display: grid;
+  gap: .5rem;
+  margin-top: .75rem;
+}
+
+.loot-result-card {
+  display: grid;
+  gap: .4rem;
+  padding: .55rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #f8f9fa;
+}
+
+.loot-coin-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+}
+
+.loot-coin-pill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: .2rem;
+  min-height: 1.55rem;
+  padding: .2rem .45rem;
+  border: 1px solid #dee2e6;
+  border-radius: .2rem;
+  background: #fff;
+  font-size: .8rem;
+  line-height: 1;
+}
+
+.loot-empty {
+  color: #6c757d;
+  font-size: .82rem;
+}
+
+.loot-individual-results {
+  grid-template-columns: 1fr;
+}
+
+.loot-player-result {
+  display: grid;
+  gap: .25rem;
+  padding-top: .4rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.loot-player-result strong {
+  font-size: .82rem;
+}
+
+@media (max-width: 574px) {
+  .loot-top-row {
+    grid-template-columns: 1fr;
+    gap: .5rem;
+  }
+
+  .loot-actions {
+    justify-content: flex-start;
+  }
+
+  .loot-coin-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .col-fixed {
@@ -1172,6 +1349,7 @@ body {
 .app-shell[data-theme="dark"] .modal-content,
 .app-shell[data-theme="dark"] .about-feature-group,
 .app-shell[data-theme="dark"] .die-row,
+.app-shell[data-theme="dark"] .loot-options,
 .app-shell[data-theme="dark"] .npc-detail-row,
 .app-shell[data-theme="dark"] .item-quirk-row,
 .app-shell[data-theme="dark"] .encounter-thresholds div,
@@ -1225,6 +1403,9 @@ body {
 .app-shell[data-theme="dark"] .abilities td,
 .app-shell[data-theme="dark"] .die-result strong,
 .app-shell[data-theme="dark"] .die-total,
+.app-shell[data-theme="dark"] .loot-coin-field,
+.app-shell[data-theme="dark"] .loot-result-card,
+.app-shell[data-theme="dark"] .loot-coin-pill,
 .app-shell[data-theme="dark"] .npc-name-panel,
 .app-shell[data-theme="dark"] .item-quirk-title,
 .app-shell[data-theme="dark"] .encounter-summary,
@@ -1273,6 +1454,11 @@ body {
 .app-shell[data-theme="dark"] .die-result span,
 .app-shell[data-theme="dark"] .die-results-panel label,
 .app-shell[data-theme="dark"] .die-total span,
+.app-shell[data-theme="dark"] .loot-party-field span,
+.app-shell[data-theme="dark"] .loot-coin-field span,
+.app-shell[data-theme="dark"] .loot-coin-field small,
+.app-shell[data-theme="dark"] .loot-result-card > span,
+.app-shell[data-theme="dark"] .loot-empty,
 .app-shell[data-theme="dark"] .npc-field span,
 .app-shell[data-theme="dark"] .npc-name-panel span,
 .app-shell[data-theme="dark"] .npc-detail-row span,
