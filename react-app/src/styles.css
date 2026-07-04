@@ -83,10 +83,6 @@ body {
   padding: 0 .425rem .85rem;
 }
 
-.dashboard-muuri-item:has(.stat-method-menu.show) {
-  z-index: 4;
-}
-
 .dashboard-muuri-item.muuri-item-dragging {
   z-index: 3;
 }
@@ -634,6 +630,12 @@ body {
 .statroller-table {
   text-align: center;
   border-collapse: separate;
+  margin-bottom: 0;
+}
+
+.statroller-table td {
+  padding: .45rem .35rem;
+  vertical-align: middle;
 }
 
 .ability-modifier {
@@ -646,59 +648,78 @@ body {
 }
 
 .pick-more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
   font-size: .6rem;
 }
 
-.stat-method-group {
-  position: relative;
+.stat-roller-form {
+  display: grid;
+  gap: .65rem;
 }
 
-.stat-method-toggle {
+.stat-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: .5rem;
+}
+
+.stat-field {
+  display: grid;
+  gap: .2rem;
+  min-width: 0;
+  margin: 0;
+}
+
+.stat-field span,
+.stat-section-title {
+  color: #6c757d;
+  font-size: .68rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.stat-flexible-panel {
+  display: grid;
+  gap: .45rem;
+  padding: .55rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #f8f9fa;
+}
+
+.stat-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: .5rem;
+}
+
+.stat-method-field {
+  flex: 1 1 11rem;
+}
+
+.stat-actions .btn {
   display: inline-flex;
   align-items: center;
-  gap: .35rem;
-  padding-right: .55rem;
+  min-height: 1.95rem;
+  gap: .3rem;
+  white-space: nowrap;
 }
 
-.stat-method-toggle::after {
-  margin-left: .15rem;
+.stat-clear-button {
+  margin-left: auto;
 }
 
-.stat-method-menu {
-  z-index: 1100;
-  min-width: 11rem;
-  top: 100%;
-  left: 0;
-}
-
-.stat-method-menu .dropdown-item {
-  padding: .25rem .5rem;
-  font-size: .875rem;
-  text-align: left;
-}
-
-.stat-method-menu .dropdown-item:hover,
-.stat-method-menu .dropdown-item:focus {
-  color: #212529;
-  background-color: rgba(23, 162, 184, .12);
-}
-
-.stat-method-menu .dropdown-item.active {
-  color: #212529 !important;
-  background-color: transparent;
-}
-
-.stat-method-menu .dropdown-item.active .checkmark {
-  color: #17a2b8;
-}
-
-.stat-method-menu .dropdown-item:active {
-  color: #fff !important;
-  background-color: #17a2b8;
-}
-
-.stat-method-menu .dropdown-item:active .checkmark {
-  color: #fff;
+@media (max-width: 574px) {
+  .stat-clear-button {
+    margin-left: 0;
+  }
 }
 
 .checkmark {
