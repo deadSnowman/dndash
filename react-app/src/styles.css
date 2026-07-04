@@ -348,9 +348,140 @@ body {
   color: #6c757d;
 }
 
+.encounter-builder {
+  display: grid;
+  gap: .65rem;
+}
+
+.encounter-controls {
+  display: grid;
+  grid-template-columns: minmax(5rem, .8fr) minmax(5rem, 1fr);
+  gap: .5rem;
+}
+
+.encounter-field,
+.encounter-monster-row label {
+  display: grid;
+  gap: .2rem;
+  min-width: 0;
+  margin: 0;
+}
+
+.encounter-field span,
+.encounter-summary span,
+.encounter-thresholds span,
+.encounter-monster-header span,
+.encounter-monster-row label span {
+  color: #6c757d;
+  font-size: .68rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.encounter-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .45rem;
+  padding: .55rem;
+  border: 1px solid #dee2e6;
+  border-left: .3rem solid #6c757d;
+  border-radius: .25rem;
+  background: #f8f9fa;
+}
+
+.encounter-summary div,
+.encounter-thresholds div {
+  display: grid;
+  gap: .15rem;
+}
+
+.encounter-summary strong {
+  font-size: 1rem;
+  line-height: 1.15;
+}
+
+.encounter-summary.difficulty-easy {
+  border-left-color: #28a745;
+}
+
+.encounter-summary.difficulty-medium {
+  border-left-color: #17a2b8;
+}
+
+.encounter-summary.difficulty-hard {
+  border-left-color: #ffc107;
+}
+
+.encounter-summary.difficulty-deadly {
+  border-left-color: #dc3545;
+}
+
+.encounter-thresholds {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(4.75rem, 1fr));
+  gap: .35rem;
+}
+
+.encounter-thresholds div {
+  padding: .4rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #fff;
+}
+
+.encounter-thresholds strong {
+  font-size: .85rem;
+  line-height: 1.1;
+}
+
+.encounter-monsters {
+  display: grid;
+  gap: .4rem;
+}
+
+.encounter-monster-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+}
+
+.encounter-monster-header .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+}
+
+.encounter-monster-row {
+  display: grid;
+  grid-template-columns: minmax(4.25rem, .45fr) minmax(8rem, 1fr) auto;
+  gap: .4rem;
+  align-items: end;
+}
+
+.encounter-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  min-width: 2rem;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.encounter-note {
+  color: #6c757d;
+  line-height: 1.25;
+}
+
 @media (max-width: 574px) {
   .die-roller-list {
     grid-template-columns: 1fr;
+  }
+
+  .encounter-monster-row {
+    grid-template-columns: minmax(4.25rem, .45fr) minmax(7rem, 1fr) auto;
   }
 }
 
