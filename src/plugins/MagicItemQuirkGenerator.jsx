@@ -17,7 +17,7 @@ function ItemQuirkRow({ label, value }) {
   );
 }
 
-export default function MagicItemQuirkGenerator({ cardProps = {} }) {
+export default function MagicItemQuirkGenerator({ cardProps = {}, embedded = false }) {
   const [itemType, setItemType] = useState('any');
   const [rarity, setRarity] = useState('any');
   const [item, setItem] = useState(() => generateMagicItemQuirk('any', 'any'));
@@ -65,9 +65,8 @@ export default function MagicItemQuirkGenerator({ cardProps = {} }) {
     }
   }
 
-  return (
-    <PluginCard title="Magic Item Forge" dragHandleProps={cardProps.dragHandleProps}>
-      <div className="item-quirk-generator">
+  const content = (
+    <div className="item-quirk-generator">
         <div className="item-quirk-controls">
           <label className="item-quirk-field">
             <span>Item</span>
@@ -116,6 +115,13 @@ export default function MagicItemQuirkGenerator({ cardProps = {} }) {
           {copyStatus && <small>{copyStatus}</small>}
         </div>
       </div>
+  );
+
+  if (embedded) return content;
+
+  return (
+    <PluginCard title="Magic Item Forge" dragHandleProps={cardProps.dragHandleProps}>
+      {content}
     </PluginCard>
   );
 }

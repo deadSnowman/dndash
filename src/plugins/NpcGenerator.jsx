@@ -24,7 +24,7 @@ function DetailRow({ label, value, onRegenerate }) {
   );
 }
 
-export default function NpcGenerator({ cardProps = {} }) {
+export default function NpcGenerator({ cardProps = {}, embedded = false }) {
   const [ancestry, setAncestry] = useState('any');
   const [npc, setNpc] = useState(() => generateNpc('any'));
   const [copyStatus, setCopyStatus] = useState('');
@@ -74,9 +74,8 @@ export default function NpcGenerator({ cardProps = {} }) {
     }
   }
 
-  return (
-    <PluginCard title="NPC Generator" dragHandleProps={cardProps.dragHandleProps}>
-      <div className="npc-generator">
+  const content = (
+    <div className="npc-generator">
         <div className="npc-controls">
           <label className="npc-field">
             <span>Ancestry</span>
@@ -129,6 +128,13 @@ export default function NpcGenerator({ cardProps = {} }) {
           {copyStatus && <small>{copyStatus}</small>}
         </div>
       </div>
+  );
+
+  if (embedded) return content;
+
+  return (
+    <PluginCard title="NPC Generator" dragHandleProps={cardProps.dragHandleProps}>
+      {content}
     </PluginCard>
   );
 }

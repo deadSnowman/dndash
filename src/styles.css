@@ -1013,6 +1013,47 @@ body {
   color: #6c757d;
 }
 
+.generator-suite {
+  display: grid;
+  gap: .65rem;
+}
+
+.generator-suite-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem;
+  width: 100%;
+}
+
+.generator-suite-tab {
+  min-height: 1.75rem;
+  padding: .25rem .55rem;
+  border: 1px solid #dee2e6;
+  border-radius: .2rem;
+  color: #212529;
+  background: #f8f9fa;
+  font-size: .74rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.generator-suite-tab.active {
+  color: #0f6674;
+  border-color: #17a2b8;
+  background: #fff;
+}
+
+.generator-suite-tab:hover,
+.generator-suite-tab:focus {
+  border-color: #17a2b8;
+}
+
+.generator-suite-panel {
+  min-width: 0;
+}
+
 .initiative-tracker {
   display: grid;
   gap: .65rem;
@@ -2127,6 +2168,7 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .stat-flexible-panel,
 :is(.app-shell, body)[data-theme="dark"] .encounter-picker-toggle,
 :is(.app-shell, body)[data-theme="dark"] .settings-plugin-row,
+:is(.app-shell, body)[data-theme="dark"] .generator-suite-tab,
 :is(.app-shell, body)[data-theme="dark"] .cheat-sheet-link-list a,
 :is(.app-shell, body)[data-theme="dark"] #cheatSheetTab .nav-link {
   color: var(--app-text);
@@ -2134,6 +2176,9 @@ body {
   background: var(--app-panel-soft);
 }
 
+:is(.app-shell, body)[data-theme="dark"] .generator-suite-tab.active,
+:is(.app-shell, body)[data-theme="dark"] .generator-suite-tab:hover,
+:is(.app-shell, body)[data-theme="dark"] .generator-suite-tab:focus,
 :is(.app-shell, body)[data-theme="dark"] #cheatSheetTab .nav-link.active,
 :is(.app-shell, body)[data-theme="dark"] .cheat-sheet-link-list a:hover,
 :is(.app-shell, body)[data-theme="dark"] .cheat-sheet-link-list a:focus {

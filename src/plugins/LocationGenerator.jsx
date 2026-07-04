@@ -24,7 +24,7 @@ function LocationRow({ label, value, onRegenerate }) {
   );
 }
 
-export default function LocationGenerator({ cardProps = {} }) {
+export default function LocationGenerator({ cardProps = {}, embedded = false }) {
   const [locationType, setLocationType] = useState('any');
   const [location, setLocation] = useState(() => generateLocation('any'));
   const [copyStatus, setCopyStatus] = useState('');
@@ -74,9 +74,8 @@ export default function LocationGenerator({ cardProps = {} }) {
     }
   }
 
-  return (
-    <PluginCard title="Location Generator" dragHandleProps={cardProps.dragHandleProps}>
-      <div className="location-generator">
+  const content = (
+    <div className="location-generator">
         <div className="location-controls">
           <label className="location-field">
             <span>Type</span>
@@ -128,6 +127,13 @@ export default function LocationGenerator({ cardProps = {} }) {
           {copyStatus && <small>{copyStatus}</small>}
         </div>
       </div>
+  );
+
+  if (embedded) return content;
+
+  return (
+    <PluginCard title="Location Generator" dragHandleProps={cardProps.dragHandleProps}>
+      {content}
     </PluginCard>
   );
 }
