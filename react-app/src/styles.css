@@ -455,7 +455,7 @@ body {
 
 .encounter-monster-row {
   display: grid;
-  grid-template-columns: minmax(4.25rem, .45fr) minmax(8rem, 1fr) auto;
+  grid-template-columns: minmax(4.25rem, .45fr) minmax(7rem, 1fr) minmax(8rem, 1fr) auto;
   gap: .4rem;
   align-items: end;
 }
@@ -475,6 +475,58 @@ body {
   line-height: 1.25;
 }
 
+.encounter-picker {
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #fff;
+}
+
+.encounter-picker-toggle {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  width: 100%;
+  padding: .45rem .55rem;
+  border: 0;
+  color: #212529;
+  background: #f8f9fa;
+  font-size: .78rem;
+  font-weight: 700;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.encounter-picker-body {
+  display: grid;
+  gap: .55rem;
+  padding: .55rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.encounter-picker-controls {
+  display: grid;
+  grid-template-columns: minmax(4.5rem, .45fr) minmax(10rem, 1fr);
+  gap: .5rem;
+}
+
+.encounter-picker-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+}
+
+.encounter-picker-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+}
+
+.encounter-custom-modal .modal-body {
+  display: grid;
+  gap: .65rem;
+  background: #fff;
+}
+
 @media (max-width: 574px) {
   .die-roller-list {
     grid-template-columns: 1fr;
@@ -482,6 +534,15 @@ body {
 
   .encounter-monster-row {
     grid-template-columns: minmax(4.25rem, .45fr) minmax(7rem, 1fr) auto;
+  }
+
+  .encounter-monster-row label:nth-child(2) {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .encounter-picker-controls {
+    grid-template-columns: 1fr;
   }
 }
 
