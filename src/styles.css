@@ -1387,14 +1387,16 @@ body {
   grid-column: 1;
 }
 
-.party-edit,
 .party-icon-button {
   width: 2rem;
   height: 2rem;
   padding: 0;
 }
 
-.party-edit {
+.party-character-controls {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
   grid-column: 2;
   grid-row: 1 / span 2;
   align-self: start;
@@ -2548,6 +2550,34 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .rules-result-button:hover,
 :is(.app-shell, body)[data-theme="dark"] .rules-result-button:focus {
   border-color: #17a2b8;
+}
+
+:is(.app-shell, body)[data-theme="dark"] .initiative-row {
+  border-left-color: var(--app-border);
+}
+
+:is(.app-shell, body)[data-theme="dark"] .initiative-row.active {
+  border-left-color: #17a2b8;
+}
+
+:is(.app-shell, body)[data-theme="dark"] .encounter-summary {
+  border-left-color: #6c757d;
+}
+
+:is(.app-shell, body)[data-theme="dark"] .encounter-summary.difficulty-easy {
+  border-left-color: #28a745;
+}
+
+:is(.app-shell, body)[data-theme="dark"] .encounter-summary.difficulty-medium {
+  border-left-color: #17a2b8;
+}
+
+:is(.app-shell, body)[data-theme="dark"] .encounter-summary.difficulty-hard {
+  border-left-color: #ffc107;
+}
+
+:is(.app-shell, body)[data-theme="dark"] .encounter-summary.difficulty-deadly {
+  border-left-color: #dc3545;
 }
 
 :is(.app-shell, body)[data-theme="dark"] .party-character {

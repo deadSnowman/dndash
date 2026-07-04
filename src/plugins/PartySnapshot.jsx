@@ -1,4 +1,4 @@
-import { Check, CircleMinus, CirclePlus, Pencil, Plus, Trash2 } from 'lucide-react';
+import { Check, ChevronDown, ChevronRight, CircleMinus, CirclePlus, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import PluginCard from '../components/PluginCard.jsx';
 import NumberInput from '../components/forms/NumberInput.jsx';
@@ -30,7 +30,8 @@ function createCharacter(index = 1) {
     conditions: '',
     magicItems: '',
     hooks: '',
-    dmNotes: ''
+    dmNotes: '',
+    collapsed: false
   };
 }
 
@@ -61,7 +62,8 @@ function normalizeCharacter(character, index) {
     conditions: character?.conditions ?? '',
     magicItems: character?.magicItems ?? '',
     hooks: character?.hooks ?? '',
-    dmNotes: character?.dmNotes ?? ''
+    dmNotes: character?.dmNotes ?? '',
+    collapsed: character?.collapsed === true
   };
 }
 
@@ -156,8 +158,9 @@ function DetailGroup({ title, show, children }) {
   );
 }
 
-function CharacterRow({ character, onAdjustHp, onRemove, onUpdate }) {
+function CharacterRow({ character, onAdjustHp, onCollapsedChange, onRemove, onUpdate }) {
   const [editing, setEditing] = useState(false);
+  const isCollapsed = character.collapsed === true;
   const hasDetails =
     character.player ||
     character.passiveInsight ||
@@ -197,18 +200,36 @@ function CharacterRow({ character, onAdjustHp, onRemove, onUpdate }) {
           AC {character.ac || '-'} · HP {character.hp || '-'}/{character.maxHp || '-'} · Temp {character.tempHp || '0'} · PP{' '}
           {character.passivePerception || '-'}
         </span>
-        <button
-          type="button"
-          className="btn btn-light btn-sm party-icon-button party-edit"
-          onClick={() => setEditing((value) => !value)}
-          aria-label={editing ? `Done editing ${character.name || 'character'}` : `Edit ${character.name || 'character'}`}
-          title={editing ? 'Done editing' : 'Edit character'}
-        >
-          {editing ? <Check size={14} strokeWidth={2.4} /> : <Pencil size={14} strokeWidth={2.4} />}
-        </button>
+        <div className="party-character-controls">
+          <button
+            type="button"
+            className="btn btn-light btn-sm party-icon-button"
+            onClick={() => {
+              const nextCollapsed = !isCollapsed;
+              if (nextCollapsed) setEditing(false);
+              onCollapsedChange(nextCollapsed);
+            }}
+            aria-label={isCollapsed ? `Expand ${character.name || 'character'}` : `Collapse ${character.name || 'character'}`}
+            title={isCollapsed ? 'Expand character' : 'Collapse character'}
+          >
+            {isCollapsed ? <ChevronRight size={14} strokeWidth={2.4} /> : <ChevronDown size={14} strokeWidth={2.4} />}
+          </button>
+          <button
+            type="button"
+            className="btn btn-light btn-sm party-icon-button"
+            onClick={() => {
+              setEditing((value) => !value);
+              if (isCollapsed) onCollapsedChange(false);
+            }}
+            aria-label={editing ? `Done editing ${character.name || 'character'}` : `Edit ${character.name || 'character'}`}
+            title={editing ? 'Done editing' : 'Edit character'}
+          >
+            {editing ? <Check size={14} strokeWidth={2.4} /> : <Pencil size={14} strokeWidth={2.4} />}
+          </button>
+        </div>
       </div>
 
-      {hasDetails && !editing && (
+      {!isCollapsed && hasDetails && !editing && (
         <div className="party-character-details">
           <DetailGroup title="Table" show={hasTableDetails}>
             <DetailItem label="Player" value={character.player} />
@@ -239,7 +260,7 @@ function CharacterRow({ character, onAdjustHp, onRemove, onUpdate }) {
         </div>
       )}
 
-      {editing && (
+      {!isCollapsed && editing && (
         <div className="party-edit-panel">
           <div className="party-field-grid party-identity-grid">
             <Field label="Name">
@@ -391,19 +412,21 @@ function CharacterRow({ character, onAdjustHp, onRemove, onUpdate }) {
         </div>
       )}
 
-      <div className="party-character-actions">
-        <button type="button" className="btn btn-light btn-sm" onClick={() => onAdjustHp(-5)} aria-label={`Subtract 5 HP from ${character.name || 'character'}`}>
-          <CircleMinus size={14} strokeWidth={2.4} />
-          5 HP
-        </button>
-        <button type="button" className="btn btn-light btn-sm" onClick={() => onAdjustHp(5)} aria-label={`Add 5 HP to ${character.name || 'character'}`}>
-          <CirclePlus size={14} strokeWidth={2.4} />
-          5 HP
-        </button>
-        <button type="button" className="btn btn-light btn-sm party-icon-button" onClick={onRemove} aria-label={`Remove ${character.name || 'character'}`} title="Remove character">
-          <Trash2 size={14} strokeWidth={2.4} />
-        </button>
-      </div>
+      {!isCollapsed && (
+        <div className="party-character-actions">
+          <button type="button" className="btn btn-light btn-sm" onClick={() => onAdjustHp(-5)} aria-label={`Subtract 5 HP from ${character.name || 'character'}`}>
+            <CircleMinus size={14} strokeWidth={2.4} />
+            5 HP
+          </button>
+          <button type="button" className="btn btn-light btn-sm" onClick={() => onAdjustHp(5)} aria-label={`Add 5 HP to ${character.name || 'character'}`}>
+            <CirclePlus size={14} strokeWidth={2.4} />
+            5 HP
+          </button>
+          <button type="button" className="btn btn-light btn-sm party-icon-button" onClick={onRemove} aria-label={`Remove ${character.name || 'character'}`} title="Remove character">
+            <Trash2 size={14} strokeWidth={2.4} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -441,6 +464,10 @@ export default function PartySnapshot({ cardProps = {} }) {
     setCharacters((current) =>
       current.map((character) => (character.id === id ? { ...character, [field]: value } : character))
     );
+  }
+
+  function setCharacterCollapsed(id, collapsed) {
+    updateCharacter(id, 'collapsed', collapsed);
   }
 
   function adjustHp(id, amount) {
@@ -481,6 +508,7 @@ export default function PartySnapshot({ cardProps = {} }) {
                 character={character}
                 key={character.id}
                 onAdjustHp={(amount) => adjustHp(character.id, amount)}
+                onCollapsedChange={(collapsed) => setCharacterCollapsed(character.id, collapsed)}
                 onRemove={() => removeCharacter(character.id)}
                 onUpdate={(field, value) => updateCharacter(character.id, field, value)}
               />
