@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Minus, Plus } from 'lucide-react';
+import { Minus, Plus, RotateCcw } from 'lucide-react';
 import PluginCard from '../components/PluginCard.jsx';
 import {
   diceSet,
@@ -10,34 +10,43 @@ import {
   rollDiceGroup
 } from '../lib/diceRoller.js';
 
-function DieRow({ sides, amount, modifier, modifierType, result, onAmount, onModifier, onModifierType, onRoll }) {
+function DieRow({ sides, amount, modifier, modifierType, result, rolls, onAmount, onModifier, onModifierType, onRoll }) {
+  const rollSummary = rolls.length > 0 ? rolls.join(' + ') : 'No roll yet';
+
   return (
-    <div className="form-row form-group">
-      <div className="col">
-        <div className="form-row form-group">
-          <div className="col">
-            <div className="input-group input-group-sm">
-              <div className="input-group-prepend">
-                <button className="btn btn-info btn-sm btn-block die-button" type="button" onClick={onRoll}>
-                  d{sides}
-                </button>
-              </div>
-              <input
-                className="form-control form-control-sm"
-                type="number"
-                step="any"
-                min="0"
-                placeholder="amount"
-                value={amount}
-                onChange={(event) => onAmount(event.target.value)}
-              />
-            </div>
-          </div>
-          <div className="col-fixed">
+    <div className="die-row">
+      <div className="die-row-top">
+        <button className="btn btn-info btn-sm die-roll-button" type="button" onClick={onRoll}>
+          d{sides}
+        </button>
+        <div className="die-result">
+          <span>Last</span>
+          <strong>{result ?? '-'}</strong>
+        </div>
+      </div>
+
+      <div className="die-row-fields">
+        <label className="die-field">
+          <span>Count</span>
+          <input
+            className="form-control form-control-sm"
+            type="number"
+            step="1"
+            min="0"
+            placeholder="1"
+            value={amount}
+            onChange={(event) => onAmount(event.target.value)}
+          />
+        </label>
+
+        <div className="die-modifier">
+          <span>Mod</span>
+          <div className="die-modifier-controls">
             <div className="btn-group btn-group-sm">
               <button
                 type="button"
                 className={`btn btn-info ${modifierType === 'plus' ? 'active' : ''}`}
+                aria-label={`Add d${sides} modifier`}
                 onClick={() => onModifierType('plus')}
               >
                 <Plus size={13} strokeWidth={2.6} />
@@ -45,28 +54,26 @@ function DieRow({ sides, amount, modifier, modifierType, result, onAmount, onMod
               <button
                 type="button"
                 className={`btn btn-info ${modifierType === 'minus' ? 'active' : ''}`}
+                aria-label={`Subtract d${sides} modifier`}
                 onClick={() => onModifierType('minus')}
               >
                 <Minus size={13} strokeWidth={2.6} />
               </button>
             </div>
-          </div>
-          <div className="col">
             <input
               className="form-control form-control-sm"
               type="number"
-              step="any"
+              step="1"
               min="0"
               value={modifier}
               onChange={(event) => onModifier(event.target.value)}
-              placeholder="modifier"
+              placeholder="0"
             />
-          </div>
-          <div className="col-sm-2">
-            <input className="form-control form-control-sm" type="text" placeholder="result" value={result ?? ''} readOnly />
           </div>
         </div>
       </div>
+
+      <small className="die-roll-summary">{rollSummary}</small>
     </div>
   );
 }
@@ -81,6 +88,11 @@ export default function DiceRoller({ cardProps = {} }) {
   const [rollResults, setRollResults] = useState('');
   const [showResultsArea, setShowResultsArea] = useState(false);
 
+  function appendHistory(line) {
+    setRollResults((current) => (current ? `${line}\n-------------\n${current}` : line));
+    setShowResultsArea(true);
+  }
+
   function setResultsAndTotal(nextResults) {
     setResults(nextResults);
     const nextTotal = getDiceTotal(nextResults);
@@ -93,9 +105,18 @@ export default function DiceRoller({ cardProps = {} }) {
     const amount = Number(amounts[key]) || 1;
     const roll = rollDiceGroup(sides, amount, modifiers[key], modifierTypes[key]);
     const nextResults = { ...results, [key]: roll.result };
-    setAmounts((current) => ({ ...current, [key]: current[key] || 1 }));
+    const nextAmounts = { ...amounts, [key]: amounts[key] || 1 };
+    setAmounts(nextAmounts);
     setDieRolls((current) => ({ ...current, [key]: roll.rolls }));
     setResultsAndTotal(nextResults);
+    appendHistory(formatRollHistoryLine({
+      amounts: { ...emptyDice(), [key]: amount },
+      modifiers,
+      modifierTypes,
+      rolls: { ...emptyDice([]), [key]: roll.rolls },
+      results: { ...emptyDice(null), [key]: roll.result },
+      total: roll.result
+    }));
   }
 
   function rollAll() {
@@ -124,7 +145,7 @@ export default function DiceRoller({ cardProps = {} }) {
       results: nextResults,
       total: nextTotal
     });
-    setRollResults((current) => (current ? `${line}\n-------------\n${current}` : line));
+    appendHistory(line);
   }
 
   function submit(event) {
@@ -148,51 +169,56 @@ export default function DiceRoller({ cardProps = {} }) {
   return (
     <PluginCard title="Die Roller" dragHandleProps={cardProps.dragHandleProps}>
       <form name="dieRollerForm" onSubmit={submit}>
-        {diceSet.map((sides) => {
-          const key = `d${sides}`;
-          return (
-            <DieRow
-              key={key}
-              sides={sides}
-              amount={amounts[key]}
-              modifier={modifiers[key]}
-              modifierType={modifierTypes[key]}
-              result={results[key]}
-              onAmount={(value) => setAmounts((current) => ({ ...current, [key]: value }))}
-              onModifier={(value) => setModifiers((current) => ({ ...current, [key]: value }))}
-              onModifierType={(value) => setModifierTypes((current) => ({ ...current, [key]: value }))}
-              onRoll={() => rollSingle(sides)}
-            />
-          );
-        })}
+        <div className="die-roller-list">
+          {diceSet.map((sides) => {
+            const key = `d${sides}`;
+            return (
+              <DieRow
+                key={key}
+                sides={sides}
+                amount={amounts[key]}
+                modifier={modifiers[key]}
+                modifierType={modifierTypes[key]}
+                result={results[key]}
+                rolls={dieRolls[key]}
+                onAmount={(value) => setAmounts((current) => ({ ...current, [key]: value }))}
+                onModifier={(value) => setModifiers((current) => ({ ...current, [key]: value }))}
+                onModifierType={(value) => setModifierTypes((current) => ({ ...current, [key]: value }))}
+                onRoll={() => rollSingle(sides)}
+              />
+            );
+          })}
+        </div>
 
-        <div className="form-row form-group">
-          <div className="col">
-            <div className="form-group">
-              <button type="submit" className="btn btn-info btn-sm" disabled={!hasDiceToRoll(amounts)}>
-                Roll all
-              </button>{' '}
-              {total !== null && (
-                <button type="button" className="btn btn-light btn-sm" onClick={clear}>
-                  Clear
-                </button>
-              )}
-            </div>
-          </div>
+        <div className="die-actions">
+          <button type="submit" className="btn btn-info btn-sm" disabled={!hasDiceToRoll(amounts)}>
+            Roll Group
+          </button>
           {total !== null && (
-            <div className="col">
-              <p><strong>Total:</strong> {total}</p>
+            <button type="button" className="btn btn-light btn-sm die-clear-button" onClick={clear}>
+              <RotateCcw size={14} strokeWidth={2.4} />
+              Clear
+            </button>
+          )}
+          {total !== null && (
+            <div className="die-total">
+              <span>Total</span>
+              <strong>{total}</strong>
             </div>
           )}
         </div>
-        {showResultsArea && (
-          <div className="form-row form-group">
-            <div className="col">
-              <label htmlFor="resultsHistory"><strong>Results</strong></label>
-              <textarea id="resultsHistory" className="form-control" rows="4" value={rollResults} readOnly />
-            </div>
-          </div>
-        )}
+
+        <div className="die-results-panel">
+          <label htmlFor="resultsHistory">Results</label>
+          <textarea
+            id="resultsHistory"
+            className="form-control"
+            rows="5"
+            value={showResultsArea ? rollResults : ''}
+            placeholder="Individual rolls and group rolls appear here."
+            readOnly
+          />
+        </div>
       </form>
     </PluginCard>
   );

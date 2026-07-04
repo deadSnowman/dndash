@@ -112,16 +112,135 @@ body {
   width: 5rem;
 }
 
-.die-button {
-  width: 50px;
-}
-
 .col-fixed {
   flex: 0 0 auto;
   width: auto;
   max-width: none;
   padding-right: 5px;
   padding-left: 5px;
+}
+
+.die-roller-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+  gap: .45rem;
+}
+
+.die-row {
+  display: grid;
+  gap: .35rem;
+  min-width: 0;
+  padding: .4rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #fff;
+}
+
+.die-row-top,
+.die-row-fields {
+  display: grid;
+  grid-template-columns: minmax(3.25rem, .85fr) minmax(4rem, 1fr);
+  gap: .35rem;
+  align-items: end;
+}
+
+.die-roll-button {
+  min-height: 2.15rem;
+  font-weight: 700;
+}
+
+.die-field,
+.die-modifier {
+  display: grid;
+  gap: .15rem;
+  margin: 0;
+}
+
+.die-field span,
+.die-modifier span,
+.die-result span,
+.die-results-panel label,
+.die-total span {
+  margin: 0;
+  color: #6c757d;
+  font-size: .68rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.die-modifier-controls {
+  display: grid;
+  grid-template-columns: auto minmax(2.75rem, 1fr);
+  gap: .25rem;
+}
+
+.die-result {
+  display: grid;
+  grid-template-columns: auto minmax(2.25rem, 1fr);
+  gap: .25rem;
+  align-items: center;
+  min-width: 0;
+}
+
+.die-result strong {
+  min-height: 2.15rem;
+  padding: .32rem .4rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #f8f9fa;
+  text-align: center;
+}
+
+.die-roll-summary {
+  overflow: hidden;
+  color: #6c757d;
+  font-size: .72rem;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.die-actions {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  margin-top: .7rem;
+}
+
+.die-clear-button {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+}
+
+.die-total {
+  display: inline-flex;
+  align-items: baseline;
+  gap: .35rem;
+  margin-left: auto;
+  padding: .2rem .5rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #f8f9fa;
+}
+
+.die-results-panel {
+  display: grid;
+  gap: .3rem;
+  margin-top: .7rem;
+}
+
+.die-results-panel textarea {
+  resize: vertical;
+  font-family: Consolas, "Liberation Mono", monospace;
+  font-size: .78rem;
+}
+
+@media (max-width: 574px) {
+  .die-roller-list {
+    grid-template-columns: 1fr;
+  }
 }
 
 .scrollable {
