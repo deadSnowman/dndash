@@ -598,12 +598,221 @@ body {
   white-space: nowrap;
 }
 
+.rules-lookup {
+  display: grid;
+  gap: .65rem;
+}
+
+.rules-search-field {
+  display: grid;
+  gap: .25rem;
+  margin: 0;
+}
+
+.rules-search-field > span,
+.rules-card-header span,
+.rules-field-grid span {
+  color: #6c757d;
+  font-size: .68rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.rules-search-field > div {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .35rem;
+  padding: 0 .35rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #fff;
+}
+
+.rules-search-field svg {
+  color: #6c757d;
+}
+
+.rules-search-field input {
+  border: 0;
+  min-width: 0;
+  padding-right: 0;
+  padding-left: 0;
+  box-shadow: none;
+}
+
+.rules-search-field input:focus {
+  box-shadow: none;
+}
+
+.rules-search-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 0;
+  color: #6c757d;
+  background: transparent;
+  cursor: pointer;
+}
+
+.rules-type-toggle {
+  display: flex;
+  width: 100%;
+}
+
+.rules-type-toggle .btn {
+  flex: 1 1 0;
+  min-width: 0;
+  padding-right: .35rem;
+  padding-left: .35rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rules-results-shell {
+  display: grid;
+  grid-template-columns: minmax(6.75rem, .82fr) minmax(0, 1.18fr);
+  gap: .5rem;
+  align-items: start;
+}
+
+.rules-result-list {
+  display: grid;
+  gap: .35rem;
+  min-width: 0;
+}
+
+.rules-result-button {
+  display: grid;
+  gap: .18rem;
+  width: 100%;
+  padding: .45rem .5rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  color: inherit;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rules-result-button.active,
+.rules-result-button:hover,
+.rules-result-button:focus {
+  border-color: #17a2b8;
+  outline: 0;
+}
+
+.rules-result-button strong,
+.rules-result-meta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rules-result-button strong {
+  font-size: .84rem;
+  line-height: 1.15;
+}
+
+.rules-result-meta,
+.rules-empty,
+.rules-error {
+  color: #6c757d;
+  font-size: .72rem;
+  line-height: 1.2;
+}
+
+.rules-result-button em {
+  display: -webkit-box;
+  overflow: hidden;
+  color: #495057;
+  font-size: .74rem;
+  font-style: normal;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.rules-error {
+  color: #842029;
+}
+
+.rules-card {
+  display: grid;
+  gap: .55rem;
+  min-width: 0;
+  padding: .55rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #f8f9fa;
+}
+
+.rules-card-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: .4rem;
+  align-items: start;
+}
+
+.rules-card-header h3 {
+  margin: .15rem 0 0;
+  overflow-wrap: anywhere;
+  font-size: 1rem;
+  line-height: 1.15;
+}
+
+.rules-card-header .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: .4rem;
+  padding-left: .4rem;
+}
+
+.rules-summary {
+  margin: 0;
+  color: #343a40;
+  font-size: .82rem;
+  line-height: 1.35;
+}
+
+.rules-field-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(4.6rem, 1fr));
+  gap: .35rem;
+}
+
+.rules-field-grid div {
+  display: grid;
+  gap: .2rem;
+  min-width: 0;
+  padding: .4rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #fff;
+}
+
+.rules-field-grid strong {
+  overflow-wrap: anywhere;
+  font-size: .78rem;
+  line-height: 1.15;
+}
+
 @media (max-width: 574px) {
   .die-d20-controls {
     grid-template-columns: 1fr;
   }
 
   .die-preset-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rules-results-shell {
     grid-template-columns: 1fr;
   }
 }
@@ -1498,6 +1707,9 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .modal-content,
 :is(.app-shell, body)[data-theme="dark"] .about-feature-group,
 :is(.app-shell, body)[data-theme="dark"] .die-history-item,
+:is(.app-shell, body)[data-theme="dark"] .rules-result-button,
+:is(.app-shell, body)[data-theme="dark"] .rules-search-field > div,
+:is(.app-shell, body)[data-theme="dark"] .rules-field-grid div,
 :is(.app-shell, body)[data-theme="dark"] .loot-options,
 :is(.app-shell, body)[data-theme="dark"] .npc-detail-row,
 :is(.app-shell, body)[data-theme="dark"] .item-quirk-row,
@@ -1552,6 +1764,7 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .abilities td,
 :is(.app-shell, body)[data-theme="dark"] .die-current-panel,
 :is(.app-shell, body)[data-theme="dark"] .die-d20-panel,
+:is(.app-shell, body)[data-theme="dark"] .rules-card,
 :is(.app-shell, body)[data-theme="dark"] .loot-coin-field,
 :is(.app-shell, body)[data-theme="dark"] .loot-result-card,
 :is(.app-shell, body)[data-theme="dark"] .loot-coin-pill,
@@ -1600,6 +1813,8 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .die-history-item small,
 :is(.app-shell, body)[data-theme="dark"] .die-history-item em,
 :is(.app-shell, body)[data-theme="dark"] .die-empty-history,
+:is(.app-shell, body)[data-theme="dark"] .rules-result-meta,
+:is(.app-shell, body)[data-theme="dark"] .rules-empty,
 :is(.app-shell, body)[data-theme="dark"] .settings-drag-handle,
 :is(.app-shell, body)[data-theme="dark"] .about-feature-group h2,
 :is(.app-shell, body)[data-theme="dark"] .die-current-panel span,
@@ -1608,6 +1823,9 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .die-expression-field span,
 :is(.app-shell, body)[data-theme="dark"] .die-mod-field span,
 :is(.app-shell, body)[data-theme="dark"] .die-history-header span,
+:is(.app-shell, body)[data-theme="dark"] .rules-search-field > span,
+:is(.app-shell, body)[data-theme="dark"] .rules-card-header span,
+:is(.app-shell, body)[data-theme="dark"] .rules-field-grid span,
 :is(.app-shell, body)[data-theme="dark"] .loot-party-field span,
 :is(.app-shell, body)[data-theme="dark"] .loot-coin-field span,
 :is(.app-shell, body)[data-theme="dark"] .loot-coin-field small,
@@ -1628,6 +1846,20 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .stat-section-title,
 :is(.app-shell, body)[data-theme="dark"] .settings-section-title {
   color: var(--app-muted);
+}
+
+:is(.app-shell, body)[data-theme="dark"] .rules-result-button em {
+  color: var(--app-text);
+}
+
+:is(.app-shell, body)[data-theme="dark"] .rules-summary {
+  color: var(--app-text);
+}
+
+:is(.app-shell, body)[data-theme="dark"] .rules-result-button.active,
+:is(.app-shell, body)[data-theme="dark"] .rules-result-button:hover,
+:is(.app-shell, body)[data-theme="dark"] .rules-result-button:focus {
+  border-color: #17a2b8;
 }
 
 footer .footer {
