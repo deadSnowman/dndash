@@ -909,6 +909,104 @@ body {
   color: #6c757d;
 }
 
+.location-generator {
+  display: grid;
+  gap: .65rem;
+}
+
+.location-controls,
+.location-actions {
+  display: flex;
+  align-items: end;
+  gap: .5rem;
+}
+
+.location-controls .btn,
+.location-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  white-space: nowrap;
+}
+
+.location-field {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+.location-field span,
+.location-name-panel span,
+.location-detail-row span {
+  display: block;
+  margin-bottom: .2rem;
+  color: #6c757d;
+  font-size: .68rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.location-name-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: .5rem;
+  align-items: center;
+  padding: .5rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #f8f9fa;
+}
+
+.location-name-panel strong {
+  display: block;
+  font-size: 1.1rem;
+  line-height: 1.2;
+}
+
+.location-detail-list {
+  display: grid;
+  gap: .35rem;
+}
+
+.location-detail-row {
+  position: relative;
+  padding: .45rem 2.75rem .45rem .5rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #fff;
+}
+
+.location-detail-row p {
+  margin: 0;
+  font-size: .82rem;
+  line-height: 1.25;
+}
+
+.location-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  min-width: 2rem;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.location-detail-row .location-icon-button {
+  position: absolute;
+  top: .45rem;
+  right: .45rem;
+}
+
+.location-actions {
+  align-items: center;
+}
+
+.location-actions small {
+  color: #6c757d;
+}
+
 .encounter-builder {
   display: grid;
   gap: .65rem;
@@ -1744,6 +1842,7 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .rules-field-grid div,
 :is(.app-shell, body)[data-theme="dark"] .loot-options,
 :is(.app-shell, body)[data-theme="dark"] .npc-detail-row,
+:is(.app-shell, body)[data-theme="dark"] .location-detail-row,
 :is(.app-shell, body)[data-theme="dark"] .item-quirk-row,
 :is(.app-shell, body)[data-theme="dark"] .encounter-thresholds div,
 :is(.app-shell, body)[data-theme="dark"] .encounter-picker {
@@ -1801,6 +1900,7 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .loot-result-card,
 :is(.app-shell, body)[data-theme="dark"] .loot-coin-pill,
 :is(.app-shell, body)[data-theme="dark"] .npc-name-panel,
+:is(.app-shell, body)[data-theme="dark"] .location-name-panel,
 :is(.app-shell, body)[data-theme="dark"] .item-quirk-title,
 :is(.app-shell, body)[data-theme="dark"] .encounter-summary,
 :is(.app-shell, body)[data-theme="dark"] .stat-flexible-panel,
@@ -1849,6 +1949,7 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .about-note,
 :is(.app-shell, body)[data-theme="dark"] .encounter-note,
 :is(.app-shell, body)[data-theme="dark"] .npc-actions small,
+:is(.app-shell, body)[data-theme="dark"] .location-actions small,
 :is(.app-shell, body)[data-theme="dark"] .item-quirk-actions small,
 :is(.app-shell, body)[data-theme="dark"] .settings-section-header p,
 :is(.app-shell, body)[data-theme="dark"] .die-current-panel p,
@@ -1877,6 +1978,9 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .npc-field span,
 :is(.app-shell, body)[data-theme="dark"] .npc-name-panel span,
 :is(.app-shell, body)[data-theme="dark"] .npc-detail-row span,
+:is(.app-shell, body)[data-theme="dark"] .location-field span,
+:is(.app-shell, body)[data-theme="dark"] .location-name-panel span,
+:is(.app-shell, body)[data-theme="dark"] .location-detail-row span,
 :is(.app-shell, body)[data-theme="dark"] .item-quirk-field span,
 :is(.app-shell, body)[data-theme="dark"] .item-quirk-title span,
 :is(.app-shell, body)[data-theme="dark"] .item-quirk-row span,

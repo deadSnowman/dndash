@@ -196,6 +196,10 @@ function pick(list) {
   return list[Math.floor(Math.random() * list.length)];
 }
 
+function sentenceCase(value) {
+  return value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
+}
+
 export function generateName(ancestry = 'any') {
   const names = ancestryNames[ancestry] || ancestryNames.any;
   return `${pick(names.given)} ${pick(names.family)}`;
@@ -205,12 +209,12 @@ export function generateNpc(ancestry = 'any') {
   return {
     ancestry,
     name: generateName(ancestry),
-    role: pick(roles),
-    appearance: pick(appearances),
-    trait: pick(traits),
-    mannerism: pick(mannerisms),
-    desire: pick(desires),
-    fear: pick(fears),
+    role: sentenceCase(pick(roles)),
+    appearance: sentenceCase(pick(appearances)),
+    trait: sentenceCase(pick(traits)),
+    mannerism: sentenceCase(pick(mannerisms)),
+    desire: sentenceCase(pick(desires)),
+    fear: sentenceCase(pick(fears)),
     secret: pick(secrets),
     hook: pick(hooks)
   };

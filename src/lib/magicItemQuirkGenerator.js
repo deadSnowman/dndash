@@ -108,6 +108,10 @@ function pick(list) {
   return list[Math.floor(Math.random() * list.length)];
 }
 
+function sentenceCase(value) {
+  return value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
+}
+
 function normalizeType(type) {
   return itemNames[type] ? type : 'any';
 }
@@ -121,10 +125,10 @@ export function generateMagicItemQuirk(type = 'any', rarity = 'any') {
     type: safeType,
     rarity,
     title,
-    visualTell: pick(visualTells),
-    minorProperty: pick(minorProperties),
-    quirk: pick(quirks),
-    flaw: pick(flaws),
-    creator: pick(creators)
+    visualTell: sentenceCase(pick(visualTells)),
+    minorProperty: sentenceCase(pick(minorProperties)),
+    quirk: sentenceCase(pick(quirks)),
+    flaw: sentenceCase(pick(flaws)),
+    creator: sentenceCase(pick(creators))
   };
 }
