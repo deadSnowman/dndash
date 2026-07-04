@@ -334,6 +334,7 @@ body {
 .cheat-sheet-tab-content {
   height: 300px;
   overflow-y: auto;
+  scroll-behavior: smooth;
   border: 1px solid #dee2e6;
   border-top: unset;
   padding: .75rem;
@@ -349,21 +350,62 @@ body {
 
 .cheat-sheet-tab-content h2 {
   font-size: .95rem;
+  scroll-margin-top: .75rem;
 }
 
 .cheat-sheet-tab-content h1 {
   font-size: 1.5rem;
 }
 
+.cheat-sheet-tabs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  width: 100%;
+}
+
+.cheat-sheet-tabs .nav-item {
+  min-width: 0;
+}
+
 #cheatSheetTab .nav-link {
+  width: 100%;
   padding: .35rem .5rem;
   color: unset;
   font-size: .85rem;
   line-height: 1.2;
+  text-align: center;
 }
 
 #cheatSheetTab .nav-link.active {
   background: #fff;
+}
+
+.condition-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  margin-bottom: .75rem;
+}
+
+.condition-list a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.6rem;
+  padding: .2rem .45rem;
+  border: 1px solid #dee2e6;
+  border-radius: .2rem;
+  color: #212529;
+  background: #f8f9fa;
+  font-size: .72rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.condition-list a:hover,
+.condition-list a:focus {
+  color: #0f6674;
+  border-color: #17a2b8;
+  text-decoration: none;
 }
 
 .modal-backdrop-custom {
