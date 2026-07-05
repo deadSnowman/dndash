@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import ConfirmModal from '../components/ConfirmModal.jsx';
 import NavBar from '../components/NavBar.jsx';
 import SettingsModal from '../components/SettingsModal.jsx';
 import { useMuuriDashboard } from '../hooks/useMuuriDashboard.js';
@@ -93,6 +94,7 @@ function saveDashboardSettings(settings) {
 export default function HomePage({ darkTheme = false, onToggleTheme }) {
   const [dashboardSettings, setDashboardSettings] = useState(loadDashboardSettings);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [confirmConfig, setConfirmConfig] = useState(null);
   const { plugins, columns, cheatSheetTabIds } = dashboardSettings;
   const enabledPlugins = plugins.filter((plugin) => plugin.enabled);
   const dashboardOrderKey = enabledPlugins.map((plugin) => plugin.id).join('|');
@@ -149,6 +151,20 @@ export default function HomePage({ darkTheme = false, onToggleTheme }) {
     setSettingsOpen(false);
   }
 
+  function requestConfirm(config) {
+    setConfirmConfig(config);
+  }
+
+  function closeConfirm() {
+    setConfirmConfig(null);
+  }
+
+  function confirmAction() {
+    const action = confirmConfig?.onConfirm;
+    closeConfirm();
+    action?.();
+  }
+
   return (
     <>
       <NavBar
@@ -177,6 +193,7 @@ export default function HomePage({ darkTheme = false, onToggleTheme }) {
                       isCollapsed: plugin.collapsed === true,
                       onCollapsedChange: (collapsed) => updatePluginCollapsed(plugin.id, collapsed)
                     }}
+                    requestConfirm={requestConfirm}
                     visibleCheatSheetTabIds={cheatSheetTabIds}
                   />
                 </div>
@@ -193,6 +210,16 @@ export default function HomePage({ darkTheme = false, onToggleTheme }) {
           plugins={plugins}
           onCancel={() => setSettingsOpen(false)}
           onSave={saveSettings}
+        />
+      )}
+      {confirmConfig && (
+        <ConfirmModal
+          cancelLabel={confirmConfig.cancelLabel}
+          confirmLabel={confirmConfig.confirmLabel}
+          message={confirmConfig.message}
+          title={confirmConfig.title}
+          onCancel={closeConfirm}
+          onConfirm={confirmAction}
         />
       )}
     </>

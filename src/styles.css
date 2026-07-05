@@ -2064,6 +2064,12 @@ body {
   background: #f8f9fa;
 }
 
+.confirm-modal-message {
+  margin: 0;
+  font-size: .9rem;
+  line-height: 1.4;
+}
+
 .settings-section {
   padding: .75rem;
   border: 1px solid #dee2e6;
@@ -2453,11 +2459,19 @@ body {
   background: var(--app-panel-soft);
 }
 
-:is(.app-shell, body)[data-theme="dark"] .btn-light:hover,
-:is(.app-shell, body)[data-theme="dark"] .btn-light:focus {
+:is(.app-shell, body)[data-theme="dark"] .btn-light:not(:disabled):not(.disabled):hover,
+:is(.app-shell, body)[data-theme="dark"] .btn-light:not(:disabled):not(.disabled):focus {
   color: var(--app-text);
   border-color: #17a2b8;
   background: #303741;
+}
+
+:is(.app-shell, body)[data-theme="dark"] .btn-light:disabled,
+:is(.app-shell, body)[data-theme="dark"] .btn-light.disabled {
+  color: var(--app-muted);
+  border-color: var(--app-border);
+  background: var(--app-panel-soft);
+  box-shadow: none;
 }
 
 :is(.app-shell, body)[data-theme="dark"] .modal-backdrop-custom .close {

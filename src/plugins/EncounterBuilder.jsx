@@ -219,7 +219,7 @@ export default function EncounterBuilder({ cardProps = {} }) {
               </label>
               <button
                 type="button"
-                className="btn btn-light btn-sm encounter-remove"
+                className="btn btn-outline-danger btn-sm encounter-remove"
                 onClick={() => removeMonster(monster.id)}
                 disabled={monsters.length <= 1}
                 aria-label="Remove monster row"
@@ -303,7 +303,7 @@ export default function EncounterBuilder({ cardProps = {} }) {
                 {selectedMonster?.source === 'Custom' && (
                   <button
                     type="button"
-                    className="btn btn-light btn-sm"
+                    className="btn btn-outline-danger btn-sm"
                     onClick={() => removeCustomMonster(selectedMonster.id)}
                   >
                     <Trash2 size={14} strokeWidth={2.4} />

@@ -182,7 +182,7 @@ function CombatantRow({ combatant, active, onDamage, onHeal, onRemove, onUpdate 
   );
 }
 
-export default function InitiativeTracker({ cardProps = {} }) {
+export default function InitiativeTracker({ cardProps = {}, requestConfirm }) {
   const [savedEncounter] = useState(loadSavedEncounter);
   const [combatants, setCombatants] = useState(savedEncounter.combatants);
   const [activeIndex, setActiveIndex] = useState(savedEncounter.activeIndex);
@@ -265,6 +265,20 @@ export default function InitiativeTracker({ cardProps = {} }) {
     setRound(1);
   }
 
+  function requestClearEncounter() {
+    if (!requestConfirm) {
+      clearEncounter();
+      return;
+    }
+
+    requestConfirm({
+      title: 'Clear Initiative?',
+      message: 'Remove every combatant from the initiative tracker and reset the round? This cannot be undone.',
+      confirmLabel: 'Clear',
+      onConfirm: clearEncounter
+    });
+  }
+
   return (
     <PluginCard title="Initiative Tracker" {...cardProps}>
       <div className="initiative-tracker">
@@ -298,7 +312,7 @@ export default function InitiativeTracker({ cardProps = {} }) {
             <Plus size={14} strokeWidth={2.4} />
             Add
           </button>
-          <button type="button" className="btn btn-light btn-sm" onClick={clearEncounter}>
+          <button type="button" className="btn btn-light btn-sm" onClick={requestClearEncounter} disabled={combatants.length === 0}>
             Clear
           </button>
         </div>

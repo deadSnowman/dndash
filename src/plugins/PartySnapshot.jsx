@@ -431,7 +431,7 @@ function CharacterRow({ character, onAdjustHp, onCollapsedChange, onRemove, onUp
   );
 }
 
-export default function PartySnapshot({ cardProps = {} }) {
+export default function PartySnapshot({ cardProps = {}, requestConfirm }) {
   const [characters, setCharacters] = useState(loadSavedParty);
 
   const summary = useMemo(() => {
@@ -509,7 +509,19 @@ export default function PartySnapshot({ cardProps = {} }) {
                 key={character.id}
                 onAdjustHp={(amount) => adjustHp(character.id, amount)}
                 onCollapsedChange={(collapsed) => setCharacterCollapsed(character.id, collapsed)}
-                onRemove={() => removeCharacter(character.id)}
+                onRemove={() => {
+                  if (!requestConfirm) {
+                    removeCharacter(character.id);
+                    return;
+                  }
+
+                  requestConfirm({
+                    title: 'Remove Character?',
+                    message: `Remove ${character.name || 'this character'} from Party Snapshot? This cannot be undone.`,
+                    confirmLabel: 'Remove',
+                    onConfirm: () => removeCharacter(character.id)
+                  });
+                }}
                 onUpdate={(field, value) => updateCharacter(character.id, field, value)}
               />
             ))
