@@ -148,10 +148,111 @@ body {
     padding-left: 0;
   }
 
+  .currency-panel {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .currency-type-field {
+    grid-column: 1;
+  }
+
+  .currency-badge {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: end;
+  }
+
 }
 
 .party-count-input {
   width: 5rem;
+}
+
+.currency-converter {
+  display: grid;
+  gap: .55rem;
+}
+
+.currency-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(7rem, .8fr) auto;
+  align-items: end;
+  gap: .45rem;
+  padding: .55rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #f8f9fa;
+}
+
+.currency-panel.result {
+  background: #fff;
+}
+
+.currency-amount-field,
+.currency-type-field {
+  display: grid;
+  gap: .2rem;
+  min-width: 0;
+  margin: 0;
+}
+
+.currency-amount-field span,
+.currency-type-field span {
+  color: #6c757d;
+  font-size: .68rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.currency-amount-input {
+  min-width: 0;
+  font-weight: 700;
+}
+
+.currency-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.4rem;
+  min-height: 1.95rem;
+  padding: .2rem .45rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #fff;
+  font-size: .78rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.currency-toolbar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .45rem;
+  color: #6c757d;
+  font-size: .76rem;
+  line-height: 1.2;
+}
+
+.currency-toolbar span {
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.currency-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+}
+
+.currency-clear-button {
+  min-width: 3.5rem;
 }
 
 .loot-splitter {
@@ -2510,6 +2611,8 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .card,
 :is(.app-shell, body)[data-theme="dark"] .modal-content,
 :is(.app-shell, body)[data-theme="dark"] .about-feature-group,
+:is(.app-shell, body)[data-theme="dark"] .currency-panel.result,
+:is(.app-shell, body)[data-theme="dark"] .currency-badge,
 :is(.app-shell, body)[data-theme="dark"] .die-history-item,
 :is(.app-shell, body)[data-theme="dark"] .rules-result-button,
 :is(.app-shell, body)[data-theme="dark"] .rules-search-field > div,
@@ -2569,6 +2672,7 @@ body {
 }
 
 :is(.app-shell, body)[data-theme="dark"] .abilities td,
+:is(.app-shell, body)[data-theme="dark"] .currency-panel,
 :is(.app-shell, body)[data-theme="dark"] .die-current-panel,
 :is(.app-shell, body)[data-theme="dark"] .die-d20-panel,
 :is(.app-shell, body)[data-theme="dark"] .rules-card,
@@ -2654,6 +2758,9 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .settings-drag-handle,
 :is(.app-shell, body)[data-theme="dark"] .about-feature-group h2,
 :is(.app-shell, body)[data-theme="dark"] .die-current-panel span,
+:is(.app-shell, body)[data-theme="dark"] .currency-amount-field span,
+:is(.app-shell, body)[data-theme="dark"] .currency-type-field span,
+:is(.app-shell, body)[data-theme="dark"] .currency-toolbar,
 :is(.app-shell, body)[data-theme="dark"] .die-d20-header span,
 :is(.app-shell, body)[data-theme="dark"] .die-d20-header small,
 :is(.app-shell, body)[data-theme="dark"] .die-expression-field span,
