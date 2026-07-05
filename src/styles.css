@@ -819,6 +819,7 @@ body {
   .initiative-status,
   .initiative-row-fields,
   .initiative-notes-grid,
+  .general-notes,
   .party-summary,
   .party-detail-grid,
   .party-identity-grid,
@@ -1267,6 +1268,155 @@ body {
   width: 2rem;
   padding-right: 0;
   padding-left: 0;
+}
+
+.general-notes {
+  display: grid;
+  grid-template-columns: minmax(7rem, .58fr) minmax(0, 1.42fr);
+  gap: .55rem;
+  min-height: 18rem;
+}
+
+.notes-sidebar,
+.notes-editor {
+  min-width: 0;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  background: #f8f9fa;
+}
+
+.notes-sidebar {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.notes-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .4rem;
+  min-height: 2.35rem;
+  padding: .42rem .5rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.notes-sidebar-header span,
+.notes-title-field span,
+.notes-body-field span {
+  color: #6c757d;
+  font-size: .68rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.notes-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+}
+
+.notes-section-list {
+  display: grid;
+  align-content: start;
+  gap: .3rem;
+  max-height: 22rem;
+  overflow-y: auto;
+  padding: .45rem;
+}
+
+.notes-section-button {
+  display: grid;
+  gap: .18rem;
+  width: 100%;
+  min-width: 0;
+  padding: .45rem .5rem;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.notes-section-button:hover,
+.notes-section-button:focus {
+  border-color: #17a2b8;
+  background: rgba(23, 162, 184, .08);
+  outline: 0;
+}
+
+.notes-section-button.active {
+  border-color: #17a2b8;
+  border-left-width: .25rem;
+  color: #0f6674;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px rgba(23, 162, 184, .12);
+}
+
+.notes-section-button.active small {
+  color: #0f6674;
+}
+
+.notes-section-button strong,
+.notes-section-button small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notes-section-button strong {
+  font-size: .82rem;
+  line-height: 1.15;
+}
+
+.notes-section-button small {
+  color: #6c757d;
+  font-size: .72rem;
+  line-height: 1.15;
+}
+
+.notes-editor {
+  display: grid;
+  grid-template-rows: auto minmax(12rem, 1fr);
+  gap: .5rem;
+  padding: .55rem;
+  background: #fff;
+}
+
+.notes-editor-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: .45rem;
+}
+
+.notes-title-field,
+.notes-body-field {
+  display: grid;
+  gap: .2rem;
+  min-width: 0;
+  margin: 0;
+}
+
+.notes-title-field input {
+  font-weight: 700;
+}
+
+.notes-body-field {
+  min-height: 0;
+}
+
+.notes-body-field textarea {
+  min-height: 12rem;
+  height: 100%;
+  resize: vertical;
+  line-height: 1.4;
 }
 
 .party-snapshot {
@@ -2367,6 +2517,7 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .loot-options,
 :is(.app-shell, body)[data-theme="dark"] .npc-detail-row,
 :is(.app-shell, body)[data-theme="dark"] .location-detail-row,
+:is(.app-shell, body)[data-theme="dark"] .notes-editor,
 :is(.app-shell, body)[data-theme="dark"] .initiative-row,
 :is(.app-shell, body)[data-theme="dark"] .item-quirk-row,
 :is(.app-shell, body)[data-theme="dark"] .encounter-thresholds div,
@@ -2422,6 +2573,7 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .die-d20-panel,
 :is(.app-shell, body)[data-theme="dark"] .rules-card,
 :is(.app-shell, body)[data-theme="dark"] .initiative-empty,
+:is(.app-shell, body)[data-theme="dark"] .notes-sidebar,
 :is(.app-shell, body)[data-theme="dark"] .loot-coin-field,
 :is(.app-shell, body)[data-theme="dark"] .loot-result-card,
 :is(.app-shell, body)[data-theme="dark"] .loot-coin-pill,
@@ -2522,6 +2674,10 @@ body {
 :is(.app-shell, body)[data-theme="dark"] .location-name-panel span,
 :is(.app-shell, body)[data-theme="dark"] .location-detail-row span,
 :is(.app-shell, body)[data-theme="dark"] .initiative-status span,
+:is(.app-shell, body)[data-theme="dark"] .notes-sidebar-header span,
+:is(.app-shell, body)[data-theme="dark"] .notes-section-button small,
+:is(.app-shell, body)[data-theme="dark"] .notes-title-field span,
+:is(.app-shell, body)[data-theme="dark"] .notes-body-field span,
 :is(.app-shell, body)[data-theme="dark"] .initiative-row-summary,
 :is(.app-shell, body)[data-theme="dark"] .initiative-row-fields label span,
 :is(.app-shell, body)[data-theme="dark"] .item-quirk-field span,
@@ -2612,6 +2768,27 @@ body {
 
 :is(.app-shell, body)[data-theme="dark"] .party-detail-group {
   border-color: var(--app-border);
+}
+
+:is(.app-shell, body)[data-theme="dark"] .notes-sidebar-header {
+  border-color: var(--app-border);
+}
+
+:is(.app-shell, body)[data-theme="dark"] .notes-section-button:hover,
+:is(.app-shell, body)[data-theme="dark"] .notes-section-button:focus {
+  border-color: #17a2b8;
+  background: rgba(23, 162, 184, .12);
+}
+
+:is(.app-shell, body)[data-theme="dark"] .notes-section-button.active {
+  color: #9eeaf9;
+  border-color: #17a2b8;
+  background: var(--app-panel);
+  box-shadow: inset 0 0 0 1px rgba(23, 162, 184, .22);
+}
+
+:is(.app-shell, body)[data-theme="dark"] .notes-section-button.active small {
+  color: #9eeaf9;
 }
 
 :is(.app-shell, body)[data-theme="dark"] .party-summary span,
