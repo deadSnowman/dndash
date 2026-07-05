@@ -1,12 +1,14 @@
 import { ChevronDown, ChevronRight, Plus, Shuffle, Trash2 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import PluginCard from '../components/PluginCard.jsx';
 import NumberInput from '../components/forms/NumberInput.jsx';
 import SelectField from '../components/forms/SelectField.jsx';
 import { builtInMonsters, calculateEncounter, crOptions } from '../lib/encounterBuilder.js';
 
 const levelOptions = Array.from({ length: 20 }, (_, index) => index + 1);
+const ENCOUNTER_BUILDER_KEY = 'dndash.encounterBuilder';
 const CUSTOM_MONSTERS_KEY = 'dndash.customMonsters';
+const crOptionValues = new Set(crOptions.map((option) => option.value));
 
 function formatXp(value) {
   return Math.round(value).toLocaleString();
@@ -19,6 +21,48 @@ function createMonsterRow(index = 1, monster = {}) {
     cr: monster.cr ?? '1',
     name: monster.name ?? ''
   };
+}
+
+function normalizeMonsterRow(monster, index) {
+  return {
+    ...createMonsterRow(index + 1),
+    ...monster,
+    id: monster?.id || `${Date.now()}-${index}-${Math.random().toString(16).slice(2)}`,
+    count: monster?.count ?? 1,
+    cr: crOptionValues.has(monster?.cr) ? monster.cr : '1',
+    name: monster?.name ?? ''
+  };
+}
+
+function loadSavedEncounter() {
+  const fallback = {
+    partySize: 4,
+    level: 3,
+    monsters: [createMonsterRow()],
+    pickerOpen: false,
+    pickerCr: '1',
+    pickerMonsterId: ''
+  };
+
+  if (typeof window === 'undefined') return fallback;
+
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(ENCOUNTER_BUILDER_KEY) || '{}');
+    const monsters = Array.isArray(saved.monsters) && saved.monsters.length > 0
+      ? saved.monsters.map(normalizeMonsterRow)
+      : fallback.monsters;
+
+    return {
+      partySize: saved.partySize ?? fallback.partySize,
+      level: levelOptions.includes(Number(saved.level)) ? saved.level : fallback.level,
+      monsters,
+      pickerOpen: Boolean(saved.pickerOpen),
+      pickerCr: crOptionValues.has(saved.pickerCr) ? saved.pickerCr : fallback.pickerCr,
+      pickerMonsterId: saved.pickerMonsterId ?? fallback.pickerMonsterId
+    };
+  } catch {
+    return fallback;
+  }
 }
 
 function loadCustomMonsters() {
@@ -40,14 +84,15 @@ function saveCustomMonsters(monsters) {
 }
 
 export default function EncounterBuilder({ cardProps = {} }) {
-  const [partySize, setPartySize] = useState(4);
-  const [level, setLevel] = useState(3);
-  const [monsters, setMonsters] = useState(() => [createMonsterRow()]);
-  const [pickerOpen, setPickerOpen] = useState(false);
+  const [savedEncounter] = useState(loadSavedEncounter);
+  const [partySize, setPartySize] = useState(savedEncounter.partySize);
+  const [level, setLevel] = useState(savedEncounter.level);
+  const [monsters, setMonsters] = useState(savedEncounter.monsters);
+  const [pickerOpen, setPickerOpen] = useState(savedEncounter.pickerOpen);
   const [customMonsterOpen, setCustomMonsterOpen] = useState(false);
   const [customMonsters, setCustomMonsters] = useState(loadCustomMonsters);
-  const [pickerCr, setPickerCr] = useState('1');
-  const [pickerMonsterId, setPickerMonsterId] = useState('');
+  const [pickerCr, setPickerCr] = useState(savedEncounter.pickerCr);
+  const [pickerMonsterId, setPickerMonsterId] = useState(savedEncounter.pickerMonsterId);
   const [customMonsterDraft, setCustomMonsterDraft] = useState({ name: '', cr: '1', type: '' });
   const monsterLibrary = useMemo(
     () => [
@@ -66,6 +111,22 @@ export default function EncounterBuilder({ cardProps = {} }) {
   );
 
   const selectedMonster = filteredMonsters.find((monster) => monster.id === pickerMonsterId) || filteredMonsters[0];
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    window.localStorage.setItem(
+      ENCOUNTER_BUILDER_KEY,
+      JSON.stringify({
+        partySize,
+        level,
+        monsters,
+        pickerOpen,
+        pickerCr,
+        pickerMonsterId
+      })
+    );
+  }, [level, monsters, partySize, pickerCr, pickerMonsterId, pickerOpen]);
 
   function updateMonster(id, field, value) {
     setMonsters((current) =>
