@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { RotateCcw } from 'lucide-react';
 import PluginCard from '../components/PluginCard.jsx';
 import CheckboxField from '../components/forms/CheckboxField.jsx';
@@ -21,6 +21,42 @@ const coinAbbreviations = {
   platinum: 'pp'
 };
 
+const LOOT_SPLITTER_KEY = 'dndash.lootSplitter';
+const defaultLoot = { copper: '', silver: '', electrum: '', gold: '', platinum: '' };
+
+function normalizeLoot(value) {
+  return Object.fromEntries(
+    coins.map((coin) => [coin, value?.[coin] ?? ''])
+  );
+}
+
+function loadSavedLootSplitter() {
+  const fallback = {
+    numparty: 1,
+    loot: defaultLoot,
+    convert: true,
+    electrum: false,
+    splitRemainder: false,
+    showResults: false
+  };
+
+  if (typeof window === 'undefined') return fallback;
+
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(LOOT_SPLITTER_KEY) || '{}');
+    return {
+      numparty: saved.numparty ?? fallback.numparty,
+      loot: normalizeLoot(saved.loot),
+      convert: saved.convert ?? fallback.convert,
+      electrum: saved.electrum ?? fallback.electrum,
+      splitRemainder: saved.splitRemainder ?? fallback.splitRemainder,
+      showResults: saved.showResults ?? fallback.showResults
+    };
+  } catch {
+    return fallback;
+  }
+}
+
 function CoinList({ loot, emptyText = 'No coins' }) {
   const visibleCoins = coins.filter((coin) => Number(loot[coin]) > 0);
   if (visibleCoins.length === 0) return <span className="loot-empty">{emptyText}</span>;
@@ -37,13 +73,34 @@ function CoinList({ loot, emptyText = 'No coins' }) {
 }
 
 export default function LootSplitter({ cardProps = {} }) {
-  const [numparty, setNumparty] = useState(1);
-  const [loot, setLoot] = useState(() => ({ copper: '', silver: '', electrum: '', gold: '', platinum: '' }));
-  const [convert, setConvert] = useState(true);
-  const [electrum, setElectrum] = useState(false);
-  const [splitRemainder, setSplitRemainder] = useState(false);
-  const [lootReturn, setLootReturn] = useState(null);
+  const [savedLootSplitter] = useState(loadSavedLootSplitter);
+  const [numparty, setNumparty] = useState(savedLootSplitter.numparty);
+  const [loot, setLoot] = useState(savedLootSplitter.loot);
+  const [convert, setConvert] = useState(savedLootSplitter.convert);
+  const [electrum, setElectrum] = useState(savedLootSplitter.electrum);
+  const [splitRemainder, setSplitRemainder] = useState(savedLootSplitter.splitRemainder);
+  const [showResults, setShowResults] = useState(savedLootSplitter.showResults);
   const visibleCoins = electrum ? coins : coins.filter((coin) => coin !== 'electrum');
+  const lootReturn = useMemo(
+    () => (showResults ? splitLoot(numparty, convert, loot, electrum) : null),
+    [convert, electrum, loot, numparty, showResults]
+  );
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    window.localStorage.setItem(
+      LOOT_SPLITTER_KEY,
+      JSON.stringify({
+        numparty,
+        loot,
+        convert,
+        electrum,
+        splitRemainder,
+        showResults
+      })
+    );
+  }, [convert, electrum, loot, numparty, showResults, splitRemainder]);
 
   function updateLoot(coin, value) {
     setLoot((current) => ({ ...current, [coin]: value }));
@@ -51,13 +108,13 @@ export default function LootSplitter({ cardProps = {} }) {
 
   function split(event) {
     event.preventDefault();
-    setLootReturn(splitLoot(numparty, convert, loot, electrum));
+    setShowResults(true);
   }
 
   function clear() {
     setNumparty(1);
-    setLoot({ copper: '', silver: '', electrum: '', gold: '', platinum: '' });
-    setLootReturn(null);
+    setLoot(defaultLoot);
+    setShowResults(false);
     setConvert(true);
     setElectrum(false);
     setSplitRemainder(false);

@@ -2775,6 +2775,13 @@ body {
 .settings-checkbox input {
   flex: 0 0 auto;
   margin-top: .12rem;
+  accent-color: #17a2b8;
+}
+
+.settings-checkbox input:focus-visible,
+.settings-plugin-label input:focus-visible {
+  outline: 2px solid rgba(23, 162, 184, .35);
+  outline-offset: 2px;
 }
 
 .settings-checkbox:has(input:disabled) {
@@ -2809,6 +2816,7 @@ body {
 
 .settings-plugin-label input {
   flex: 0 0 auto;
+  accent-color: #17a2b8;
 }
 
 .settings-drag-handle {

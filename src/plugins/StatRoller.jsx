@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Plus, RotateCcw } from 'lucide-react';
 import PluginCard from '../components/PluginCard.jsx';
 import SelectField from '../components/forms/SelectField.jsx';
@@ -21,6 +21,77 @@ const flexibleAbilityLabels = {
   wis: 'Wisdom',
   chr: 'Charisma'
 };
+
+const STAT_ROLLER_KEY = 'dndash.statRoller';
+const defaultFlexibleBonuses = { primary: '', secondary: '' };
+
+function normalizeAbilityMap(value) {
+  const next = emptyAbilities();
+  if (!value || typeof value !== 'object') return next;
+
+  abilities.forEach((ability) => {
+    next[ability] = Number(value[ability]) || 0;
+  });
+
+  return next;
+}
+
+function normalizeSelectedRace(value) {
+  if (value === '-1') return '-1';
+  const index = Number(value);
+  return Number.isInteger(index) && races[index] ? String(index) : '-1';
+}
+
+function normalizeSelectedSubrace(value, selectedRace) {
+  if (value === '-1') return '-1';
+  const race = selectedRace === '-1' ? null : races[Number(selectedRace)];
+  const index = Number(value);
+  return Number.isInteger(index) && race?.subraces?.[index] ? String(index) : '-1';
+}
+
+function normalizeFlexibleBonuses(value) {
+  const primary = abilities.includes(value?.primary) ? value.primary : '';
+  const secondary = abilities.includes(value?.secondary) ? value.secondary : '';
+  return { primary, secondary };
+}
+
+function loadSavedStatRoller() {
+  const fallback = {
+    selectedRace: '-1',
+    selectedSubrace: '-1',
+    abilityScoreRolls: emptyAbilities(),
+    abilityScoreIncrease: emptyAbilities(),
+    pickIncrease: emptyAbilities(),
+    flexibleBonuses: defaultFlexibleBonuses,
+    rollMethod: '4d6 Drop Lowest',
+    statsRolled: false,
+    picks: 0,
+    picked: 0
+  };
+
+  if (typeof window === 'undefined') return fallback;
+
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(STAT_ROLLER_KEY) || '{}');
+    const selectedRace = normalizeSelectedRace(saved.selectedRace ?? fallback.selectedRace);
+    const selectedSubrace = normalizeSelectedSubrace(saved.selectedSubrace ?? fallback.selectedSubrace, selectedRace);
+
+    return {
+      selectedRace,
+      selectedSubrace,
+      abilityScoreRolls: normalizeAbilityMap(saved.abilityScoreRolls),
+      abilityScoreIncrease: normalizeAbilityMap(saved.abilityScoreIncrease),
+      pickIncrease: normalizeAbilityMap(saved.pickIncrease),
+      flexibleBonuses: normalizeFlexibleBonuses(saved.flexibleBonuses),
+      rollMethod: rollMethods[saved.rollMethod] ? saved.rollMethod : fallback.rollMethod,
+      statsRolled: Boolean(saved.statsRolled),
+      picks: Math.max(0, Number(saved.picks) || 0),
+      picked: Math.max(0, Number(saved.picked) || 0)
+    };
+  } catch {
+    return fallback;
+  }
+}
 
 function RaceSelector({ selectedRace, selectedSubrace, race, hasSubrace, onRaceChange, onSubraceChange }) {
   return (
@@ -166,16 +237,17 @@ function RollMethodControls({
 }
 
 export default function StatRoller({ cardProps = {} }) {
-  const [selectedRace, setSelectedRace] = useState('-1');
-  const [selectedSubrace, setSelectedSubrace] = useState('-1');
-  const [abilityScoreRolls, setAbilityScoreRolls] = useState(emptyAbilities);
-  const [abilityScoreIncrease, setAbilityScoreIncrease] = useState(emptyAbilities);
-  const [pickIncrease, setPickIncrease] = useState(emptyAbilities);
-  const [flexibleBonuses, setFlexibleBonuses] = useState({ primary: '', secondary: '' });
-  const [rollMethod, setRollMethod] = useState('4d6 Drop Lowest');
-  const [statsRolled, setStatsRolled] = useState(false);
-  const [picks, setPicks] = useState(0);
-  const [picked, setPicked] = useState(0);
+  const [savedStatRoller] = useState(loadSavedStatRoller);
+  const [selectedRace, setSelectedRace] = useState(savedStatRoller.selectedRace);
+  const [selectedSubrace, setSelectedSubrace] = useState(savedStatRoller.selectedSubrace);
+  const [abilityScoreRolls, setAbilityScoreRolls] = useState(savedStatRoller.abilityScoreRolls);
+  const [abilityScoreIncrease, setAbilityScoreIncrease] = useState(savedStatRoller.abilityScoreIncrease);
+  const [pickIncrease, setPickIncrease] = useState(savedStatRoller.pickIncrease);
+  const [flexibleBonuses, setFlexibleBonuses] = useState(savedStatRoller.flexibleBonuses);
+  const [rollMethod, setRollMethod] = useState(savedStatRoller.rollMethod);
+  const [statsRolled, setStatsRolled] = useState(savedStatRoller.statsRolled);
+  const [picks, setPicks] = useState(savedStatRoller.picks);
+  const [picked, setPicked] = useState(savedStatRoller.picked);
 
   const race = selectedRace === '-1' ? null : races[Number(selectedRace)];
   const hasSubrace = Boolean(race?.subraces?.length);
@@ -196,6 +268,37 @@ export default function StatRoller({ cardProps = {} }) {
   );
   const abilityScores = getAbilityScores(statsRolled, abilityScoreRolls, totalAbilityScoreIncrease);
   const abilityModifiers = getAbilityModifiers(statsRolled, abilityScores, pickIncrease);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    window.localStorage.setItem(
+      STAT_ROLLER_KEY,
+      JSON.stringify({
+        selectedRace,
+        selectedSubrace,
+        abilityScoreRolls,
+        abilityScoreIncrease,
+        pickIncrease,
+        flexibleBonuses,
+        rollMethod,
+        statsRolled,
+        picks,
+        picked
+      })
+    );
+  }, [
+    abilityScoreIncrease,
+    abilityScoreRolls,
+    flexibleBonuses,
+    picked,
+    pickIncrease,
+    picks,
+    rollMethod,
+    selectedRace,
+    selectedSubrace,
+    statsRolled
+  ]);
 
   function raceSelectionChanged(value) {
     const nextRace = value === '-1' ? null : races[Number(value)];
@@ -233,7 +336,7 @@ export default function StatRoller({ cardProps = {} }) {
     setAbilityScoreRolls(emptyAbilities());
     setAbilityScoreIncrease(emptyAbilities());
     setPickIncrease(emptyAbilities());
-    setFlexibleBonuses({ primary: '', secondary: '' });
+    setFlexibleBonuses(defaultFlexibleBonuses);
     setStatsRolled(false);
     setPicks(0);
     setPicked(0);
