@@ -1525,9 +1525,55 @@ body {
   gap: .65rem;
 }
 
+.party-summary-shell {
+  display: grid;
+  gap: .45rem;
+}
+
+.party-summary-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  width: 100%;
+  min-height: 2.35rem;
+  padding: .45rem .55rem;
+  border: 1px solid #dee2e6;
+  border-radius: .25rem;
+  color: inherit;
+  background: #f8f9fa;
+  text-align: left;
+  cursor: pointer;
+}
+
+.party-summary-toggle:hover,
+.party-summary-toggle:focus {
+  border-color: #17a2b8;
+  outline: 0;
+}
+
+.party-summary-toggle span {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  min-width: 0;
+  font-size: .82rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.party-summary-toggle small {
+  flex: 0 0 auto;
+  color: #6c757d;
+  font-size: .72rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
 .party-summary {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr));
   gap: .45rem;
 }
 
@@ -2865,6 +2911,7 @@ body {
 }
 
 :is(.app-shell, body)[data-theme="dark"] .party-summary div,
+:is(.app-shell, body)[data-theme="dark"] .party-summary-toggle,
 :is(.app-shell, body)[data-theme="dark"] .party-empty,
 :is(.app-shell, body)[data-theme="dark"] .party-character-details,
 :is(.app-shell, body)[data-theme="dark"] .party-detail-chips span {
@@ -2898,8 +2945,14 @@ body {
   color: #9eeaf9;
 }
 
+:is(.app-shell, body)[data-theme="dark"] .party-summary-toggle:hover,
+:is(.app-shell, body)[data-theme="dark"] .party-summary-toggle:focus {
+  border-color: #17a2b8;
+}
+
 :is(.app-shell, body)[data-theme="dark"] .party-summary span,
 :is(.app-shell, body)[data-theme="dark"] .party-summary small,
+:is(.app-shell, body)[data-theme="dark"] .party-summary-toggle small,
 :is(.app-shell, body)[data-theme="dark"] .party-character-summary,
 :is(.app-shell, body)[data-theme="dark"] .party-field-grid label span,
 :is(.app-shell, body)[data-theme="dark"] .party-character-main small,

@@ -68,13 +68,24 @@ function normalizeCharacter(character, index) {
 }
 
 function loadSavedParty() {
-  if (typeof window === 'undefined') return [];
+  if (typeof window === 'undefined') {
+    return {
+      characters: [],
+      summaryCollapsed: false
+    };
+  }
 
   try {
     const saved = JSON.parse(window.localStorage.getItem(PARTY_SNAPSHOT_KEY) || '{}');
-    return Array.isArray(saved.characters) ? saved.characters.map(normalizeCharacter) : [];
+    return {
+      characters: Array.isArray(saved.characters) ? saved.characters.map(normalizeCharacter) : [],
+      summaryCollapsed: saved.summaryCollapsed === true
+    };
   } catch {
-    return [];
+    return {
+      characters: [],
+      summaryCollapsed: false
+    };
   }
 }
 
@@ -87,7 +98,18 @@ function getHighest(characters, field) {
   return characters.reduce(
     (highest, character) => {
       const value = asNumber(character[field]);
-      if (value === null || value < highest.value) return highest;
+      if (value === null || (highest.value !== null && value < highest.value)) return highest;
+      return { value, name: character.name || 'Unnamed' };
+    },
+    { value: null, name: '' }
+  );
+}
+
+function getLowestCurrentHp(characters) {
+  return characters.reduce(
+    (lowest, character) => {
+      const value = asNumber(character.hp);
+      if (value === null || (lowest.value !== null && value > lowest.value)) return lowest;
       return { value, name: character.name || 'Unnamed' };
     },
     { value: null, name: '' }
@@ -99,6 +121,10 @@ function splitList(value) {
     .split(',')
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+function hasDarkvision(character) {
+  return /darkvision/i.test(character.senses);
 }
 
 function SummaryTile({ label, value, detail }) {
@@ -446,27 +472,35 @@ function CharacterRow({ character, onAdjustHp, onCollapsedChange, onRemove, onUp
 }
 
 export default function PartySnapshot({ cardProps = {}, requestConfirm }) {
-  const [characters, setCharacters] = useState(loadSavedParty);
+  const [savedParty] = useState(loadSavedParty);
+  const [characters, setCharacters] = useState(savedParty.characters);
+  const [summaryCollapsed, setSummaryCollapsed] = useState(savedParty.summaryCollapsed);
 
   const summary = useMemo(() => {
     const highestPerception = getHighest(characters, 'passivePerception');
     const highestInsight = getHighest(characters, 'passiveInsight');
     const highestInvestigation = getHighest(characters, 'passiveInvestigation');
+    const highestAc = getHighest(characters, 'ac');
+    const lowestHp = getLowestCurrentHp(characters);
     const languages = new Set(characters.flatMap((character) => splitList(character.languages)));
-    const darkvisionCount = characters.filter((character) => /darkvision/i.test(character.senses)).length;
+    const darkvisionCount = characters.filter(hasDarkvision).length;
+    const conditionsCount = characters.filter((character) => character.conditions.trim()).length;
 
     return {
       highestPerception,
       highestInsight,
       highestInvestigation,
+      highestAc,
+      lowestHp,
       languages: languages.size,
-      darkvisionCount
+      darkvisionCount,
+      conditionsCount
     };
   }, [characters]);
 
   useEffect(() => {
-    window.localStorage.setItem(PARTY_SNAPSHOT_KEY, JSON.stringify({ characters }));
-  }, [characters]);
+    window.localStorage.setItem(PARTY_SNAPSHOT_KEY, JSON.stringify({ characters, summaryCollapsed }));
+  }, [characters, summaryCollapsed]);
 
   function addCharacter() {
     setCharacters((current) => [...current, createCharacter(current.length + 1)]);
@@ -499,17 +533,36 @@ export default function PartySnapshot({ cardProps = {}, requestConfirm }) {
   return (
     <PluginCard title="Party Snapshot" {...cardProps}>
       <div className="party-snapshot">
-        <div className="party-summary">
-          <SummaryTile label="Party" value={characters.length} detail={characters.length === 1 ? 'character' : 'characters'} />
-          <SummaryTile
-            label="Best PP"
-            value={summary.highestPerception.value ?? '-'}
-            detail={summary.highestPerception.name}
-          />
-          <SummaryTile label="Best PI" value={summary.highestInsight.value ?? '-'} detail={summary.highestInsight.name} />
-          <SummaryTile label="Best PInv" value={summary.highestInvestigation.value ?? '-'} detail={summary.highestInvestigation.name} />
-          <SummaryTile label="Darkvision" value={summary.darkvisionCount || '-'} detail="characters" />
-          <SummaryTile label="Languages" value={summary.languages || '-'} detail="known" />
+        <div className="party-summary-shell">
+          <button
+            type="button"
+            className="party-summary-toggle"
+            onClick={() => setSummaryCollapsed((value) => !value)}
+            aria-expanded={!summaryCollapsed}
+          >
+            <span>
+              {summaryCollapsed ? <ChevronRight size={15} strokeWidth={2.4} /> : <ChevronDown size={15} strokeWidth={2.4} />}
+              Party Summary
+            </span>
+            <small>{characters.length} {characters.length === 1 ? 'character' : 'characters'}</small>
+          </button>
+
+          {!summaryCollapsed && (
+            <div className="party-summary">
+              <SummaryTile label="Highest AC" value={summary.highestAc.value ?? '-'} detail={summary.highestAc.name} />
+              <SummaryTile label="Lowest HP" value={summary.lowestHp.value ?? '-'} detail={summary.lowestHp.name} />
+              <SummaryTile
+                label="Best PP"
+                value={summary.highestPerception.value ?? '-'}
+                detail={summary.highestPerception.name}
+              />
+              <SummaryTile label="Best PI" value={summary.highestInsight.value ?? '-'} detail={summary.highestInsight.name} />
+              <SummaryTile label="Best PInv" value={summary.highestInvestigation.value ?? '-'} detail={summary.highestInvestigation.name} />
+              <SummaryTile label="Darkvision" value={summary.darkvisionCount || '-'} detail="characters" />
+              <SummaryTile label="Conditions" value={summary.conditionsCount || '-'} detail="active" />
+              <SummaryTile label="Languages" value={summary.languages || '-'} detail="known" />
+            </div>
+          )}
         </div>
 
         <div className="party-actions">
