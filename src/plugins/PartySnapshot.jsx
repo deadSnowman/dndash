@@ -158,11 +158,25 @@ function DetailGroup({ title, show, children }) {
   );
 }
 
+function buildCharacterSummary(character) {
+  const items = [
+    character.ac && `AC ${character.ac}`,
+    (character.hp || character.maxHp) && `HP ${character.hp || '-'}/${character.maxHp || '-'}`,
+    character.tempHp && `Temp ${character.tempHp}`,
+    character.passivePerception && `PP ${character.passivePerception}`,
+    character.passiveInsight && `PI ${character.passiveInsight}`,
+    character.passiveInvestigation && `PInv ${character.passiveInvestigation}`
+  ].filter(Boolean);
+
+  return items.join(' · ');
+}
+
 function CharacterRow({ character, onAdjustHp, onCollapsedChange, onRemove, onUpdate }) {
   const [editing, setEditing] = useState(false);
   const isCollapsed = character.collapsed === true;
   const hasDetails =
     character.player ||
+    character.passivePerception ||
     character.passiveInsight ||
     character.passiveInvestigation ||
     character.spellDc ||
@@ -180,6 +194,7 @@ function CharacterRow({ character, onAdjustHp, onCollapsedChange, onRemove, onUp
   const identity = [character.ancestry, character.classLevel].filter(Boolean).join(' ');
   const hasTableDetails = character.player || character.conditions;
   const hasCheckDetails =
+    character.passivePerception ||
     character.passiveInsight ||
     character.passiveInvestigation ||
     character.spellDc ||
@@ -188,6 +203,7 @@ function CharacterRow({ character, onAdjustHp, onCollapsedChange, onRemove, onUp
     character.skillStandouts;
   const hasExplorationDetails = character.senses || character.languages || character.speeds || character.resistances;
   const hasStoryDetails = character.magicItems || character.hooks || character.dmNotes;
+  const summary = buildCharacterSummary(character);
 
   return (
     <div className={`party-character ${editing ? 'editing' : ''}`}>
@@ -196,10 +212,7 @@ function CharacterRow({ character, onAdjustHp, onCollapsedChange, onRemove, onUp
           <strong>{character.name || 'Unnamed'}</strong>
           {identity && <small>{identity}</small>}
         </div>
-        <span className="party-character-summary">
-          AC {character.ac || '-'} · HP {character.hp || '-'}/{character.maxHp || '-'} · Temp {character.tempHp || '0'} · PP{' '}
-          {character.passivePerception || '-'}
-        </span>
+        {summary && <span className="party-character-summary">{summary}</span>}
         <div className="party-character-controls">
           <button
             type="button"
@@ -236,7 +249,8 @@ function CharacterRow({ character, onAdjustHp, onCollapsedChange, onRemove, onUp
             <DetailItem label="Conditions" value={character.conditions} />
           </DetailGroup>
 
-          <DetailGroup title="Checks" show={hasCheckDetails}>
+          <DetailGroup title="Awareness & Checks" show={hasCheckDetails}>
+            <DetailItem label="Passive Perception" value={character.passivePerception} />
             <DetailItem label="Passive Insight" value={character.passiveInsight} />
             <DetailItem label="Passive Investigation" value={character.passiveInvestigation} />
             <DetailItem label="Spell DC" value={character.spellDc} />
@@ -437,12 +451,14 @@ export default function PartySnapshot({ cardProps = {}, requestConfirm }) {
   const summary = useMemo(() => {
     const highestPerception = getHighest(characters, 'passivePerception');
     const highestInsight = getHighest(characters, 'passiveInsight');
+    const highestInvestigation = getHighest(characters, 'passiveInvestigation');
     const languages = new Set(characters.flatMap((character) => splitList(character.languages)));
     const darkvisionCount = characters.filter((character) => /darkvision/i.test(character.senses)).length;
 
     return {
       highestPerception,
       highestInsight,
+      highestInvestigation,
       languages: languages.size,
       darkvisionCount
     };
@@ -491,7 +507,9 @@ export default function PartySnapshot({ cardProps = {}, requestConfirm }) {
             detail={summary.highestPerception.name}
           />
           <SummaryTile label="Best PI" value={summary.highestInsight.value ?? '-'} detail={summary.highestInsight.name} />
-          <SummaryTile label="Languages" value={summary.languages || '-'} detail={`${summary.darkvisionCount} darkvision`} />
+          <SummaryTile label="Best PInv" value={summary.highestInvestigation.value ?? '-'} detail={summary.highestInvestigation.name} />
+          <SummaryTile label="Darkvision" value={summary.darkvisionCount || '-'} detail="characters" />
+          <SummaryTile label="Languages" value={summary.languages || '-'} detail="known" />
         </div>
 
         <div className="party-actions">
