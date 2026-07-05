@@ -8,6 +8,7 @@ import RulesLookup from './RulesLookup.jsx';
 import InitiativeTracker from './InitiativeTracker.jsx';
 import PartySnapshot from './PartySnapshot.jsx';
 import GeneralNotes from './GeneralNotes.jsx';
+import RumorMill from './RumorMill.jsx';
 import GeneratorSuite from './GeneratorSuite.jsx';
 // These standalone generators are intentionally kept available in code.
 // The dashboard exposes them through Quick Generators, so they are hidden from Settings by default.
@@ -25,6 +26,7 @@ export const pluginRegistry = [
   { id: 'initiativeTracker', name: 'Initiative Tracker', Component: InitiativeTracker, enabled: true },
   { id: 'partySnapshot', name: 'Party Snapshot', Component: PartySnapshot, enabled: true },
   { id: 'generalNotes', name: 'General Notes', Component: GeneralNotes, enabled: true },
+  { id: 'rumorMill', name: 'Rumor Mill', Component: RumorMill, enabled: true },
   { id: 'generatorSuite', name: 'Quick Generators', Component: GeneratorSuite, enabled: true },
   { id: 'encounterBuilder', name: 'Encounter Builder', Component: EncounterBuilder, enabled: true },
   { id: 'npcGenerator', name: 'NPC Generator', Component: NpcGenerator, enabled: false, hidden: true },
