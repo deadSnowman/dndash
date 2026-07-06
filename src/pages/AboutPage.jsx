@@ -2,6 +2,8 @@ import { useState } from 'react';
 import NavBar from '../components/NavBar.jsx';
 import aboutImage from '../assets/ledrungorogin_colored.png';
 
+const BUY_ME_A_COFFEE_URL = 'https://buymeacoffee.com/deadsnowman';
+
 const featureGroups = [
   {
     title: 'Table Utilities',
@@ -86,7 +88,7 @@ export default function AboutPage({ darkTheme = false, onToggleTheme }) {
             Fork me on <a href="https://github.com/deadSnowman/dndash">Github</a>
           </p>
           <p>
-            Check out my other site <a href="https://skribblecats.com/">Skribble Cats</a>
+            Check out my other site <a href="https://skribblecats.com/">Skribble Cats</a> or maybe <a className='login-about-link' href={BUY_ME_A_COFFEE_URL} target='_blank' rel='noreferrer'>Buy me a coffee</a> :)
           </p>
         </div>
       </footer>
