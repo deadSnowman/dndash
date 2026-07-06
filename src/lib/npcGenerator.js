@@ -1,3 +1,8 @@
+/**
+ * Name pools keyed by ancestry option.
+ *
+ * @type {Record<string, {given: string[], family: string[]}>}
+ */
 const ancestryNames = {
   any: {
     given: [
@@ -180,6 +185,11 @@ const hooks = [
   'Has heard the same strange song in three different dreams.'
 ];
 
+/**
+ * Selectable ancestry filters for the NPC generator UI.
+ *
+ * @type {{value: string, label: string}[]}
+ */
 export const ancestryOptions = [
   { value: 'any', label: 'Any' },
   { value: 'human', label: 'Human' },
@@ -192,19 +202,45 @@ export const ancestryOptions = [
   { value: 'goblin', label: 'Goblin' }
 ];
 
+/**
+ * Selects a random item from a nonempty list.
+ *
+ * @param {string[]} list Values to choose from.
+ * @returns {string} Randomly selected list item.
+ */
 function pick(list) {
   return list[Math.floor(Math.random() * list.length)];
 }
 
+/**
+ * Capitalizes the first character of generated prose.
+ *
+ * @param {string} value Text to capitalize.
+ * @returns {string} Sentence-cased text, or the original empty value.
+ */
 function sentenceCase(value) {
   return value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
 }
 
+/**
+ * Generates a random full NPC name for an ancestry.
+ *
+ * Unknown ancestry values fall back to the generic name pool.
+ *
+ * @param {string} [ancestry='any'] Ancestry key from {@link ancestryOptions}.
+ * @returns {string} Generated given and family name.
+ */
 export function generateName(ancestry = 'any') {
   const names = ancestryNames[ancestry] || ancestryNames.any;
   return `${pick(names.given)} ${pick(names.family)}`;
 }
 
+/**
+ * Generates a complete random NPC profile.
+ *
+ * @param {string} [ancestry='any'] Ancestry key from {@link ancestryOptions}.
+ * @returns {{ancestry: string, name: string, role: string, appearance: string, trait: string, mannerism: string, desire: string, fear: string, secret: string, hook: string}} Generated NPC details.
+ */
 export function generateNpc(ancestry = 'any') {
   return {
     ancestry,

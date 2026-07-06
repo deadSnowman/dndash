@@ -5,6 +5,12 @@ import NumberInput from '../components/forms/NumberInput.jsx';
 
 const PARTY_SNAPSHOT_KEY = 'dndash.partySnapshot';
 
+/**
+ * Creates a blank party character with every tracked field initialized.
+ *
+ * @param {number} [index=1] Display index used in the default name.
+ * @returns {object} Character snapshot object.
+ */
 function createCharacter(index = 1) {
   return {
     id: `${Date.now()}-${index}-${Math.random().toString(16).slice(2)}`,
@@ -35,6 +41,13 @@ function createCharacter(index = 1) {
   };
 }
 
+/**
+ * Normalizes a stored character snapshot for safe rendering and editing.
+ *
+ * @param {object} character Stored character data.
+ * @param {number} index Character index in saved data.
+ * @returns {object} Normalized character snapshot.
+ */
 function normalizeCharacter(character, index) {
   return {
     ...createCharacter(index + 1),
@@ -67,6 +80,11 @@ function normalizeCharacter(character, index) {
   };
 }
 
+/**
+ * Loads party snapshot state from local storage.
+ *
+ * @returns {{characters: object[], summaryCollapsed: boolean}} Saved party snapshot state.
+ */
 function loadSavedParty() {
   if (typeof window === 'undefined') {
     return {
@@ -89,11 +107,24 @@ function loadSavedParty() {
   }
 }
 
+/**
+ * Parses a finite number or returns null for blank and invalid values.
+ *
+ * @param {number | string} value Value to parse.
+ * @returns {number | null} Parsed number, or null when invalid.
+ */
 function asNumber(value) {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : null;
 }
 
+/**
+ * Finds the highest numeric value for a field across characters.
+ *
+ * @param {object[]} characters Character snapshots to inspect.
+ * @param {string} field Numeric field name.
+ * @returns {{value: number | null, name: string}} Highest value and owning character name.
+ */
 function getHighest(characters, field) {
   return characters.reduce(
     (highest, character) => {
@@ -105,6 +136,12 @@ function getHighest(characters, field) {
   );
 }
 
+/**
+ * Finds the lowest current HP among characters with numeric HP.
+ *
+ * @param {object[]} characters Character snapshots to inspect.
+ * @returns {{value: number | null, name: string}} Lowest HP and owning character name.
+ */
 function getLowestCurrentHp(characters) {
   return characters.reduce(
     (lowest, character) => {
@@ -116,6 +153,12 @@ function getLowestCurrentHp(characters) {
   );
 }
 
+/**
+ * Splits a comma-separated field into trimmed display values.
+ *
+ * @param {string} value Comma-separated value.
+ * @returns {string[]} Nonempty list items.
+ */
 function splitList(value) {
   return value
     .split(',')
@@ -123,10 +166,25 @@ function splitList(value) {
     .filter(Boolean);
 }
 
+/**
+ * Checks whether a character senses field mentions darkvision.
+ *
+ * @param {{senses: string}} character Character snapshot.
+ * @returns {boolean} True when darkvision is present.
+ */
 function hasDarkvision(character) {
   return /darkvision/i.test(character.senses);
 }
 
+/**
+ * Renders one party summary metric tile.
+ *
+ * @param {object} props Component props.
+ * @param {string} props.label Metric label.
+ * @param {number | string} props.value Metric value.
+ * @param {string} [props.detail] Optional supporting detail.
+ * @returns {JSX.Element} Summary tile.
+ */
 function SummaryTile({ label, value, detail }) {
   return (
     <div>
@@ -137,6 +195,14 @@ function SummaryTile({ label, value, detail }) {
   );
 }
 
+/**
+ * Renders a labeled field wrapper for the character edit form.
+ *
+ * @param {object} props Component props.
+ * @param {string} props.label Field label.
+ * @param {React.ReactNode} props.children Form control content.
+ * @returns {JSX.Element} Labeled form field.
+ */
 function Field({ label, children }) {
   return (
     <label>
@@ -146,6 +212,15 @@ function Field({ label, children }) {
   );
 }
 
+/**
+ * Renders a character detail block when a value exists.
+ *
+ * @param {object} props Component props.
+ * @param {string} props.label Detail label.
+ * @param {string} props.value Detail value.
+ * @param {boolean} [props.wide=false] Whether the block should use the wide layout.
+ * @returns {JSX.Element | null} Detail block or null for empty values.
+ */
 function DetailItem({ label, value, wide = false }) {
   if (!value) return null;
 
@@ -157,6 +232,14 @@ function DetailItem({ label, value, wide = false }) {
   );
 }
 
+/**
+ * Renders comma-separated character details as chips.
+ *
+ * @param {object} props Component props.
+ * @param {string} props.label Detail label.
+ * @param {string} props.value Comma-separated detail values.
+ * @returns {JSX.Element | null} Chip group or null when no values exist.
+ */
 function DetailChips({ label, value }) {
   const items = splitList(value);
   if (items.length === 0) return null;
@@ -173,6 +256,15 @@ function DetailChips({ label, value }) {
   );
 }
 
+/**
+ * Renders a named character detail section only when it has visible content.
+ *
+ * @param {object} props Component props.
+ * @param {string} props.title Section title.
+ * @param {boolean} props.show Whether to render the section.
+ * @param {React.ReactNode} props.children Detail items to display.
+ * @returns {JSX.Element | null} Detail section or null.
+ */
 function DetailGroup({ title, show, children }) {
   if (!show) return null;
 
@@ -184,6 +276,12 @@ function DetailGroup({ title, show, children }) {
   );
 }
 
+/**
+ * Builds a compact stat summary for a character row.
+ *
+ * @param {object} character Character snapshot.
+ * @returns {string} Dot-separated summary text.
+ */
 function buildCharacterSummary(character) {
   const items = [
     character.ac && `AC ${character.ac}`,
@@ -197,6 +295,17 @@ function buildCharacterSummary(character) {
   return items.join(' · ');
 }
 
+/**
+ * Renders one party character row with read, edit, collapse, HP, and remove controls.
+ *
+ * @param {object} props Component props.
+ * @param {object} props.character Character snapshot to render.
+ * @param {(amount: number) => void} props.onAdjustHp Handler for HP changes.
+ * @param {(collapsed: boolean) => void} props.onCollapsedChange Handler for row collapse changes.
+ * @param {() => void} props.onRemove Handler for removing the character.
+ * @param {(field: string, value: string) => void} props.onUpdate Handler for field updates.
+ * @returns {JSX.Element} Party character row.
+ */
 function CharacterRow({ character, onAdjustHp, onCollapsedChange, onRemove, onUpdate }) {
   const [editing, setEditing] = useState(false);
   const isCollapsed = character.collapsed === true;
@@ -471,6 +580,14 @@ function CharacterRow({ character, onAdjustHp, onCollapsedChange, onRemove, onUp
   );
 }
 
+/**
+ * Renders the party snapshot card with table-facing character summaries and persisted details.
+ *
+ * @param {object} props Component props.
+ * @param {object} [props.cardProps={}] Props forwarded to the wrapping {@link PluginCard}.
+ * @param {(config: object) => void} [props.requestConfirm] Shared confirmation modal requester.
+ * @returns {JSX.Element} Party snapshot manager.
+ */
 export default function PartySnapshot({ cardProps = {}, requestConfirm }) {
   const [savedParty] = useState(loadSavedParty);
   const [characters, setCharacters] = useState(savedParty.characters);
@@ -502,24 +619,59 @@ export default function PartySnapshot({ cardProps = {}, requestConfirm }) {
     window.localStorage.setItem(PARTY_SNAPSHOT_KEY, JSON.stringify({ characters, summaryCollapsed }));
   }, [characters, summaryCollapsed]);
 
+  /**
+   * Adds a blank character snapshot.
+   *
+   * @returns {void}
+   */
   function addCharacter() {
     setCharacters((current) => [...current, createCharacter(current.length + 1)]);
   }
 
+  /**
+   * Removes a character snapshot.
+   *
+   * @param {string} id Character id to remove.
+   * @returns {void}
+   */
   function removeCharacter(id) {
     setCharacters((current) => current.filter((character) => character.id !== id));
   }
 
+  /**
+   * Updates a field on one character snapshot.
+   *
+   * @param {string} id Character id.
+   * @param {string} field Field name to update.
+   * @param {string} value Replacement value.
+   * @returns {void}
+   */
   function updateCharacter(id, field, value) {
     setCharacters((current) =>
       current.map((character) => (character.id === id ? { ...character, [field]: value } : character))
     );
   }
 
+  /**
+   * Sets a character row's collapsed state.
+   *
+   * @param {string} id Character id.
+   * @param {boolean} collapsed Whether the row is collapsed.
+   * @returns {void}
+   */
   function setCharacterCollapsed(id, collapsed) {
     updateCharacter(id, 'collapsed', collapsed);
   }
 
+  /**
+   * Adjusts a character's current HP by an amount.
+   *
+   * Blank or invalid HP is treated as zero.
+   *
+   * @param {string} id Character id.
+   * @param {number} amount HP delta to apply.
+   * @returns {void}
+   */
   function adjustHp(id, amount) {
     setCharacters((current) =>
       current.map((character) => {

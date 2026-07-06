@@ -13,28 +13,62 @@ const coinAbbreviations = {
   Platinum: 'pp'
 };
 
+/**
+ * Formats an exchange-rate number for compact display.
+ *
+ * @param {number | string} value Exchange rate to format.
+ * @returns {string} Locale-formatted rate with up to four fractional digits.
+ */
 function formatRate(value) {
   return Number(value).toLocaleString(undefined, {
     maximumFractionDigits: 4
   });
 }
 
+/**
+ * Renders a bidirectional D&D coin converter card.
+ *
+ * @param {object} props Component props.
+ * @param {object} [props.cardProps={}] Props forwarded to the wrapping {@link PluginCard}.
+ * @returns {JSX.Element} Currency conversion form with swap, clear, and live exchange-rate display.
+ */
 export default function CurrencyConverter({ cardProps = {} }) {
   const [fromCurrency, setFromCurrency] = useState('');
   const [toCurrency, setToCurrency] = useState('');
   const [fromCurrencyType, setFromCurrencyType] = useState('Electrum');
   const [toCurrencyType, setToCurrencyType] = useState('Copper');
 
+  /**
+   * Converts the source amount into the target currency and updates both fields.
+   *
+   * @param {number | string} [nextValue=fromCurrency] Source amount.
+   * @param {string} [nextFromType=fromCurrencyType] Source currency name.
+   * @param {string} [nextToType=toCurrencyType] Target currency name.
+   * @returns {void}
+   */
   function convert(nextValue = fromCurrency, nextFromType = fromCurrencyType, nextToType = toCurrencyType) {
     setFromCurrency(nextValue);
     setToCurrency(convertCurrency(nextValue, nextFromType, nextToType));
   }
 
+  /**
+   * Converts the target amount back into the source currency and updates both fields.
+   *
+   * @param {number | string} [nextValue=toCurrency] Target amount.
+   * @param {string} [nextToType=toCurrencyType] Target currency name.
+   * @param {string} [nextFromType=fromCurrencyType] Source currency name.
+   * @returns {void}
+   */
   function convertBackward(nextValue = toCurrency, nextToType = toCurrencyType, nextFromType = fromCurrencyType) {
     setToCurrency(nextValue);
     setFromCurrency(convertCurrency(nextValue, nextToType, nextFromType));
   }
 
+  /**
+   * Swaps source and target denominations while preserving the current target amount as input.
+   *
+   * @returns {void}
+   */
   function swapCurrencies() {
     const nextFromType = toCurrencyType;
     const nextToType = fromCurrencyType;
@@ -45,6 +79,11 @@ export default function CurrencyConverter({ cardProps = {} }) {
     convert(nextFromValue, nextFromType, nextToType);
   }
 
+  /**
+   * Clears both converter amount fields.
+   *
+   * @returns {void}
+   */
   function clear() {
     setFromCurrency('');
     setToCurrency('');

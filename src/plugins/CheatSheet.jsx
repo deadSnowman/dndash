@@ -2,12 +2,26 @@ import { useRef, useState } from 'react';
 import PluginCard from '../components/PluginCard.jsx';
 import { getVisibleCheatSheetTabs } from './cheatSheetTabs.js';
 
+/**
+ * Renders the rules cheat sheet card with configurable tab visibility.
+ *
+ * @param {object} props Component props.
+ * @param {object} [props.cardProps={}] Props forwarded to the wrapping {@link PluginCard}.
+ * @param {string[]} [props.visibleCheatSheetTabIds] Tab ids selected in dashboard settings.
+ * @returns {JSX.Element} Tabbed cheat sheet content rendered from bundled HTML snippets.
+ */
 export default function CheatSheet({ cardProps = {}, visibleCheatSheetTabIds }) {
   const [active, setActive] = useState(0);
   const contentRef = useRef(null);
   const tabs = getVisibleCheatSheetTabs(visibleCheatSheetTabIds);
   const activeIndex = Math.min(active, tabs.length - 1);
 
+  /**
+   * Smooth-scrolls in-card anchor links to the referenced cheat sheet section.
+   *
+   * @param {React.MouseEvent<HTMLElement>} event Click event from the cheat sheet content container.
+   * @returns {void}
+   */
   function jumpToSection(event) {
     const link = event.target.closest('.cheat-sheet-link-list a');
     if (!link || !contentRef.current?.contains(link)) return;
@@ -23,6 +37,12 @@ export default function CheatSheet({ cardProps = {}, visibleCheatSheetTabIds }) 
     });
   }
 
+  /**
+   * Selects a cheat sheet tab and resets the scroll position.
+   *
+   * @param {number} index Tab index to activate.
+   * @returns {void}
+   */
   function selectTab(index) {
     setActive(index);
     contentRef.current?.scrollTo({ top: 0 });

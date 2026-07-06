@@ -1,5 +1,16 @@
 import { Moon, Settings, Sun } from 'lucide-react';
 
+/**
+ * Renders the shared top navigation with route links, theme toggle, and optional settings action.
+ *
+ * @param {object} props Component props.
+ * @param {'home' | 'about'} [props.active='home'] Route name to mark as active.
+ * @param {boolean} [props.darkTheme=false] Whether the current theme is dark.
+ * @param {boolean} [props.showSettings=false] Whether to render the settings button.
+ * @param {() => void} [props.onSettings] Handler called when the settings button is clicked.
+ * @param {() => void} [props.onToggleTheme] Handler called when the theme toggle is clicked.
+ * @returns {JSX.Element} A Bootstrap navbar with DnDash navigation controls.
+ */
 export default function NavBar({
   active = 'home',
   darkTheme = false,

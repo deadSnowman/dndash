@@ -4,6 +4,11 @@ import PluginCard from '../components/PluginCard.jsx';
 
 const OPEN5E_SEARCH_URL = 'https://api.open5e.com/v2/search/';
 
+/**
+ * Result type filters displayed above Open5e search results.
+ *
+ * @type {{value: string, label: string}[]}
+ */
 const resultTypes = [
   { value: 'all', label: 'All' },
   { value: 'rules', label: 'Rules' },
@@ -12,6 +17,11 @@ const resultTypes = [
   { value: 'creatures', label: 'Monsters' }
 ];
 
+/**
+ * Search result type aliases used for client-side filtering.
+ *
+ * @type {Record<string, string[]>}
+ */
 const typeAliases = {
   conditions: ['condition', 'conditions'],
   creatures: ['creature', 'creatures', 'monster', 'monsters'],
@@ -19,6 +29,11 @@ const typeAliases = {
   spells: ['spell', 'spells']
 };
 
+/**
+ * Open5e resource type to public site section mapping.
+ *
+ * @type {Record<string, string>}
+ */
 const open5eSections = {
   background: 'backgrounds',
   backgrounds: 'backgrounds',
@@ -44,6 +59,11 @@ const open5eSections = {
   spells: 'spells'
 };
 
+/**
+ * Public Open5e section aliases used to infer URLs from inconsistent result metadata.
+ *
+ * @type {[string, string[]][]}
+ */
 const open5eSectionAliases = [
   ['conditions', ['condition', 'conditions']],
   ['monsters', ['creature', 'creatures', 'monster', 'monsters']],
@@ -57,6 +77,12 @@ const open5eSectionAliases = [
   ['species', ['species', 'race', 'races']]
 ];
 
+/**
+ * Removes HTML markup and collapses whitespace from Open5e text.
+ *
+ * @param {unknown} [value=''] Text or markup to clean.
+ * @returns {string} Plain trimmed text.
+ */
 function stripMarkup(value = '') {
   return String(value)
     .replace(/<[^>]*>/g, ' ')
@@ -64,6 +90,12 @@ function stripMarkup(value = '') {
     .trim();
 }
 
+/**
+ * Converts slug-like text into title case.
+ *
+ * @param {string} [value=''] Slug or label text.
+ * @returns {string} Title-cased text.
+ */
 function titleCase(value = '') {
   return value
     .replace(/[-_]/g, ' ')
@@ -71,10 +103,22 @@ function titleCase(value = '') {
     .trim();
 }
 
+/**
+ * Returns the first nonempty string from a list of possible values.
+ *
+ * @param {...unknown} values Values to inspect.
+ * @returns {string} Trimmed string, or an empty string when none are present.
+ */
 function firstPresent(...values) {
   return values.find((value) => typeof value === 'string' && value.trim())?.trim() || '';
 }
 
+/**
+ * Converts text into a lowercase URL slug.
+ *
+ * @param {string} [value=''] Text to slugify.
+ * @returns {string} URL slug using hyphen separators.
+ */
 function slugify(value = '') {
   return stripMarkup(value)
     .toLowerCase()
@@ -83,6 +127,12 @@ function slugify(value = '') {
     .replace(/^-+|-+$/g, '');
 }
 
+/**
+ * Converts path-like text into a lowercase slug while preserving underscores.
+ *
+ * @param {string} [value=''] Text to slugify for Open5e paths.
+ * @returns {string} Path slug.
+ */
 function slugifyPath(value = '') {
   return stripMarkup(value)
     .toLowerCase()
@@ -91,12 +141,26 @@ function slugifyPath(value = '') {
     .replace(/^[-_]+|[-_]+$/g, '');
 }
 
+/**
+ * Splits a URL or path into nonempty path segments.
+ *
+ * Query strings and absolute URL origins are removed before splitting.
+ *
+ * @param {string} [value=''] URL or path value.
+ * @returns {string[]} Path segments.
+ */
 function getPathSegments(value = '') {
   if (!value) return [];
   const path = value.split('?')[0].replace(/^https?:\/\/[^/]+/i, '');
   return path.split('/').filter(Boolean);
 }
 
+/**
+ * Infers a display title from the final URL path segment.
+ *
+ * @param {string} [value=''] URL or path value.
+ * @returns {string} Title inferred from the path, or an empty string.
+ */
 function titleFromPath(value = '') {
   const segments = getPathSegments(value);
   const lastSegment = segments[segments.length - 1] || '';
@@ -104,6 +168,12 @@ function titleFromPath(value = '') {
   return titleCase(lastSegment);
 }
 
+/**
+ * Infers a compact title from the first sentence of plain text.
+ *
+ * @param {string} [value=''] Text value to summarize.
+ * @returns {string} Short title candidate.
+ */
 function titleFromText(value = '') {
   const text = stripMarkup(value);
   if (!text) return '';
@@ -111,18 +181,40 @@ function titleFromText(value = '') {
   return firstSentence.length > 64 ? `${firstSentence.slice(0, 61).trim()}...` : firstSentence;
 }
 
+/**
+ * Produces a single-line text snippet with a maximum length.
+ *
+ * @param {string} [value=''] Text or markup to compact.
+ * @param {number} [maxLength=110] Maximum output length.
+ * @returns {string} Compacted text snippet.
+ */
 function compactText(value = '', maxLength = 110) {
   const text = stripMarkup(value);
   if (!text) return '';
   return text.length > maxLength ? `${text.slice(0, maxLength - 3).trim()}...` : text;
 }
 
+/**
+ * Formats mixed Open5e metadata values for display.
+ *
+ * @param {unknown} value Metadata value from a search result.
+ * @returns {unknown} Displayable metadata value.
+ */
 function formatMetaValue(value) {
   if (Array.isArray(value)) return value.filter(Boolean).join(', ');
   if (typeof value === 'object' && value !== null) return value.name || value.title || value.key || '';
   return value;
 }
 
+/**
+ * Builds the secondary metadata line for an Open5e search result.
+ *
+ * @param {object} params Metadata inputs.
+ * @param {object} params.raw Raw Open5e result.
+ * @param {string} params.source Source label.
+ * @param {string} params.type Result type label.
+ * @returns {string} Dot-separated metadata string.
+ */
 function buildResultMeta({ raw, source, type }) {
   const detail = raw.object || {};
   const metaParts = [titleCase(type)];
@@ -141,10 +233,24 @@ function buildResultMeta({ raw, source, type }) {
   return metaParts.join(' · ');
 }
 
+/**
+ * Resolves the most useful type label from an Open5e result.
+ *
+ * @param {object} result Raw Open5e result.
+ * @returns {string} Result type label.
+ */
 function getResultType(result) {
   return result.object_model || result.resource_type || result.type || result.category || result.route || result.document?.key || 'Open5e';
 }
 
+/**
+ * Infers the Open5e public site section for a result.
+ *
+ * @param {object} result Raw Open5e result.
+ * @param {string} type Resolved result type.
+ * @param {string} [apiUrl=''] API URL associated with the result.
+ * @returns {string} Open5e public site section, or an empty string when unknown.
+ */
 function getOpen5eSection(result, type, apiUrl = '') {
   const typeText = [
     type,
@@ -175,6 +281,13 @@ function getOpen5eSection(result, type, apiUrl = '') {
   return open5eSections[resourceKey] || '';
 }
 
+/**
+ * Checks whether a slug points to a collection page instead of an individual result.
+ *
+ * @param {string} slug Candidate result slug.
+ * @param {string} section Open5e site section.
+ * @returns {boolean} True when the slug should be ignored as a collection slug.
+ */
 function isCollectionSlug(slug, section) {
   if (!slug) return false;
   if (slug === section) return true;
@@ -183,6 +296,16 @@ function isCollectionSlug(slug, section) {
   return sectionAliases.map(slugify).includes(slug);
 }
 
+/**
+ * Resolves a public Open5e slug for a search result.
+ *
+ * Rule results use the rule set prefix from `object_pk`; other results prefer explicit slug-like fields.
+ *
+ * @param {object} result Raw Open5e result.
+ * @param {string} [apiUrl=''] API URL associated with the result.
+ * @param {string} [section=''] Open5e public site section.
+ * @returns {string} Individual result slug, or an empty string when unavailable.
+ */
 function getResultSlug(result, apiUrl = '', section = '') {
   if (section === 'rules') {
     const ruleSetSlug = firstPresent(result.object_pk).split('_').slice(0, 2).join('_');
@@ -205,6 +328,14 @@ function getResultSlug(result, apiUrl = '', section = '') {
   return isCollectionSlug(slug, section) ? '' : slug;
 }
 
+/**
+ * Builds a public Open5e URL for a search result when enough metadata exists.
+ *
+ * @param {object} result Raw Open5e result.
+ * @param {string} type Resolved result type.
+ * @param {string} apiUrl API URL associated with the result.
+ * @returns {string} Public Open5e URL, or an empty string when it cannot be inferred.
+ */
 function getOpen5eUrl(result, type, apiUrl) {
   const section = getOpen5eSection(result, type, apiUrl);
   if (!section) return '';
@@ -215,6 +346,12 @@ function getOpen5eUrl(result, type, apiUrl) {
   return '';
 }
 
+/**
+ * Extracts the best available plain text body from a raw Open5e result.
+ *
+ * @param {object} result Raw Open5e result.
+ * @returns {string} Plain result text.
+ */
 function getResultText(result) {
   return stripMarkup(
     result.highlighted ||
@@ -228,6 +365,14 @@ function getResultText(result) {
   );
 }
 
+/**
+ * Converts one raw Open5e result into the shape used by the UI.
+ *
+ * @param {object} result Raw Open5e result.
+ * @param {number} index Result index in the response.
+ * @param {string} [searchText=''] Search query that produced the result.
+ * @returns {{id: string, apiUrl: string, listMeta: string, listSnippet: string, raw: object, source: string, searchText: string, text: string, title: string, type: string, webUrl: string}} Normalized result.
+ */
 function normalizeResult(result, index, searchText = '') {
   const type = getResultType(result);
   const source = result.document?.name || result.document?.key || result.document || 'Open5e';
@@ -263,12 +408,25 @@ function normalizeResult(result, index, searchText = '') {
   };
 }
 
+/**
+ * Checks whether a normalized result matches the selected type filter.
+ *
+ * @param {{type: string, title: string, source: string}} result Normalized result.
+ * @param {string} selectedType Selected filter value.
+ * @returns {boolean} True when the result should be visible.
+ */
 function resultMatchesType(result, selectedType) {
   if (selectedType === 'all') return true;
   const typeText = `${result.type} ${result.title} ${result.source}`.toLowerCase();
   return (typeAliases[selectedType] || [selectedType]).some((alias) => typeText.includes(alias));
 }
 
+/**
+ * Produces a short preview summary for the selected result.
+ *
+ * @param {{text?: string} | null} result Normalized result.
+ * @returns {string} Summary text for the preview card.
+ */
 function summarizeResult(result) {
   if (!result) return '';
   const text = result.text || 'Open this result for the full Open5e entry.';
@@ -276,6 +434,14 @@ function summarizeResult(result) {
   return sentences.slice(0, 2).join(' ').trim().slice(0, 260);
 }
 
+/**
+ * Chooses the best external URL for a normalized result.
+ *
+ * Public Open5e URLs are preferred, then search URLs, then API URLs.
+ *
+ * @param {object | null} result Normalized result.
+ * @returns {string} URL for the external-link action.
+ */
 function getExternalUrl(result) {
   if (result?.webUrl) return result.webUrl;
   const searchText = firstPresent(result?.searchText, result?.title);
@@ -285,6 +451,12 @@ function getExternalUrl(result) {
   return `https://api.open5e.com${result.apiUrl.startsWith('/') ? '' : '/'}${result.apiUrl}`;
 }
 
+/**
+ * Extracts detail fields displayed in the result preview card.
+ *
+ * @param {object | null} result Normalized result.
+ * @returns {[string, unknown][]} Label/value pairs with empty values removed.
+ */
 function getResultFields(result) {
   if (!result) return [];
   const raw = result.raw || {};
@@ -300,6 +472,13 @@ function getResultFields(result) {
   return fields.filter(([, value]) => value !== undefined && value !== null && value !== '');
 }
 
+/**
+ * Renders the Open5e rules lookup card with debounced search and result previews.
+ *
+ * @param {object} props Component props.
+ * @param {object} [props.cardProps={}] Props forwarded to the wrapping {@link PluginCard}.
+ * @returns {JSX.Element} Rules search form, result list, and selected result preview.
+ */
 export default function RulesLookup({ cardProps = {} }) {
   const [query, setQuery] = useState('');
   const [selectedType, setSelectedType] = useState('all');

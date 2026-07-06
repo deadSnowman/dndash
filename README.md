@@ -1,6 +1,10 @@
 # DnDash
 A virtual DM screen for D&D built with React and Vite.
 
+Check out the dashboard [here](https://deadsnowman.github.io/dndash/)
+
+![DnDash dashboard screenshot](src/assets/screenshot.png)
+
 DnDash keeps the little table jobs close at hand: rolling dice, splitting loot,
 checking rules, sketching NPCs, shaping encounters, and adding quick flavor when
 the session turns in an unexpected direction.

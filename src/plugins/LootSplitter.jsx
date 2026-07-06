@@ -24,12 +24,23 @@ const coinAbbreviations = {
 const LOOT_SPLITTER_KEY = 'dndash.lootSplitter';
 const defaultLoot = { copper: '', silver: '', electrum: '', gold: '', platinum: '' };
 
+/**
+ * Normalizes stored loot values into every supported coin key.
+ *
+ * @param {Record<string, number | string> | null | undefined} value Stored loot object.
+ * @returns {Record<string, number | string>} Loot object with blank defaults for missing coins.
+ */
 function normalizeLoot(value) {
   return Object.fromEntries(
     coins.map((coin) => [coin, value?.[coin] ?? ''])
   );
 }
 
+/**
+ * Loads persisted loot splitter settings from local storage.
+ *
+ * @returns {{numparty: number | string, loot: object, convert: boolean, electrum: boolean, splitRemainder: boolean, showResults: boolean}} Saved loot splitter state.
+ */
 function loadSavedLootSplitter() {
   const fallback = {
     numparty: 1,
@@ -57,6 +68,14 @@ function loadSavedLootSplitter() {
   }
 }
 
+/**
+ * Renders visible nonzero coin pills for a loot object.
+ *
+ * @param {object} props Component props.
+ * @param {Record<string, number | string>} props.loot Coin amounts to display.
+ * @param {string} [props.emptyText='No coins'] Text shown when every amount is zero.
+ * @returns {JSX.Element} Coin pill list or an empty-state label.
+ */
 function CoinList({ loot, emptyText = 'No coins' }) {
   const visibleCoins = coins.filter((coin) => Number(loot[coin]) > 0);
   if (visibleCoins.length === 0) return <span className="loot-empty">{emptyText}</span>;
@@ -72,6 +91,13 @@ function CoinList({ loot, emptyText = 'No coins' }) {
   );
 }
 
+/**
+ * Renders the loot splitter card and persists splitter inputs locally.
+ *
+ * @param {object} props Component props.
+ * @param {object} [props.cardProps={}] Props forwarded to the wrapping {@link PluginCard}.
+ * @returns {JSX.Element} Loot input form and calculated split results.
+ */
 export default function LootSplitter({ cardProps = {} }) {
   const [savedLootSplitter] = useState(loadSavedLootSplitter);
   const [numparty, setNumparty] = useState(savedLootSplitter.numparty);
@@ -102,15 +128,33 @@ export default function LootSplitter({ cardProps = {} }) {
     );
   }, [convert, electrum, loot, numparty, showResults, splitRemainder]);
 
+  /**
+   * Updates one coin amount in the loot form.
+   *
+   * @param {string} coin Normalized coin key.
+   * @param {number | string} value New coin amount.
+   * @returns {void}
+   */
   function updateLoot(coin, value) {
     setLoot((current) => ({ ...current, [coin]: value }));
   }
 
+  /**
+   * Shows split results after preventing the form's default submission.
+   *
+   * @param {React.FormEvent<HTMLFormElement>} event Loot form submit event.
+   * @returns {void}
+   */
   function split(event) {
     event.preventDefault();
     setShowResults(true);
   }
 
+  /**
+   * Restores splitter inputs and options to their defaults.
+   *
+   * @returns {void}
+   */
   function clear() {
     setNumparty(1);
     setLoot(defaultLoot);

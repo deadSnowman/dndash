@@ -5,6 +5,12 @@ import NumberInput from '../components/forms/NumberInput.jsx';
 
 const INITIATIVE_TRACKER_KEY = 'dndash.initiativeTracker';
 
+/**
+ * Creates a blank combatant with a unique id.
+ *
+ * @param {number} [index=1] Display index used in the default name.
+ * @returns {{id: string, name: string, initiative: string, ac: string, hp: string, maxHp: string, conditions: string, notes: string}} Combatant object.
+ */
 function createCombatant(index = 1) {
   return {
     id: `${Date.now()}-${index}-${Math.random().toString(16).slice(2)}`,
@@ -18,6 +24,13 @@ function createCombatant(index = 1) {
   };
 }
 
+/**
+ * Normalizes a stored combatant for safe rendering and editing.
+ *
+ * @param {object} combatant Stored combatant data.
+ * @param {number} index Combatant index in saved data.
+ * @returns {{id: string, name: string, initiative: string, ac: string, hp: string, maxHp: string, conditions: string, notes: string}} Normalized combatant.
+ */
 function normalizeCombatant(combatant, index) {
   return {
     ...createCombatant(index + 1),
@@ -33,6 +46,11 @@ function normalizeCombatant(combatant, index) {
   };
 }
 
+/**
+ * Loads initiative tracker state from local storage.
+ *
+ * @returns {{combatants: object[], activeIndex: number, round: number}} Saved encounter turn state.
+ */
 function loadSavedEncounter() {
   try {
     const saved = JSON.parse(window.localStorage.getItem(INITIATIVE_TRACKER_KEY) || '{}');
@@ -54,6 +72,12 @@ function loadSavedEncounter() {
   }
 }
 
+/**
+ * Sorts combatants by descending initiative and then name.
+ *
+ * @param {{initiative: number | string, name: string}[]} combatants Combatants to sort.
+ * @returns {object[]} Sorted copy of the combatant list.
+ */
 function sortCombatants(combatants) {
   return [...combatants].sort((a, b) => {
     const initiativeDiff = (Number(b.initiative) || 0) - (Number(a.initiative) || 0);
@@ -62,6 +86,12 @@ function sortCombatants(combatants) {
   });
 }
 
+/**
+ * Derives a display health state from current and max HP.
+ *
+ * @param {{hp: number | string, maxHp: number | string}} combatant Combatant with HP fields.
+ * @returns {'unknown' | 'down' | 'bloodied' | 'steady'} Health state key.
+ */
 function getHpState(combatant) {
   const hp = Number(combatant.hp);
   const maxHp = Number(combatant.maxHp);
@@ -71,6 +101,12 @@ function getHpState(combatant) {
   return 'steady';
 }
 
+/**
+ * Converts a health state key to an accessible label.
+ *
+ * @param {'unknown' | 'down' | 'bloodied' | 'steady'} hpState Health state key.
+ * @returns {string} Display label for the health state.
+ */
 function getHpLabel(hpState) {
   if (hpState === 'down') return 'Down';
   if (hpState === 'bloodied') return 'Bloodied';
@@ -78,6 +114,18 @@ function getHpLabel(hpState) {
   return 'Health unknown';
 }
 
+/**
+ * Renders one initiative combatant row with edit, HP adjustment, and remove controls.
+ *
+ * @param {object} props Component props.
+ * @param {object} props.combatant Combatant data to render.
+ * @param {boolean} props.active Whether this combatant has the current turn.
+ * @param {() => void} props.onDamage Handler that applies damage.
+ * @param {() => void} props.onHeal Handler that applies healing.
+ * @param {() => void} props.onRemove Handler that removes the combatant.
+ * @param {(field: string, value: string) => void} props.onUpdate Handler for field updates.
+ * @returns {JSX.Element} Initiative row in read or edit mode.
+ */
 function CombatantRow({ combatant, active, onDamage, onHeal, onRemove, onUpdate }) {
   const [editing, setEditing] = useState(false);
   const hpState = getHpState(combatant);
@@ -182,6 +230,14 @@ function CombatantRow({ combatant, active, onDamage, onHeal, onRemove, onUpdate 
   );
 }
 
+/**
+ * Renders the initiative tracker card with turn controls, sorted combatants, and persistence.
+ *
+ * @param {object} props Component props.
+ * @param {object} [props.cardProps={}] Props forwarded to the wrapping {@link PluginCard}.
+ * @param {(config: object) => void} [props.requestConfirm] Shared confirmation modal requester.
+ * @returns {JSX.Element} Initiative tracker UI.
+ */
 export default function InitiativeTracker({ cardProps = {}, requestConfirm }) {
   const [savedEncounter] = useState(loadSavedEncounter);
   const [combatants, setCombatants] = useState(savedEncounter.combatants);
@@ -202,16 +258,35 @@ export default function InitiativeTracker({ cardProps = {}, requestConfirm }) {
     );
   }, [activeIndex, combatants, round]);
 
+  /**
+   * Updates a field on one combatant.
+   *
+   * @param {string} id Combatant id.
+   * @param {string} field Field name to update.
+   * @param {string} value Replacement value.
+   * @returns {void}
+   */
   function updateCombatant(id, field, value) {
     setCombatants((current) =>
       current.map((combatant) => (combatant.id === id ? { ...combatant, [field]: value } : combatant))
     );
   }
 
+  /**
+   * Adds a blank combatant to the encounter.
+   *
+   * @returns {void}
+   */
   function addCombatant() {
     setCombatants((current) => [...current, createCombatant(current.length + 1)]);
   }
 
+  /**
+   * Removes a combatant and clamps the active turn index.
+   *
+   * @param {string} id Combatant id to remove.
+   * @returns {void}
+   */
   function removeCombatant(id) {
     setCombatants((current) => {
       const nextCombatants = current.filter((combatant) => combatant.id !== id);
@@ -220,6 +295,15 @@ export default function InitiativeTracker({ cardProps = {}, requestConfirm }) {
     });
   }
 
+  /**
+   * Adjusts a combatant's current HP by an amount.
+   *
+   * Blank or invalid HP is treated as zero.
+   *
+   * @param {string} id Combatant id.
+   * @param {number} amount HP delta to apply.
+   * @returns {void}
+   */
   function adjustHp(id, amount) {
     setCombatants((current) =>
       current.map((combatant) => {
@@ -230,6 +314,11 @@ export default function InitiativeTracker({ cardProps = {}, requestConfirm }) {
     );
   }
 
+  /**
+   * Advances to the next combatant and increments round at the end of the order.
+   *
+   * @returns {void}
+   */
   function nextTurn() {
     if (orderedCombatants.length === 0) return;
     setActiveIndex((index) => {
@@ -242,6 +331,11 @@ export default function InitiativeTracker({ cardProps = {}, requestConfirm }) {
     });
   }
 
+  /**
+   * Moves to the previous combatant and decrements round when crossing the start of a round.
+   *
+   * @returns {void}
+   */
   function previousTurn() {
     if (orderedCombatants.length === 0) return;
     setActiveIndex((index) => {
@@ -254,17 +348,32 @@ export default function InitiativeTracker({ cardProps = {}, requestConfirm }) {
     });
   }
 
+  /**
+   * Resets turn tracking to round one and the first sorted combatant.
+   *
+   * @returns {void}
+   */
   function sortAndStart() {
     setActiveIndex(0);
     setRound(1);
   }
 
+  /**
+   * Removes every combatant and resets round state.
+   *
+   * @returns {void}
+   */
   function clearEncounter() {
     setCombatants([]);
     setActiveIndex(0);
     setRound(1);
   }
 
+  /**
+   * Requests confirmation before clearing initiative when confirmation is available.
+   *
+   * @returns {void}
+   */
   function requestClearEncounter() {
     if (!requestConfirm) {
       clearEncounter();

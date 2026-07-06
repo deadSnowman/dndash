@@ -1,3 +1,8 @@
+/**
+ * Per-character XP thresholds by level for encounter difficulty calculations.
+ *
+ * @type {Record<number, {easy: number, medium: number, hard: number, deadly: number, daily: number}>}
+ */
 export const xpThresholdsByLevel = {
   1: { easy: 25, medium: 50, hard: 75, deadly: 100, daily: 300 },
   2: { easy: 50, medium: 100, hard: 150, deadly: 200, daily: 600 },
@@ -21,6 +26,11 @@ export const xpThresholdsByLevel = {
   20: { easy: 2800, medium: 5700, hard: 8500, deadly: 12700, daily: 40000 }
 };
 
+/**
+ * Challenge rating options and XP values used by encounter rows.
+ *
+ * @type {{value: string, label: string, xp: number}[]}
+ */
 export const crOptions = [
   { value: '0', label: '0', xp: 10 },
   { value: '1/8', label: '1/8', xp: 25 },
@@ -58,6 +68,11 @@ export const crOptions = [
   { value: '30', label: '30', xp: 155000 }
 ];
 
+/**
+ * Built-in monster choices for the encounter picker.
+ *
+ * @type {{name: string, cr: string, type: string}[]}
+ */
 export const builtInMonsters = [
   { name: 'Commoner', cr: '0', type: 'Humanoid' },
   { name: 'Frog', cr: '0', type: 'Beast' },
@@ -146,9 +161,29 @@ export const builtInMonsters = [
   { name: 'Tarrasque', cr: '30', type: 'Monstrosity' }
 ];
 
+/**
+ * Lookup map from challenge rating string to XP value.
+ *
+ * @type {Map<string, number>}
+ */
 const crXpByValue = new Map(crOptions.map((option) => [option.value, option.xp]));
+
+/**
+ * Encounter XP multipliers by monster-count band.
+ *
+ * @type {number[]}
+ */
 const multiplierSteps = [1, 1.5, 2, 2.5, 3, 4];
 
+/**
+ * Calculates party encounter thresholds for a party size and level.
+ *
+ * Party size clamps to at least one and level clamps to the supported 1-20 range.
+ *
+ * @param {number | string} partySize Number of characters in the party.
+ * @param {number | string} level Character level used for the whole party.
+ * @returns {{easy: number, medium: number, hard: number, deadly: number, daily: number}} XP thresholds for the full party.
+ */
 export function getPartyThresholds(partySize, level) {
   const size = Math.max(1, Number(partySize) || 1);
   const safeLevel = Math.min(20, Math.max(1, Number(level) || 1));
@@ -163,6 +198,15 @@ export function getPartyThresholds(partySize, level) {
   };
 }
 
+/**
+ * Calculates the encounter size multiplier from monster count and party size.
+ *
+ * The multiplier follows the DMG-style monster-count bands and adjusts for unusually small or large parties.
+ *
+ * @param {number | string} monsterCount Total number of monsters with XP.
+ * @param {number | string} partySize Number of characters in the party.
+ * @returns {number} Encounter XP multiplier.
+ */
 export function getMonsterMultiplier(monsterCount, partySize) {
   const count = Number(monsterCount) || 0;
   if (count <= 0) return 1;
@@ -181,6 +225,13 @@ export function getMonsterMultiplier(monsterCount, partySize) {
   return multiplierSteps[Math.min(multiplierSteps.length - 1, Math.max(0, index))];
 }
 
+/**
+ * Labels adjusted XP against party thresholds.
+ *
+ * @param {number} adjustedXp Encounter XP after applying the monster multiplier.
+ * @param {{easy: number, medium: number, hard: number, deadly: number}} thresholds Party thresholds.
+ * @returns {'Trivial' | 'Easy' | 'Medium' | 'Hard' | 'Deadly'} Difficulty label.
+ */
 export function getDifficulty(adjustedXp, thresholds) {
   if (adjustedXp >= thresholds.deadly) return 'Deadly';
   if (adjustedXp >= thresholds.hard) return 'Hard';
@@ -189,6 +240,17 @@ export function getDifficulty(adjustedXp, thresholds) {
   return 'Trivial';
 }
 
+/**
+ * Calculates encounter XP totals, multiplier, thresholds, and difficulty.
+ *
+ * Monster rows with zero count or unknown CR XP are ignored.
+ *
+ * @param {object} encounter Encounter input.
+ * @param {number | string} encounter.partySize Number of characters in the party.
+ * @param {number | string} encounter.level Character level used for thresholds.
+ * @param {{count: number | string, cr: string}[]} encounter.monsters Monster rows to evaluate.
+ * @returns {{adjustedXp: number, baseXp: number, difficulty: string, monsterCount: number, multiplier: number, thresholds: object}} Encounter calculation summary.
+ */
 export function calculateEncounter({ partySize, level, monsters }) {
   const thresholds = getPartyThresholds(partySize, level);
   const monsterRows = monsters

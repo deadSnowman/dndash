@@ -1,3 +1,15 @@
+/**
+ * Renders a reusable confirmation dialog with cancel and destructive confirm actions.
+ *
+ * @param {object} props Component props.
+ * @param {string} [props.cancelLabel='Cancel'] Text for the cancel button.
+ * @param {string} [props.confirmLabel='Delete'] Text for the confirm button.
+ * @param {string} props.message Body copy describing the action being confirmed.
+ * @param {string} props.title Dialog heading.
+ * @param {() => void} props.onCancel Handler called when the dialog is dismissed.
+ * @param {() => void} props.onConfirm Handler called when the confirm button is clicked.
+ * @returns {JSX.Element} A centered modal confirmation prompt.
+ */
 export default function ConfirmModal({
   cancelLabel = 'Cancel',
   confirmLabel = 'Delete',

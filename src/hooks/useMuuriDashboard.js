@@ -1,6 +1,12 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import Muuri from 'muuri';
 
+/**
+ * Reads Muuri item positions and returns plugin ids sorted by their visual layout order.
+ *
+ * @param {Muuri} grid Muuri grid instance containing dashboard items.
+ * @returns {string[]} Plugin ids ordered top-to-bottom and then left-to-right.
+ */
 function getVisualOrder(grid) {
   return grid
     .getItems()
@@ -20,6 +26,12 @@ function getVisualOrder(grid) {
     .map((item) => item.id);
 }
 
+/**
+ * Locks the width of the item being dragged so its card does not resize while detached.
+ *
+ * @param {import('muuri').Item} item Muuri item entering the drag state.
+ * @returns {void}
+ */
 function freezeDraggedItemWidth(item) {
   const element = item.getElement();
   const width = element.getBoundingClientRect().width;
@@ -32,6 +44,12 @@ function freezeDraggedItemWidth(item) {
   }
 }
 
+/**
+ * Clears the temporary inline width styles applied while dragging an item.
+ *
+ * @param {import('muuri').Item} item Muuri item leaving the drag state.
+ * @returns {void}
+ */
 function clearDraggedItemWidth(item) {
   const element = item.getElement();
   element.style.width = '';
@@ -39,6 +57,16 @@ function clearDraggedItemWidth(item) {
   element.style.maxWidth = '';
 }
 
+/**
+ * Creates and maintains the Muuri dashboard grid for enabled plugin cards.
+ *
+ * The hook manages Muuri setup, drag handlers, ResizeObserver refreshes, and visual-order
+ * synchronization. It mutates DOM styles only during active drags and destroys Muuri on cleanup.
+ *
+ * @param {{id: string}[]} enabledPlugins Plugins currently rendered in the dashboard.
+ * @param {(orderedIds: string[]) => void} onOrderChange Handler called with visual plugin order after drag release.
+ * @returns {React.RefObject<HTMLElement>} Ref to attach to the dashboard grid container.
+ */
 export function useMuuriDashboard(enabledPlugins, onOrderChange) {
   const gridRef = useRef(null);
   const muuriRef = useRef(null);

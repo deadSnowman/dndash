@@ -4,6 +4,18 @@ import NumberInput from './forms/NumberInput.jsx';
 import { usePluginDrafts } from '../hooks/usePluginDrafts.js';
 import { cheatSheetTabs, defaultCheatSheetTabIds } from '../plugins/cheatSheetTabs.js';
 
+/**
+ * Renders the dashboard settings dialog for card order, visibility, columns, and cheat sheet tabs.
+ *
+ * @param {object} props Component props.
+ * @param {string[]} props.cheatSheetTabIds Currently visible cheat sheet tab ids.
+ * @param {number | string} props.columns Current dashboard column count.
+ * @param {{id: string, name: string, enabled: boolean}[]} props.defaultPlugins Default plugin ordering and visibility.
+ * @param {{id: string, name: string, enabled: boolean}[]} props.plugins Current plugin ordering and visibility.
+ * @param {() => void} props.onCancel Handler called when the dialog should close without saving.
+ * @param {(settings: {cheatSheetTabIds: string[], columns: number | string, plugins: object[]}) => void} props.onSave Handler called with draft settings.
+ * @returns {JSX.Element} A modal dialog containing layout, card, and cheat sheet controls.
+ */
 export default function SettingsModal({
   cheatSheetTabIds,
   columns,
@@ -25,6 +37,13 @@ export default function SettingsModal({
     endDrag
   } = usePluginDrafts(plugins);
 
+  /**
+   * Enables or disables a cheat sheet tab while keeping at least one tab selected.
+   *
+   * @param {string} id Cheat sheet tab id to update.
+   * @param {boolean} enabled Whether the tab should be included.
+   * @returns {void}
+   */
   function updateCheatSheetTab(id, enabled) {
     setDraftCheatSheetTabIds((current) => {
       if (enabled) {
@@ -36,6 +55,11 @@ export default function SettingsModal({
     });
   }
 
+  /**
+   * Restores every cheat sheet tab to the visible set.
+   *
+   * @returns {void}
+   */
   function showAllCheatSheetTabs() {
     setDraftCheatSheetTabIds(defaultCheatSheetTabIds);
   }

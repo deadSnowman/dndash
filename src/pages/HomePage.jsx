@@ -11,12 +11,28 @@ const DEFAULT_COLUMN_COUNT = 3;
 const MIN_COLUMN_COUNT = 1;
 const MAX_COLUMN_COUNT = 5;
 
+/**
+ * Coerces a dashboard column count into the supported range.
+ *
+ * Invalid values fall back to the default column count.
+ *
+ * @param {number | string} value Raw column count from settings or storage.
+ * @returns {number} Integer column count between the configured minimum and maximum.
+ */
 function clampColumnCount(value) {
   const columns = Number(value);
   if (!Number.isFinite(columns)) return DEFAULT_COLUMN_COUNT;
   return Math.min(MAX_COLUMN_COUNT, Math.max(MIN_COLUMN_COUNT, Math.round(columns)));
 }
 
+/**
+ * Merges saved plugin preferences with the current registry defaults.
+ *
+ * Saved plugins keep order, enabled state, and collapsed state; newly registered plugins are appended.
+ *
+ * @param {unknown} savedPlugins Plugin settings loaded from storage.
+ * @returns {{id: string, name: string, enabled: boolean, collapsed?: boolean}[]} Normalized plugin settings.
+ */
 function mergeSavedPlugins(savedPlugins) {
   const defaultPlugins = createInitialPlugins();
   if (!Array.isArray(savedPlugins)) return defaultPlugins;
@@ -41,6 +57,14 @@ function mergeSavedPlugins(savedPlugins) {
   return [...ordered, ...newPlugins];
 }
 
+/**
+ * Keeps only known cheat sheet tab ids from saved settings.
+ *
+ * If saved settings contain no visible known tabs, all default tabs are restored.
+ *
+ * @param {unknown} savedTabIds Saved cheat sheet tab ids.
+ * @returns {string[]} Visible cheat sheet tab ids.
+ */
 function mergeSavedCheatSheetTabIds(savedTabIds) {
   if (!Array.isArray(savedTabIds)) return defaultCheatSheetTabIds;
 
@@ -49,6 +73,11 @@ function mergeSavedCheatSheetTabIds(savedTabIds) {
   return visibleIds.length > 0 ? visibleIds : defaultCheatSheetTabIds;
 }
 
+/**
+ * Loads dashboard settings from local storage with defensive fallbacks.
+ *
+ * @returns {{columns: number, cheatSheetTabIds: string[], plugins: object[]}} Dashboard settings for initial React state.
+ */
 function loadDashboardSettings() {
   if (typeof window === 'undefined') {
     return {
@@ -74,6 +103,14 @@ function loadDashboardSettings() {
   }
 }
 
+/**
+ * Persists dashboard settings to local storage in a compact, registry-independent shape.
+ *
+ * This has the side effect of writing `dndash.dashboardSettings` in the browser.
+ *
+ * @param {{columns: number | string, cheatSheetTabIds: string[], plugins: object[]}} settings Dashboard settings to persist.
+ * @returns {void}
+ */
 function saveDashboardSettings(settings) {
   if (typeof window === 'undefined') return;
 
@@ -91,6 +128,14 @@ function saveDashboardSettings(settings) {
   );
 }
 
+/**
+ * Renders the main dashboard page with draggable plugin cards and settings management.
+ *
+ * @param {object} props Component props.
+ * @param {boolean} [props.darkTheme=false] Whether the current app theme is dark.
+ * @param {() => void} props.onToggleTheme Handler called when the navbar theme toggle is clicked.
+ * @returns {JSX.Element} The dashboard page, settings modal, and optional confirmation modal.
+ */
 export default function HomePage({ darkTheme = false, onToggleTheme }) {
   const [dashboardSettings, setDashboardSettings] = useState(loadDashboardSettings);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -139,6 +184,12 @@ export default function HomePage({ darkTheme = false, onToggleTheme }) {
 
   const gridRef = useMuuriDashboard(enabledPlugins, updatePluginOrder);
 
+  /**
+   * Applies settings from the modal and persists them.
+   *
+   * @param {{columns: number | string, cheatSheetTabIds: string[], plugins: object[]}} nextSettings Draft settings from the modal.
+   * @returns {void}
+   */
   function saveSettings(nextSettings) {
     const settings = {
       columns: clampColumnCount(nextSettings.columns),
@@ -151,14 +202,30 @@ export default function HomePage({ darkTheme = false, onToggleTheme }) {
     setSettingsOpen(false);
   }
 
+  /**
+   * Opens the shared confirmation modal for a plugin-initiated action.
+   *
+   * @param {{title: string, message: string, cancelLabel?: string, confirmLabel?: string, onConfirm: () => void}} config Modal configuration.
+   * @returns {void}
+   */
   function requestConfirm(config) {
     setConfirmConfig(config);
   }
 
+  /**
+   * Closes the shared confirmation modal.
+   *
+   * @returns {void}
+   */
   function closeConfirm() {
     setConfirmConfig(null);
   }
 
+  /**
+   * Runs the pending confirmation callback and closes the modal.
+   *
+   * @returns {void}
+   */
   function confirmAction() {
     const action = confirmConfig?.onConfirm;
     closeConfirm();

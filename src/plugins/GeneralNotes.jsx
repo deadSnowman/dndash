@@ -4,6 +4,12 @@ import PluginCard from '../components/PluginCard.jsx';
 
 const GENERAL_NOTES_KEY = 'dndash.generalNotes';
 
+/**
+ * Creates a blank note section with a unique id.
+ *
+ * @param {number} [index=1] Display index used in the default title.
+ * @returns {{id: string, title: string, body: string}} Note object.
+ */
 function createNote(index = 1) {
   return {
     id: `${Date.now()}-${index}-${Math.random().toString(16).slice(2)}`,
@@ -12,6 +18,13 @@ function createNote(index = 1) {
   };
 }
 
+/**
+ * Normalizes a stored note for safe rendering and editing.
+ *
+ * @param {object} note Stored note data.
+ * @param {number} index Note index in saved data.
+ * @returns {{id: string, title: string, body: string}} Normalized note.
+ */
 function normalizeNote(note, index) {
   return {
     ...createNote(index + 1),
@@ -22,6 +35,11 @@ function normalizeNote(note, index) {
   };
 }
 
+/**
+ * Loads notes and active note selection from local storage.
+ *
+ * @returns {{notes: object[], activeNoteId: string | null}} Saved notes state.
+ */
 function loadSavedNotes() {
   if (typeof window === 'undefined') {
     return {
@@ -50,11 +68,25 @@ function loadSavedNotes() {
   }
 }
 
+/**
+ * Builds a compact note preview for the sidebar.
+ *
+ * @param {string} body Note body text.
+ * @returns {string} Collapsed whitespace preview or an empty-state label.
+ */
 function getPreview(body) {
   const trimmed = body.replace(/\s+/g, ' ').trim();
   return trimmed || 'No notes yet';
 }
 
+/**
+ * Renders the general notes card with section list, editor, persistence, and deletion confirmation.
+ *
+ * @param {object} props Component props.
+ * @param {object} [props.cardProps={}] Props forwarded to the wrapping {@link PluginCard}.
+ * @param {(config: object) => void} [props.requestConfirm] Shared confirmation modal requester.
+ * @returns {JSX.Element} Notes manager with sidebar and active note editor.
+ */
 export default function GeneralNotes({ cardProps = {}, requestConfirm }) {
   const [savedNotes] = useState(loadSavedNotes);
   const [notes, setNotes] = useState(savedNotes.notes);
@@ -81,6 +113,11 @@ export default function GeneralNotes({ cardProps = {}, requestConfirm }) {
     );
   }, [activeNote, activeNoteId, notes]);
 
+  /**
+   * Adds a new note and makes it active.
+   *
+   * @returns {void}
+   */
   function addNote() {
     setNotes((current) => {
       const nextNote = createNote(current.length + 1);
@@ -89,12 +126,26 @@ export default function GeneralNotes({ cardProps = {}, requestConfirm }) {
     });
   }
 
+  /**
+   * Updates a field on one note.
+   *
+   * @param {string} id Note id.
+   * @param {string} field Field name to update.
+   * @param {string} value Replacement value.
+   * @returns {void}
+   */
   function updateNote(id, field, value) {
     setNotes((current) =>
       current.map((note) => (note.id === id ? { ...note, [field]: value } : note))
     );
   }
 
+  /**
+   * Removes a note and creates a replacement when the last note is deleted.
+   *
+   * @param {string} id Note id to remove.
+   * @returns {void}
+   */
   function removeNote(id) {
     setNotes((current) => {
       const nextNotes = current.filter((note) => note.id !== id);
@@ -112,6 +163,12 @@ export default function GeneralNotes({ cardProps = {}, requestConfirm }) {
     });
   }
 
+  /**
+   * Requests confirmation before deleting a note when confirmation is available.
+   *
+   * @param {{id: string, title: string, body: string}} note Note to delete.
+   * @returns {void}
+   */
   function requestRemoveNote(note) {
     if (notes.length <= 1 && !note.body.trim() && note.title === 'Note 1') return;
 

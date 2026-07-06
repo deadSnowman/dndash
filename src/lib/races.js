@@ -1,3 +1,10 @@
+/**
+ * Supported ancestry definitions and their ability score rules.
+ *
+ * Entries may include subraces, fixed ability increases, flexible bonuses, or pick counts.
+ *
+ * @type {{name: string, abilityScoreIncrease?: Record<string, number>, subraces?: object[], flexible?: boolean, picks?: number}[]}
+ */
 export const races = [
   { name: 'Aarakocra', abilityScoreIncrease: { dex: 2, wis: 1 } },
   {
@@ -75,8 +82,18 @@ export const races = [
   { name: 'Yuan-ti Pureblood', abilityScoreIncrease: { chr: 1, int: 1 } }
 ];
 
+/**
+ * Normalized ability ids used throughout stat rolling.
+ *
+ * @type {string[]}
+ */
 export const abilities = ['str', 'dex', 'con', 'int', 'wis', 'chr'];
 
+/**
+ * Creates a zeroed object for every normalized ability id.
+ *
+ * @returns {{str: number, dex: number, con: number, int: number, wis: number, chr: number}} Ability map with every score set to zero.
+ */
 export function emptyAbilities() {
   return { str: 0, dex: 0, con: 0, int: 0, wis: 0, chr: 0 };
 }

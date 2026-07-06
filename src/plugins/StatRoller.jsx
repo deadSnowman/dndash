@@ -25,6 +25,14 @@ const flexibleAbilityLabels = {
 const STAT_ROLLER_KEY = 'dndash.statRoller';
 const defaultFlexibleBonuses = { primary: '', secondary: '' };
 
+/**
+ * Normalizes an ability map into all six supported ability keys.
+ *
+ * Missing and invalid values are converted to zero.
+ *
+ * @param {unknown} value Stored ability map.
+ * @returns {Record<string, number>} Normalized ability map.
+ */
 function normalizeAbilityMap(value) {
   const next = emptyAbilities();
   if (!value || typeof value !== 'object') return next;
@@ -36,12 +44,25 @@ function normalizeAbilityMap(value) {
   return next;
 }
 
+/**
+ * Normalizes a selected race index against the known race list.
+ *
+ * @param {number | string} value Stored race index or `-1`.
+ * @returns {string} Valid race index string or `-1`.
+ */
 function normalizeSelectedRace(value) {
   if (value === '-1') return '-1';
   const index = Number(value);
   return Number.isInteger(index) && races[index] ? String(index) : '-1';
 }
 
+/**
+ * Normalizes a selected subrace index against the selected race.
+ *
+ * @param {number | string} value Stored subrace index or `-1`.
+ * @param {string} selectedRace Normalized selected race index.
+ * @returns {string} Valid subrace index string or `-1`.
+ */
 function normalizeSelectedSubrace(value, selectedRace) {
   if (value === '-1') return '-1';
   const race = selectedRace === '-1' ? null : races[Number(selectedRace)];
@@ -49,12 +70,23 @@ function normalizeSelectedSubrace(value, selectedRace) {
   return Number.isInteger(index) && race?.subraces?.[index] ? String(index) : '-1';
 }
 
+/**
+ * Normalizes flexible ancestry bonus choices.
+ *
+ * @param {unknown} value Stored flexible bonus selection.
+ * @returns {{primary: string, secondary: string}} Flexible ability ids or blank strings.
+ */
 function normalizeFlexibleBonuses(value) {
   const primary = abilities.includes(value?.primary) ? value.primary : '';
   const secondary = abilities.includes(value?.secondary) ? value.secondary : '';
   return { primary, secondary };
 }
 
+/**
+ * Loads stat roller state from local storage.
+ *
+ * @returns {{selectedRace: string, selectedSubrace: string, abilityScoreRolls: object, abilityScoreIncrease: object, pickIncrease: object, flexibleBonuses: object, rollMethod: string, statsRolled: boolean, picks: number, picked: number}} Saved stat roller state.
+ */
 function loadSavedStatRoller() {
   const fallback = {
     selectedRace: '-1',
@@ -93,6 +125,18 @@ function loadSavedStatRoller() {
   }
 }
 
+/**
+ * Renders ancestry and optional subrace selectors.
+ *
+ * @param {object} props Component props.
+ * @param {string} props.selectedRace Selected race index string.
+ * @param {string} props.selectedSubrace Selected subrace index string.
+ * @param {object | null} props.race Selected race object.
+ * @param {boolean} props.hasSubrace Whether the selected race has subraces.
+ * @param {(value: string) => void} props.onRaceChange Handler for race changes.
+ * @param {(value: string) => void} props.onSubraceChange Handler for subrace changes.
+ * @returns {JSX.Element} Race selector controls.
+ */
 function RaceSelector({ selectedRace, selectedSubrace, race, hasSubrace, onRaceChange, onSubraceChange }) {
   return (
     <div className="stat-selector-grid">
@@ -116,6 +160,14 @@ function RaceSelector({ selectedRace, selectedSubrace, race, hasSubrace, onRaceC
   );
 }
 
+/**
+ * Renders controls for choosing flexible +2 and +1 ability bonuses.
+ *
+ * @param {object} props Component props.
+ * @param {{primary: string, secondary: string}} props.flexibleBonuses Current flexible choices.
+ * @param {(field: 'primary' | 'secondary', value: string) => void} props.onChange Handler for flexible choice changes.
+ * @returns {JSX.Element} Flexible bonus selector panel.
+ */
 function FlexibleAbilityControls({ flexibleBonuses, onChange }) {
   return (
     <div className="stat-flexible-panel">
@@ -154,6 +206,21 @@ function FlexibleAbilityControls({ flexibleBonuses, onChange }) {
   );
 }
 
+/**
+ * Renders rolled ability scores, ancestry increases, modifiers, and pick controls.
+ *
+ * @param {object} props Component props.
+ * @param {Record<string, number>} props.abilityScoreRolls Rolled scores by ability.
+ * @param {Record<string, number>} props.abilityScoreIncrease Static ancestry and flexible increases.
+ * @param {Record<string, number>} props.abilityModifiers Calculated modifiers by ability.
+ * @param {Record<string, number>} props.abilityScores Calculated scores by ability.
+ * @param {Record<string, number>} props.pickIncrease Player-selected pick increases.
+ * @param {number} props.picks Number of allowed pick increases.
+ * @param {boolean} props.statsRolled Whether scores have been rolled.
+ * @param {(ability: string) => boolean} props.isPickDisabled Predicate for disabling a pick button.
+ * @param {(ability: string) => void} props.onPick Handler for toggling a pick increase.
+ * @returns {JSX.Element} Ability score table.
+ */
 function AbilityTable({
   abilityScoreRolls,
   abilityScoreIncrease,
@@ -203,6 +270,18 @@ function AbilityTable({
   );
 }
 
+/**
+ * Renders stat roll method, roll, and clear controls.
+ *
+ * @param {object} props Component props.
+ * @param {boolean} props.raceReady Whether the selected ancestry is complete enough to roll.
+ * @param {string} props.rollMethod Current roll method label.
+ * @param {boolean} props.showClear Whether to render the clear button.
+ * @param {() => void} props.onRoll Handler for rolling stats.
+ * @param {() => void} props.onClear Handler for clearing state.
+ * @param {(value: string) => void} props.onSelectMethod Handler for roll method changes.
+ * @returns {JSX.Element} Roll action controls.
+ */
 function RollMethodControls({
   raceReady,
   rollMethod,
@@ -236,6 +315,13 @@ function RollMethodControls({
   );
 }
 
+/**
+ * Renders the stat roller card with ancestry bonuses, flexible choices, and persisted rolls.
+ *
+ * @param {object} props Component props.
+ * @param {object} [props.cardProps={}] Props forwarded to the wrapping {@link PluginCard}.
+ * @returns {JSX.Element} Stat roller form.
+ */
 export default function StatRoller({ cardProps = {} }) {
   const [savedStatRoller] = useState(loadSavedStatRoller);
   const [selectedRace, setSelectedRace] = useState(savedStatRoller.selectedRace);
@@ -300,6 +386,12 @@ export default function StatRoller({ cardProps = {} }) {
     statsRolled
   ]);
 
+  /**
+   * Handles race selection and resets dependent subrace, pick, and flexible bonus state.
+   *
+   * @param {string} value Selected race index string.
+   * @returns {void}
+   */
   function raceSelectionChanged(value) {
     const nextRace = value === '-1' ? null : races[Number(value)];
     setSelectedRace(value);
@@ -317,6 +409,12 @@ export default function StatRoller({ cardProps = {} }) {
     }
   }
 
+  /**
+   * Handles subrace selection and applies its fixed ability increases.
+   *
+   * @param {string} value Selected subrace index string.
+   * @returns {void}
+   */
   function subraceSelectionChange(value) {
     setSelectedSubrace(value);
     setPickIncrease(emptyAbilities());
@@ -330,6 +428,11 @@ export default function StatRoller({ cardProps = {} }) {
     }
   }
 
+  /**
+   * Clears selected ancestry, rolled scores, picks, and flexible bonuses.
+   *
+   * @returns {void}
+   */
   function clear() {
     setSelectedRace('-1');
     setSelectedSubrace('-1');
@@ -342,6 +445,12 @@ export default function StatRoller({ cardProps = {} }) {
     setPicked(0);
   }
 
+  /**
+   * Checks whether selecting another ability would exceed the allowed pick count.
+   *
+   * @param {string} ability Ability id being considered.
+   * @returns {boolean} True when the pick button should be disabled.
+   */
   function areOtherStatsPicked(ability) {
     if (!(pickIncrease[ability] > 0) && picked > 0) {
       return picked >= picks;
@@ -349,6 +458,12 @@ export default function StatRoller({ cardProps = {} }) {
     return false;
   }
 
+  /**
+   * Toggles a selectable +1 ability increase while tracking the number picked.
+   *
+   * @param {string} ability Ability id to toggle.
+   * @returns {void}
+   */
   function pickAbilityIncrease(ability) {
     setPickIncrease((current) => {
       const next = { ...current };
@@ -365,6 +480,11 @@ export default function StatRoller({ cardProps = {} }) {
     });
   }
 
+  /**
+   * Rolls ability scores with the selected method when ancestry selection is complete.
+   *
+   * @returns {void}
+   */
   function rollStats() {
     if (!raceReady) return;
     setAbilityScoreRolls(rollAbilityScores(rollMethod));

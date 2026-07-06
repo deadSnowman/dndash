@@ -1,3 +1,8 @@
+/**
+ * Selectable location type filters for the location generator.
+ *
+ * @type {{value: string, label: string}[]}
+ */
 export const locationTypeOptions = [
   { value: 'any', label: 'Any' },
   { value: 'settlement', label: 'Settlement' },
@@ -8,6 +13,11 @@ export const locationTypeOptions = [
   { value: 'landmark', label: 'Landmark' }
 ];
 
+/**
+ * Concrete location type keys excluding the random `any` option.
+ *
+ * @type {string[]}
+ */
 const locationTypes = locationTypeOptions.filter((option) => option.value !== 'any').map((option) => option.value);
 
 const names = {
@@ -68,18 +78,44 @@ const hooks = {
 
 const complications = ['a rival arrives first', 'bad weather pins everyone in place', 'the local authority has the wrong suspect', 'payment is offered in favors instead of coin', 'the obvious villain is useful', 'someone important is listening nearby', 'a harmless tradition has sharp consequences', 'the clock is shorter than anyone admits'];
 
+/**
+ * Selects a random item from a nonempty list.
+ *
+ * @param {string[]} list Values to choose from.
+ * @returns {string} Randomly selected list item.
+ */
 function pick(list) {
   return list[Math.floor(Math.random() * list.length)];
 }
 
+/**
+ * Capitalizes the first character of generated prose.
+ *
+ * @param {string} value Text to capitalize.
+ * @returns {string} Sentence-cased text, or the original empty value.
+ */
 function sentenceCase(value) {
   return value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
 }
 
+/**
+ * Resolves the `any` type to a random concrete location type.
+ *
+ * Unknown non-`any` values are returned unchanged, matching existing generator assumptions.
+ *
+ * @param {string} type Requested location type.
+ * @returns {string} Concrete location type key.
+ */
 function resolveType(type) {
   return type === 'any' ? pick(locationTypes) : type;
 }
 
+/**
+ * Generates a full random location profile.
+ *
+ * @param {string} [type='any'] Location type key from {@link locationTypeOptions}.
+ * @returns {{type: string, name: string, mood: string, firstImpression: string, feature: string, inhabitants: string, secret: string, hook: string, complication: string}} Generated location details.
+ */
 export function generateLocation(type = 'any') {
   const locationType = resolveType(type);
 
@@ -96,6 +132,13 @@ export function generateLocation(type = 'any') {
   };
 }
 
+/**
+ * Generates one field from a fresh location profile.
+ *
+ * @param {string} type Location type key to use for the generation.
+ * @param {string} field Field name to return from the generated profile.
+ * @returns {string | undefined} Generated field value, or undefined for an unknown field.
+ */
 export function generateLocationField(type, field) {
   const locationType = resolveType(type);
   const generated = generateLocation(locationType);

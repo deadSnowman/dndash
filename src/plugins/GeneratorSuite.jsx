@@ -10,6 +10,13 @@ const generatorTabs = [
   { id: 'magicItem', label: 'Magic Item', Component: MagicItemQuirkGenerator }
 ];
 
+/**
+ * Renders the quick generator suite with embedded NPC, location, and magic item tools.
+ *
+ * @param {object} props Component props.
+ * @param {object} [props.cardProps={}] Props forwarded to the wrapping {@link PluginCard}.
+ * @returns {JSX.Element} Tabbed generator card that renders the active embedded generator.
+ */
 export default function GeneratorSuite({ cardProps = {} }) {
   const [activeTab, setActiveTab] = useState(generatorTabs[0].id);
 

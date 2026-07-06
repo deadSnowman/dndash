@@ -19,10 +19,22 @@ const modeLabels = {
   disadvantage: 'Dis'
 };
 
+/**
+ * Removes whitespace from a dice expression before validation and evaluation.
+ *
+ * @param {string} value Raw expression from user input.
+ * @returns {string} Whitespace-free expression.
+ */
 function sanitizeExpression(value) {
   return value.replace(/\s+/g, '');
 }
 
+/**
+ * Rolls a single dice token and records kept and dropped dice.
+ *
+ * @param {string} token Dice token such as `2d6`, `4d6dl`, or `2d20h`.
+ * @returns {{token: string, rolls: number[], kept: number[], subtotal: number} | null} Roll details, or null when the token is not valid.
+ */
 function rollToken(token) {
   const match = token.match(/^(\d+)d(\d+)(?:d?([lh]))?$/i);
   if (!match) return null;
@@ -46,6 +58,12 @@ function rollToken(token) {
   };
 }
 
+/**
+ * Formats dice token roll details for the current-roll and history displays.
+ *
+ * @param {{token: string, rolls: number[], kept: number[]}[]} parts Dice token roll details.
+ * @returns {string} Human-readable breakdown text.
+ */
 function formatBreakdown(parts) {
   if (parts.length === 0) return 'Flat modifier';
 
@@ -57,6 +75,17 @@ function formatBreakdown(parts) {
     .join(' | ');
 }
 
+/**
+ * Evaluates a validated dice expression and returns result metadata.
+ *
+ * Dice tokens are replaced before `Function` evaluates basic math; invalid expressions intentionally throw user-facing errors.
+ *
+ * @param {string} expression Dice expression such as `2d6+3`.
+ * @returns {{expression: string, result: number, breakdown: string}} Evaluated roll result.
+ * @throws {Error} Throws when the expression is blank, contains unsupported characters, cannot parse a dice token, or does not produce a finite number.
+ * @example
+ * evaluateExpression('2d6+3');
+ */
 function evaluateExpression(expression) {
   const cleanExpression = sanitizeExpression(expression);
   if (!cleanExpression) throw new Error('Enter a roll first.');
@@ -80,6 +109,13 @@ function evaluateExpression(expression) {
   };
 }
 
+/**
+ * Rolls a d20 with normal, advantage, or disadvantage mode and applies a modifier.
+ *
+ * @param {'normal' | 'advantage' | 'disadvantage'} mode Roll mode.
+ * @param {number | string} modifier Numeric modifier to add to the kept d20.
+ * @returns {{expression: string, result: number, breakdown: string}} D20 roll result and display breakdown.
+ */
 function rollD20(mode, modifier) {
   const first = rollDiceGroup(20, 1, 0, 'plus').rolls[0];
   const second = mode === 'normal' ? null : rollDiceGroup(20, 1, 0, 'plus').rolls[0];
@@ -93,6 +129,14 @@ function rollD20(mode, modifier) {
   };
 }
 
+/**
+ * Renders one recent roll history item.
+ *
+ * @param {object} props Component props.
+ * @param {{expression: string, result: number, breakdown: string}} props.item Roll history item.
+ * @param {(expression: string) => void} props.onUse Handler called when the item is selected.
+ * @returns {JSX.Element} Button containing roll history details.
+ */
 function HistoryItem({ item, onUse }) {
   return (
     <button className="die-history-item" type="button" onClick={() => onUse(item.expression)}>
@@ -105,6 +149,13 @@ function HistoryItem({ item, onUse }) {
   );
 }
 
+/**
+ * Renders the dice roller card with expression rolling, d20 modes, quick dice, and history.
+ *
+ * @param {object} props Component props.
+ * @param {object} [props.cardProps={}] Props forwarded to the wrapping {@link PluginCard}.
+ * @returns {JSX.Element} Dice roller form and recent roll list.
+ */
 export default function DiceRoller({ cardProps = {} }) {
   const [expression, setExpression] = useState('1d20');
   const [modifier, setModifier] = useState(0);
@@ -115,6 +166,12 @@ export default function DiceRoller({ cardProps = {} }) {
 
   const canRollExpression = useMemo(() => sanitizeExpression(expression).length > 0, [expression]);
 
+  /**
+   * Stores a roll as the current result and prepends it to recent history.
+   *
+   * @param {{expression: string, result: number, breakdown: string}} roll Roll result to record.
+   * @returns {void}
+   */
   function recordRoll(roll) {
     const nextRoll = { ...roll, id: crypto.randomUUID() };
     setCurrentRoll(nextRoll);
@@ -122,6 +179,12 @@ export default function DiceRoller({ cardProps = {} }) {
     setError('');
   }
 
+  /**
+   * Handles expression form submission and records the evaluated result.
+   *
+   * @param {React.FormEvent<HTMLFormElement>} event Form submit event.
+   * @returns {void}
+   */
   function rollCurrentExpression(event) {
     event.preventDefault();
 
@@ -132,6 +195,12 @@ export default function DiceRoller({ cardProps = {} }) {
     }
   }
 
+  /**
+   * Applies and rolls one preset dice expression.
+   *
+   * @param {string} presetExpression Preset expression to evaluate.
+   * @returns {void}
+   */
   function rollPreset(presetExpression) {
     setExpression(presetExpression);
 
@@ -142,16 +211,32 @@ export default function DiceRoller({ cardProps = {} }) {
     }
   }
 
+  /**
+   * Rolls one die from the quick die buttons.
+   *
+   * @param {number} sides Number of sides on the die.
+   * @returns {void}
+   */
   function rollQuickDie(sides) {
     const nextExpression = `1d${sides}`;
     setExpression(nextExpression);
     recordRoll(evaluateExpression(nextExpression));
   }
 
+  /**
+   * Rolls the d20 panel using the selected mode and modifier.
+   *
+   * @returns {void}
+   */
   function rollCurrentD20() {
     recordRoll(rollD20(d20Mode, modifier));
   }
 
+  /**
+   * Resets the dice roller form, current result, history, and errors.
+   *
+   * @returns {void}
+   */
   function clear() {
     setExpression('1d20');
     setModifier(0);

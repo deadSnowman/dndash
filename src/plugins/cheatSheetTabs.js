@@ -13,6 +13,11 @@ import spellcastingHtml from '../data/cheat-sheet/spellcasting.html?raw';
 import creatureSizesHtml from '../data/cheat-sheet/creature-sizes.html?raw';
 import quickDcsHtml from '../data/cheat-sheet/quick-dcs.html?raw';
 
+/**
+ * Cheat sheet tabs and their raw HTML content imported by Vite.
+ *
+ * @type {{id: string, title: string, content: string}[]}
+ */
 export const cheatSheetTabs = [
   { id: 'conditions', title: 'Conditions', content: conditionsHtml },
   { id: 'actions', title: 'Actions', content: actionsHtml },
@@ -30,8 +35,21 @@ export const cheatSheetTabs = [
   { id: 'quickDcs', title: 'Quick DCs', content: quickDcsHtml }
 ];
 
+/**
+ * Default visible cheat sheet tab ids in display order.
+ *
+ * @type {string[]}
+ */
 export const defaultCheatSheetTabIds = cheatSheetTabs.map((tab) => tab.id);
 
+/**
+ * Resolves the visible cheat sheet tabs from saved tab ids.
+ *
+ * Empty, invalid, or unknown-only id lists fall back to all tabs.
+ *
+ * @param {unknown} tabIds Saved tab ids.
+ * @returns {{id: string, title: string, content: string}[]} Tabs to render.
+ */
 export function getVisibleCheatSheetTabs(tabIds) {
   if (!Array.isArray(tabIds) || tabIds.length === 0) return cheatSheetTabs;
 

@@ -1,3 +1,8 @@
+/**
+ * Selectable item type filters for the magic item quirk generator.
+ *
+ * @type {{value: string, label: string}[]}
+ */
 export const itemTypeOptions = [
   { value: 'any', label: 'Any' },
   { value: 'weapon', label: 'Weapon' },
@@ -9,6 +14,11 @@ export const itemTypeOptions = [
   { value: 'scroll', label: 'Scroll' }
 ];
 
+/**
+ * Selectable rarity labels for generated magic item flavor.
+ *
+ * @type {{value: string, label: string}[]}
+ */
 export const rarityOptions = [
   { value: 'any', label: 'Any' },
   { value: 'common', label: 'Common' },
@@ -104,18 +114,45 @@ const creators = [
   'a fey noble with a cruel sense of hospitality'
 ];
 
+/**
+ * Selects a random item from a nonempty list.
+ *
+ * @param {string[]} list Values to choose from.
+ * @returns {string} Randomly selected list item.
+ */
 function pick(list) {
   return list[Math.floor(Math.random() * list.length)];
 }
 
+/**
+ * Capitalizes the first character of generated prose.
+ *
+ * @param {string} value Text to capitalize.
+ * @returns {string} Sentence-cased text, or the original empty value.
+ */
 function sentenceCase(value) {
   return value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
 }
 
+/**
+ * Converts an unknown item type to the generic item pool.
+ *
+ * @param {string} type Requested item type.
+ * @returns {string} Supported item type key.
+ */
 function normalizeType(type) {
   return itemNames[type] ? type : 'any';
 }
 
+/**
+ * Generates a named magic item with cosmetic properties, quirks, flaws, and creator flavor.
+ *
+ * Unknown item types use the generic item pool; rarity is preserved as display metadata only.
+ *
+ * @param {string} [type='any'] Item type key from {@link itemTypeOptions}.
+ * @param {string} [rarity='any'] Rarity key from {@link rarityOptions}.
+ * @returns {{type: string, rarity: string, title: string, visualTell: string, minorProperty: string, quirk: string, flaw: string, creator: string}} Generated item flavor.
+ */
 export function generateMagicItemQuirk(type = 'any', rarity = 'any') {
   const safeType = normalizeType(type);
   const itemName = pick(itemNames[safeType]);

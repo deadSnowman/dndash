@@ -8,6 +8,14 @@ import {
   rarityOptions
 } from '../lib/magicItemQuirkGenerator.js';
 
+/**
+ * Renders one magic item quirk detail row.
+ *
+ * @param {object} props Component props.
+ * @param {string} props.label Detail label.
+ * @param {string} props.value Detail value.
+ * @returns {JSX.Element} Item quirk row.
+ */
 function ItemQuirkRow({ label, value }) {
   return (
     <div className="item-quirk-row">
@@ -17,6 +25,14 @@ function ItemQuirkRow({ label, value }) {
   );
 }
 
+/**
+ * Renders the magic item quirk generator as a standalone card or embedded generator panel.
+ *
+ * @param {object} props Component props.
+ * @param {object} [props.cardProps={}] Props forwarded to the wrapping {@link PluginCard}.
+ * @param {boolean} [props.embedded=false] Whether to omit the outer plugin card.
+ * @returns {JSX.Element} Magic item flavor controls, generated details, and copy action.
+ */
 export default function MagicItemQuirkGenerator({ cardProps = {}, embedded = false }) {
   const [itemType, setItemType] = useState('any');
   const [rarity, setRarity] = useState('any');
@@ -32,21 +48,46 @@ export default function MagicItemQuirkGenerator({ cardProps = {}, embedded = fal
     [rarity]
   );
 
+  /**
+   * Generates a fresh magic item flavor profile.
+   *
+   * @param {string} [nextType=itemType] Item type option value.
+   * @param {string} [nextRarity=rarity] Rarity option value.
+   * @returns {void}
+   */
   function regenerate(nextType = itemType, nextRarity = rarity) {
     setItem(generateMagicItemQuirk(nextType, nextRarity));
     setCopyStatus('');
   }
 
+  /**
+   * Changes the selected item type filter.
+   *
+   * @param {string} value Item type option value.
+   * @returns {void}
+   */
   function updateItemType(value) {
     setItemType(value);
     setCopyStatus('');
   }
 
+  /**
+   * Changes the selected rarity filter.
+   *
+   * @param {string} value Rarity option value.
+   * @returns {void}
+   */
   function updateRarity(value) {
     setRarity(value);
     setCopyStatus('');
   }
 
+  /**
+   * Copies the current magic item summary to the clipboard.
+   *
+   * @async
+   * @returns {Promise<void>} Resolves after copy status has been updated.
+   */
   async function copyItem() {
     const summary = [
       `${item.title} (${rarityLabel} ${itemTypeLabel})`,

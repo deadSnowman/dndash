@@ -17,6 +17,14 @@ const featureGroups = [
   }
 ];
 
+/**
+ * Renders the about page describing DnDash and its feature groups.
+ *
+ * @param {object} props Component props.
+ * @param {boolean} [props.darkTheme=false] Whether the current app theme is dark.
+ * @param {() => void} props.onToggleTheme Handler called when the navbar theme toggle is clicked.
+ * @returns {JSX.Element} About page content, illustration, navigation, and footer.
+ */
 export default function AboutPage({ darkTheme = false, onToggleTheme }) {
   const [imageLoaded, setImageLoaded] = useState(false);
 

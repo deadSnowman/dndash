@@ -4,6 +4,15 @@ import PluginCard from '../components/PluginCard.jsx';
 import SelectField from '../components/forms/SelectField.jsx';
 import { generateLocation, generateLocationField, locationTypeOptions } from '../lib/locationGenerator.js';
 
+/**
+ * Renders one location detail row with an optional regenerate button.
+ *
+ * @param {object} props Component props.
+ * @param {string} props.label Detail label.
+ * @param {string} props.value Detail value.
+ * @param {() => void} [props.onRegenerate] Handler for regenerating the row value.
+ * @returns {JSX.Element} Location detail row.
+ */
 function LocationRow({ label, value, onRegenerate }) {
   return (
     <div className="location-detail-row">
@@ -24,6 +33,14 @@ function LocationRow({ label, value, onRegenerate }) {
   );
 }
 
+/**
+ * Renders the location generator as a standalone card or embedded generator panel.
+ *
+ * @param {object} props Component props.
+ * @param {object} [props.cardProps={}] Props forwarded to the wrapping {@link PluginCard}.
+ * @param {boolean} [props.embedded=false] Whether to omit the outer plugin card.
+ * @returns {JSX.Element} Location generator controls, generated details, and copy action.
+ */
 export default function LocationGenerator({ cardProps = {}, embedded = false }) {
   const [locationType, setLocationType] = useState('any');
   const [location, setLocation] = useState(() => generateLocation('any'));
@@ -34,26 +51,56 @@ export default function LocationGenerator({ cardProps = {}, embedded = false }) 
     [locationType]
   );
 
+  /**
+   * Changes the location type filter without regenerating the current location.
+   *
+   * @param {string} value Location type option value.
+   * @returns {void}
+   */
   function updateType(value) {
     setLocationType(value);
     setCopyStatus('');
   }
 
+  /**
+   * Generates a fresh location for the selected type filter.
+   *
+   * @returns {void}
+   */
   function regenerateLocation() {
     setLocation(generateLocation(locationType));
     setCopyStatus('');
   }
 
+  /**
+   * Updates one generated location field and clears copy status.
+   *
+   * @param {string} field Location field name.
+   * @param {string} value Replacement field value.
+   * @returns {void}
+   */
   function updateField(field, value) {
     setLocation((current) => ({ ...current, [field]: value }));
     setCopyStatus('');
   }
 
+  /**
+   * Regenerates one field using the current concrete location type.
+   *
+   * @param {string} field Location field name.
+   * @returns {void}
+   */
   function regenerateField(field) {
     const typeForField = locationType === 'any' ? location.type : locationType;
     updateField(field, generateLocationField(typeForField, field));
   }
 
+  /**
+   * Copies the current location summary to the clipboard.
+   *
+   * @async
+   * @returns {Promise<void>} Resolves after copy status has been updated.
+   */
   async function copyLocation() {
     const summary = [
       `${location.name} (${typeLabel})`,

@@ -10,10 +10,23 @@ const ENCOUNTER_BUILDER_KEY = 'dndash.encounterBuilder';
 const CUSTOM_MONSTERS_KEY = 'dndash.customMonsters';
 const crOptionValues = new Set(crOptions.map((option) => option.value));
 
+/**
+ * Formats an XP value using the current locale.
+ *
+ * @param {number} value XP value to format.
+ * @returns {string} Rounded, locale-formatted XP text.
+ */
 function formatXp(value) {
   return Math.round(value).toLocaleString();
 }
 
+/**
+ * Creates a new monster row for encounter editing.
+ *
+ * @param {number} [index=1] Index used to seed the generated id and default name.
+ * @param {object} [monster={}] Optional monster values to copy into the row.
+ * @returns {{id: string, count: number | string, cr: string, name: string}} Monster row.
+ */
 function createMonsterRow(index = 1, monster = {}) {
   return {
     id: `${Date.now()}-${index}-${Math.random().toString(16).slice(2)}`,
@@ -23,6 +36,13 @@ function createMonsterRow(index = 1, monster = {}) {
   };
 }
 
+/**
+ * Normalizes a stored monster row for safe rendering.
+ *
+ * @param {object} monster Stored monster row.
+ * @param {number} index Row index in saved data.
+ * @returns {{id: string, count: number | string, cr: string, name: string}} Normalized monster row.
+ */
 function normalizeMonsterRow(monster, index) {
   return {
     ...createMonsterRow(index + 1),
@@ -34,6 +54,11 @@ function normalizeMonsterRow(monster, index) {
   };
 }
 
+/**
+ * Loads encounter builder state from local storage.
+ *
+ * @returns {{partySize: number | string, level: number | string, monsters: object[], pickerOpen: boolean, pickerCr: string, pickerMonsterId: string}} Saved encounter state.
+ */
 function loadSavedEncounter() {
   const fallback = {
     partySize: 4,
@@ -65,6 +90,13 @@ function loadSavedEncounter() {
   }
 }
 
+/**
+ * Loads custom monsters from local storage.
+ *
+ * Invalid entries without both name and CR are ignored.
+ *
+ * @returns {{name: string, cr: string, type?: string}[]} Custom monster definitions.
+ */
 function loadCustomMonsters() {
   if (typeof window === 'undefined') return [];
 
@@ -78,11 +110,24 @@ function loadCustomMonsters() {
   }
 }
 
+/**
+ * Persists custom monsters to local storage.
+ *
+ * @param {{name: string, cr: string, type?: string}[]} monsters Custom monster definitions.
+ * @returns {void}
+ */
 function saveCustomMonsters(monsters) {
   if (typeof window === 'undefined') return;
   window.localStorage.setItem(CUSTOM_MONSTERS_KEY, JSON.stringify(monsters));
 }
 
+/**
+ * Renders the encounter builder card with difficulty math, monster rows, and a monster picker.
+ *
+ * @param {object} props Component props.
+ * @param {object} [props.cardProps={}] Props forwarded to the wrapping {@link PluginCard}.
+ * @returns {JSX.Element} Encounter calculator with persisted custom monsters and encounter state.
+ */
 export default function EncounterBuilder({ cardProps = {} }) {
   const [savedEncounter] = useState(loadSavedEncounter);
   const [partySize, setPartySize] = useState(savedEncounter.partySize);
@@ -128,27 +173,57 @@ export default function EncounterBuilder({ cardProps = {} }) {
     );
   }, [level, monsters, partySize, pickerCr, pickerMonsterId, pickerOpen]);
 
+  /**
+   * Updates a field on one encounter monster row.
+   *
+   * @param {string} id Monster row id.
+   * @param {string} field Field name to update.
+   * @param {number | string} value Replacement value.
+   * @returns {void}
+   */
   function updateMonster(id, field, value) {
     setMonsters((current) =>
       current.map((monster) => (monster.id === id ? { ...monster, [field]: value } : monster))
     );
   }
 
+  /**
+   * Appends a blank monster row to the encounter.
+   *
+   * @returns {void}
+   */
   function addMonster() {
     setMonsters((current) => [...current, createMonsterRow(current.length + 1)]);
   }
 
+  /**
+   * Appends a selected library monster to the encounter.
+   *
+   * @param {{name: string, cr: string} | undefined} monster Monster library item.
+   * @returns {void}
+   */
   function addMonsterToEncounter(monster) {
     if (!monster) return;
     setMonsters((current) => [...current, createMonsterRow(current.length + 1, monster)]);
   }
 
+  /**
+   * Adds a random monster from the currently filtered picker list.
+   *
+   * @returns {void}
+   */
   function addRandomMonster() {
     if (filteredMonsters.length === 0) return;
     const monster = filteredMonsters[Math.floor(Math.random() * filteredMonsters.length)];
     addMonsterToEncounter(monster);
   }
 
+  /**
+   * Saves the custom monster form into local storage and selects it in the picker.
+   *
+   * @param {React.FormEvent<HTMLFormElement>} event Custom monster form submit event.
+   * @returns {void}
+   */
   function saveCustomMonster(event) {
     event.preventDefault();
     const name = customMonsterDraft.name.trim();
@@ -168,6 +243,12 @@ export default function EncounterBuilder({ cardProps = {} }) {
     setCustomMonsterOpen(false);
   }
 
+  /**
+   * Removes a custom monster by picker id.
+   *
+   * @param {string} monsterId Picker id in the `custom-{index}` format.
+   * @returns {void}
+   */
   function removeCustomMonster(monsterId) {
     const customIndex = Number(monsterId?.replace('custom-', ''));
     if (!Number.isInteger(customIndex)) return;
@@ -178,6 +259,12 @@ export default function EncounterBuilder({ cardProps = {} }) {
     setPickerMonsterId('');
   }
 
+  /**
+   * Removes one encounter monster row when more than one row exists.
+   *
+   * @param {string} id Monster row id.
+   * @returns {void}
+   */
   function removeMonster(id) {
     setMonsters((current) =>
       current.length > 1 ? current.filter((monster) => monster.id !== id) : current

@@ -16,6 +16,13 @@ import NpcGenerator from './NpcGenerator.jsx';
 import LocationGenerator from './LocationGenerator.jsx';
 import MagicItemQuirkGenerator from './MagicItemQuirkGenerator.jsx';
 
+/**
+ * Dashboard plugin registry mapping ids to names, components, and default visibility.
+ *
+ * Hidden plugins remain available for embedded use but are excluded from Settings by default.
+ *
+ * @type {{id: string, name: string, Component: React.ComponentType, enabled: boolean, hidden?: boolean}[]}
+ */
 export const pluginRegistry = [
   { id: 'currencyConverter', name: 'Currency Converter', Component: CurrencyConverter, enabled: true },
   { id: 'lootSplitter', name: 'Loot Splitter', Component: LootSplitter, enabled: true },
@@ -34,12 +41,23 @@ export const pluginRegistry = [
   { id: 'magicItemQuirks', name: 'Magic Item Quirks', Component: MagicItemQuirkGenerator, enabled: false, hidden: true }
 ];
 
+/**
+ * Creates the persisted dashboard plugin settings from visible registry entries.
+ *
+ * @returns {{id: string, name: string, enabled: boolean}[]} Initial plugin settings in dashboard order.
+ */
 export function createInitialPlugins() {
   return pluginRegistry
     .filter((plugin) => !plugin.hidden)
     .map(({ id, name, enabled }) => ({ id, name, enabled }));
 }
 
+/**
+ * Looks up the React component registered for a plugin id.
+ *
+ * @param {string} id Plugin id to resolve.
+ * @returns {React.ComponentType | undefined} Plugin component, or undefined when the id is unknown.
+ */
 export function getPluginComponent(id) {
   return pluginRegistry.find((plugin) => plugin.id === id)?.Component;
 }

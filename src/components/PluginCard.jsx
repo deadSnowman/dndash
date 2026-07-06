@@ -1,6 +1,17 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
+/**
+ * Renders a collapsible dashboard card with an optional controlled collapsed state.
+ *
+ * @param {object} props Component props.
+ * @param {string} props.title Card header text.
+ * @param {React.ReactNode} props.children Card body content rendered when expanded.
+ * @param {object} [props.dragHandleProps={}] Props supplied by the dashboard drag library for the header handle.
+ * @param {boolean} [props.isCollapsed] Controlled collapsed state; omitted for local state.
+ * @param {(collapsed: boolean) => void} [props.onCollapsedChange] Handler called after the collapsed state toggles.
+ * @returns {JSX.Element} A Bootstrap card that renders children inside its body when expanded.
+ */
 export default function PluginCard({
   title,
   children,
@@ -12,6 +23,11 @@ export default function PluginCard({
   const isControlled = typeof controlledCollapsed === 'boolean';
   const isCollapsed = isControlled ? controlledCollapsed : localCollapsed;
 
+  /**
+   * Switches between expanded and collapsed state while notifying controlled parents.
+   *
+   * @returns {void}
+   */
   const toggleCollapsed = () => {
     const nextCollapsed = !isCollapsed;
 

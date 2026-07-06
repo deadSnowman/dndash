@@ -4,6 +4,15 @@ import PluginCard from '../components/PluginCard.jsx';
 import SelectField from '../components/forms/SelectField.jsx';
 import { ancestryOptions, generateName, generateNpc } from '../lib/npcGenerator.js';
 
+/**
+ * Renders one NPC detail row with an optional regenerate button.
+ *
+ * @param {object} props Component props.
+ * @param {string} props.label Detail label.
+ * @param {string} props.value Detail value.
+ * @param {() => void} [props.onRegenerate] Handler for regenerating the row value.
+ * @returns {JSX.Element} NPC detail row.
+ */
 function DetailRow({ label, value, onRegenerate }) {
   return (
     <div className="npc-detail-row">
@@ -24,6 +33,14 @@ function DetailRow({ label, value, onRegenerate }) {
   );
 }
 
+/**
+ * Renders the NPC generator as a standalone card or embedded generator panel.
+ *
+ * @param {object} props Component props.
+ * @param {object} [props.cardProps={}] Props forwarded to the wrapping {@link PluginCard}.
+ * @param {boolean} [props.embedded=false] Whether to omit the outer plugin card.
+ * @returns {JSX.Element} NPC generator controls, generated details, and copy action.
+ */
 export default function NpcGenerator({ cardProps = {}, embedded = false }) {
   const [ancestry, setAncestry] = useState('any');
   const [npc, setNpc] = useState(() => generateNpc('any'));
@@ -34,26 +51,55 @@ export default function NpcGenerator({ cardProps = {}, embedded = false }) {
     [ancestry]
   );
 
+  /**
+   * Changes the ancestry filter and generates a fresh NPC.
+   *
+   * @param {string} value Ancestry option value.
+   * @returns {void}
+   */
   function updateAncestry(value) {
     setAncestry(value);
     setNpc(generateNpc(value));
     setCopyStatus('');
   }
 
+  /**
+   * Updates one generated NPC field and clears copy status.
+   *
+   * @param {string} field NPC field name.
+   * @param {string} value Replacement field value.
+   * @returns {void}
+   */
   function updateField(field, value) {
     setNpc((current) => ({ ...current, [field]: value }));
     setCopyStatus('');
   }
 
+  /**
+   * Generates a complete new NPC for the current ancestry.
+   *
+   * @returns {void}
+   */
   function regenerateNpc() {
     setNpc(generateNpc(ancestry));
     setCopyStatus('');
   }
 
+  /**
+   * Generates a replacement NPC name for the current ancestry.
+   *
+   * @returns {void}
+   */
   function regenerateName() {
     updateField('name', generateName(ancestry));
   }
 
+  /**
+   * Copies the current NPC summary to the clipboard.
+   *
+   * @async
+   * @returns {Promise<void>} Resolves after copy status has been updated.
+   */
   async function copyNpc() {
     const summary = [
       `${npc.name} (${ancestryLabel} ${npc.role})`,

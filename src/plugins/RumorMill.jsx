@@ -9,6 +9,12 @@ const truthOptions = ['Unknown', 'True', 'False', 'Partly True', 'Misleading'];
 const statusOptions = ['Unheard', 'Heard', 'Followed Up', 'Resolved'];
 const filterOptions = ['Active', 'Unheard', 'Heard', 'Resolved', 'All'];
 
+/**
+ * Creates a blank rumor with a unique id.
+ *
+ * @param {number} [index=1] Index used to seed the generated id.
+ * @returns {{id: string, rumor: string, source: string, truth: string, status: string, tags: string, payoff: string, notes: string}} Rumor object.
+ */
 function createRumor(index = 1) {
   return {
     id: `${Date.now()}-${index}-${Math.random().toString(16).slice(2)}`,
@@ -22,6 +28,13 @@ function createRumor(index = 1) {
   };
 }
 
+/**
+ * Normalizes a stored rumor for safe rendering and editing.
+ *
+ * @param {object} rumor Stored rumor data.
+ * @param {number} index Rumor index in saved data.
+ * @returns {{id: string, rumor: string, source: string, truth: string, status: string, tags: string, payoff: string, notes: string}} Normalized rumor.
+ */
 function normalizeRumor(rumor, index) {
   return {
     ...createRumor(index + 1),
@@ -37,6 +50,11 @@ function normalizeRumor(rumor, index) {
   };
 }
 
+/**
+ * Loads rumor state from local storage.
+ *
+ * @returns {{rumors: object[], activeRumorId: string | null, filter: string}} Saved rumor list state.
+ */
 function loadSavedRumors() {
   if (typeof window === 'undefined') {
     return {
@@ -68,6 +86,12 @@ function loadSavedRumors() {
   }
 }
 
+/**
+ * Splits comma-separated tag text into trimmed tags.
+ *
+ * @param {string} value Comma-separated tag string.
+ * @returns {string[]} Nonempty tag values.
+ */
 function splitTags(value) {
   return value
     .split(',')
@@ -75,22 +99,47 @@ function splitTags(value) {
     .filter(Boolean);
 }
 
+/**
+ * Returns display text for a rumor title.
+ *
+ * @param {{rumor: string}} rumor Rumor to title.
+ * @returns {string} Rumor text or an untitled fallback.
+ */
 function getRumorTitle(rumor) {
   return rumor.rumor.trim() || 'Untitled rumor';
 }
 
+/**
+ * Builds a compact sidebar preview from source or tags.
+ *
+ * @param {{source: string, tags: string}} rumor Rumor to preview.
+ * @returns {string} Preview text.
+ */
 function getPreview(rumor) {
   if (rumor.source.trim()) return rumor.source.trim();
   const tags = splitTags(rumor.tags);
   return tags.length > 0 ? tags.join(', ') : 'No source yet';
 }
 
+/**
+ * Filters rumors by status.
+ *
+ * @param {{status: string}[]} rumors Rumors to filter.
+ * @param {string} filter Filter option.
+ * @returns {object[]} Filtered rumor list.
+ */
 function filterRumors(rumors, filter) {
   if (filter === 'All') return rumors;
   if (filter === 'Active') return rumors.filter((rumor) => rumor.status !== 'Resolved');
   return rumors.filter((rumor) => rumor.status === filter);
 }
 
+/**
+ * Determines the next one-click status action for a rumor.
+ *
+ * @param {{status: string} | null} rumor Active rumor.
+ * @returns {{label: string, status: string} | null} Next action, or null when no action applies.
+ */
 function getNextStatusAction(rumor) {
   if (!rumor) return null;
   if (rumor.status === 'Unheard') return { label: 'Mark Heard', status: 'Heard' };
@@ -100,6 +149,15 @@ function getNextStatusAction(rumor) {
   return null;
 }
 
+/**
+ * Renders one read-only rumor detail block when a value exists.
+ *
+ * @param {object} props Component props.
+ * @param {string} props.label Detail label.
+ * @param {string} props.value Detail value.
+ * @param {boolean} [props.wide=false] Whether the detail spans the wide grid style.
+ * @returns {JSX.Element | null} Detail block or null for empty values.
+ */
 function DetailItem({ label, value, wide = false }) {
   if (!value) return null;
 
@@ -111,6 +169,14 @@ function DetailItem({ label, value, wide = false }) {
   );
 }
 
+/**
+ * Renders one rumor metadata pill when a value exists.
+ *
+ * @param {object} props Component props.
+ * @param {string} props.label Metadata label.
+ * @param {string} props.value Metadata value.
+ * @returns {JSX.Element | null} Metadata pill or null for empty values.
+ */
 function ReadMeta({ label, value }) {
   if (!value) return null;
 
@@ -122,6 +188,13 @@ function ReadMeta({ label, value }) {
   );
 }
 
+/**
+ * Renders comma-separated rumor tags as chips.
+ *
+ * @param {object} props Component props.
+ * @param {string} props.tags Comma-separated tag text.
+ * @returns {JSX.Element | null} Tag chip list or null when no tags exist.
+ */
 function TagList({ tags }) {
   const items = splitTags(tags);
   if (items.length === 0) return null;
@@ -138,6 +211,14 @@ function TagList({ tags }) {
   );
 }
 
+/**
+ * Renders the rumor manager card with filters, editing, status changes, and clipboard copy.
+ *
+ * @param {object} props Component props.
+ * @param {object} [props.cardProps={}] Props forwarded to the wrapping {@link PluginCard}.
+ * @param {(config: object) => void} [props.requestConfirm] Shared confirmation modal requester.
+ * @returns {JSX.Element} Rumor mill list and active rumor editor.
+ */
 export default function RumorMill({ cardProps = {}, requestConfirm }) {
   const [savedRumors] = useState(loadSavedRumors);
   const [rumors, setRumors] = useState(savedRumors.rumors);
@@ -170,6 +251,11 @@ export default function RumorMill({ cardProps = {}, requestConfirm }) {
     );
   }, [activeRumor, activeRumorId, filter, rumors]);
 
+  /**
+   * Adds a blank rumor, activates it, and enters edit mode.
+   *
+   * @returns {void}
+   */
   function addRumor() {
     setRumors((current) => {
       const nextRumor = createRumor(current.length + 1);
@@ -180,6 +266,14 @@ export default function RumorMill({ cardProps = {}, requestConfirm }) {
     });
   }
 
+  /**
+   * Updates a field on one rumor.
+   *
+   * @param {string} id Rumor id.
+   * @param {string} field Field name to update.
+   * @param {string} value Replacement value.
+   * @returns {void}
+   */
   function updateRumor(id, field, value) {
     setRumors((current) =>
       current.map((rumor) => (rumor.id === id ? { ...rumor, [field]: value } : rumor))
@@ -187,6 +281,12 @@ export default function RumorMill({ cardProps = {}, requestConfirm }) {
     setCopyStatus('');
   }
 
+  /**
+   * Removes a rumor and creates a replacement when the last rumor is deleted.
+   *
+   * @param {string} id Rumor id to remove.
+   * @returns {void}
+   */
   function removeRumor(id) {
     setRumors((current) => {
       const nextRumors = current.filter((rumor) => rumor.id !== id);
@@ -205,6 +305,12 @@ export default function RumorMill({ cardProps = {}, requestConfirm }) {
     setCopyStatus('');
   }
 
+  /**
+   * Requests confirmation before deleting a rumor when confirmation is available.
+   *
+   * @param {{id: string, rumor: string}} rumor Rumor to delete.
+   * @returns {void}
+   */
   function requestRemoveRumor(rumor) {
     if (!requestConfirm) {
       removeRumor(rumor.id);
@@ -219,12 +325,23 @@ export default function RumorMill({ cardProps = {}, requestConfirm }) {
     });
   }
 
+  /**
+   * Applies the next status action to the active rumor.
+   *
+   * @returns {void}
+   */
   function advanceActiveRumorStatus() {
     if (!activeRumor || !nextStatusAction) return;
     updateRumor(activeRumor.id, 'status', nextStatusAction.status);
     setEditing(false);
   }
 
+  /**
+   * Copies the player-facing active rumor text to the clipboard.
+   *
+   * @async
+   * @returns {Promise<void>} Resolves after copy status has been updated.
+   */
   async function copyPlayerRumor() {
     if (!activeRumor) return;
     const text = [activeRumor.rumor, activeRumor.source && `Source: ${activeRumor.source}`]
