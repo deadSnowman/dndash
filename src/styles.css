@@ -102,6 +102,7 @@ body {
   --dashboard-effective-columns: var(--dashboard-columns, 3);
 }
 
+/* Treat the setting as a maximum column count; cards need about 22rem before dense tool UIs stay readable. */
 .dashboard-muuri-item {
   position: absolute;
   z-index: 1;
@@ -132,13 +133,25 @@ body {
   cursor: grabbing;
 }
 
-@media (max-width: 899px) {
+@media (max-width: 1799px) {
+  .dashboard-muuri {
+    --dashboard-effective-columns: min(var(--dashboard-columns, 3), 4);
+  }
+}
+
+@media (max-width: 1439px) {
+  .dashboard-muuri {
+    --dashboard-effective-columns: min(var(--dashboard-columns, 3), 3);
+  }
+}
+
+@media (max-width: 1079px) {
   .dashboard-muuri {
     --dashboard-effective-columns: min(var(--dashboard-columns, 3), 2);
   }
 }
 
-@media (max-width: 574px) {
+@media (max-width: 719px) {
   .dashboard-muuri {
     --dashboard-effective-columns: 1;
   }
